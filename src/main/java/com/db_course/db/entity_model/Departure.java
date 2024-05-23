@@ -1,4 +1,4 @@
-package com.db_course.server.db.entity_model;
+package com.db_course.db.entity_model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

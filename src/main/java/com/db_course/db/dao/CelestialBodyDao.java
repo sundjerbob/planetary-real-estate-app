@@ -1,10 +1,12 @@
-package com.db_course.server.db.dao;
+package com.db_course.db.dao;
 
-import com.db_course.server.db.entity_model.CelestialBody;
+import com.db_course.db.entity_model.CelestialBody;
 
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.function.Consumer;
 
 public class CelestialBodyDao {
 
@@ -14,9 +16,7 @@ public class CelestialBodyDao {
         this.connection = connection;
     }
 
-    public List<CelestialBody> getAllCelestialBodies() throws SQLException {
-        List<CelestialBody> celestialBodyList = new ArrayList<>();
-
+    public void processAllCelestialBodies(Consumer<CelestialBody> celestialBodyConsumer) throws SQLException {
         // Prepare SQL query
         String sql = "SELECT celestial_body_id, name, type, description FROM CELESTIAL_BODIES";
 
@@ -34,12 +34,12 @@ public class CelestialBodyDao {
                 int type = resultSet.getInt("type");
                 String description = resultSet.getString("description");
 
-                // Create a CelestialBody object and add it to the list
+                // Create a CelestialBody object
                 CelestialBody celestialBody = new CelestialBody(celestialBodyId, name, type, description);
-                celestialBodyList.add(celestialBody);
+
+                // Process the CelestialBody object using the consumer function
+                celestialBodyConsumer.accept(celestialBody);
             }
         }
-
-        return celestialBodyList;
     }
 }

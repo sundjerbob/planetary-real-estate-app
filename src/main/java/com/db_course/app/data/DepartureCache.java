@@ -1,6 +1,6 @@
-package com.db_course.app.gui.data;
+package com.db_course.app.data;
 
-import com.db_course.server.db.entity_model.Departure;
+import com.db_course.db.entity_model.Departure;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

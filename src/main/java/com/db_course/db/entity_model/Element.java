@@ -1,4 +1,5 @@
-package com.db_course.server.db.entity_model;
+package com.db_course.db.entity_model;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,8 +8,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AtmosphereElement {
-    private int atmosphereId;
+
+
+public class Element {
     private int elementId;
-    private double percentage;
+    private String name;
+    private double minPercentage;
+    private double maxPercentage;
 }

@@ -1,6 +1,6 @@
-package com.db_course.server.db.dao;
+package com.db_course.db.dao;
 
-import com.db_course.server.db.entity_model.AtmosphereElement;
+import com.db_course.db.entity_model.AtmosphereElement;
 
 import java.sql.*;
 import java.util.ArrayList;

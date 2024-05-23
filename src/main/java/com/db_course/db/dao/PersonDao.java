@@ -1,13 +1,9 @@
-package com.db_course.server.db.dao;
+package com.db_course.db.dao;
 
-import com.db_course.server.db.entity_model.Person;
+import com.db_course.db.entity_model.Person;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.*;
+import java.util.function.Consumer;
 
 public class PersonDao {
 
@@ -17,37 +13,31 @@ public class PersonDao {
         this.connection = connection;
     }
 
-    public List<Person> getAllUsers() throws SQLException {
-        List<Person> userList = new ArrayList<>();
-
-        // Prepare SQL query
-        String sql = "SELECT person_id, name, last_name, username, password FROM PERSON";
+    public void processAllUsers(Consumer<Person> personConsumer) throws SQLException {
 
         try (
-                // Create PreparedStatement
-                PreparedStatement statement = connection.prepareStatement(sql);
-                // Execute query and get ResultSet
+                PreparedStatement statement = connection.prepareStatement(
+                        "SELECT person_id, name, last_name, username, password FROM PERSON"
+                );
                 ResultSet resultSet = statement.executeQuery()
         ) {
-            // Iterate over the result set
+
             while (resultSet.next()) {
-                // Retrieve user data from the result set
+
                 int personId = resultSet.getInt("person_id");
                 String name = resultSet.getString("name");
                 String lastName = resultSet.getString("last_name");
                 String username = resultSet.getString("username");
                 String password = resultSet.getString("password");
 
-                // Create a User object and add it to the list
                 Person user = new Person(personId, name, lastName, username, password);
-                userList.add(user);
+
+                personConsumer.accept(user);
             }
         }
 
-        return userList;
     }
 
-    // Method to fetch a user by username
     public Person getUserByUsername(String username) throws SQLException {
         String sql = "SELECT person_id, name, last_name, username, password FROM PERSON WHERE username = ?";
 
@@ -67,18 +57,32 @@ public class PersonDao {
         return null;
     }
 
-    // Method to check if a username already exists
-    public boolean doesUsernameExist(String username) throws SQLException {
-        String sql = "SELECT COUNT(*) FROM PERSON WHERE username = ?";
+    public Person insertUser(Person person) throws SQLException {
+        String sql = "INSERT INTO PERSON (name, last_name, username, password) VALUES (?, ?, ?, ?)";
 
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setString(1, username);
-            try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
-                    return resultSet.getInt(1) > 0;
+        try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            statement.setString(1, person.getName());
+            statement.setString(2, person.getLastName());
+            statement.setString(3, person.getUsername());
+            statement.setString(4, person.getPassword());
+
+            int affectedRows = statement.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("Creating user failed, no rows affected.");
+            }
+
+            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    person.setPersonId(generatedKeys.getInt(1));
+                }
+                else {
+                    throw new SQLException("Creating user failed, no ID obtained.");
                 }
             }
         }
-        return false;
+
+        return person;
     }
+
 }

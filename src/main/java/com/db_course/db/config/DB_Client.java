@@ -1,4 +1,4 @@
-package com.db_course.server.db.config;
+package com.db_course.db.config;
 
 import lombok.Getter;
 
@@ -12,12 +12,12 @@ public class DB_Client {
     @Getter
     private Connection connection;
 
-    private String connectionPrefix = "jdbc:mysql://";
-    private String ipAddress = "localhost";
-    private String dbName = "planetary_real_estate_db";
-    private String port = "3306";
-    private String userName = "root";
-    private String password = "password"; // Change this to your password
+    private final String connectionPrefix = "jdbc:mysql://";
+    private final String ipAddress = "localhost";
+    private final String dbName = "planetary_real_estate_db";
+    private final String port = "3306";
+    private final String userName = "root";
+    private final String password = "mivanmajer99"; // Change this to your password
 
     // Changed to non-static
     private void connect() {

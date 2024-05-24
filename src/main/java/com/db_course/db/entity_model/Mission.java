@@ -12,7 +12,7 @@ import java.time.LocalDate;
 
 public class Mission {
 
-    private int missionId;
+    private int id;
     private String name;
     private LocalDate launchDate;
     private int celestialBodyId;

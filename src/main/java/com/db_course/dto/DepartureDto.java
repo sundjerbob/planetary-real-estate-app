@@ -14,7 +14,11 @@ import java.time.LocalDateTime;
 
 public class DepartureDto {
 
-    private int departureId;
+    private int id;
     private LocalDateTime departureDate;
-    private int passengerId;
+    private String celestialBodyOrigin;
+    private String celestialBodyDest;
+    private double pathwayLengthKm;
 }
+
+

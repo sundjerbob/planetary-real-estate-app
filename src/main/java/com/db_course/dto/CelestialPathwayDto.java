@@ -8,11 +8,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class UserDto {
+public class CelestialPathwayDto {
 
     private int id;
-    private String name;
-    private String lastName;
-    private String username;
+    private String bodyA;
+    private String bodyB;
+    private double distance_km;
 
 }

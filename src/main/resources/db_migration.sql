@@ -50,12 +50,15 @@ CREATE TABLE CELESTIAL_BODIES
     FOREIGN KEY (rotates_around_id) REFERENCES CELESTIAL_BODIES (celestial_body_id)
 );
 
+-- Create Celestial Pathways connecting the reachable cosmos-points (celestial bodies)
 CREATE TABLE CELESTIAL_PATHWAYS
 (
-    pathway_id  INT AUTO_INCREMENT PRIMARY KEY,
+    pathway_id  INT AUTO_INCREMENT,
     body_a_id   INT    NOT NULL,
     body_b_id   INT    NOT NULL,
     distance_km DOUBLE NOT NULL,
+
+    PRIMARY KEY (pathway_id, body_a_id, body_a_id),
     FOREIGN KEY (body_a_id) REFERENCES CELESTIAL_BODIES (celestial_body_id),
     FOREIGN KEY (body_b_id) REFERENCES CELESTIAL_BODIES (celestial_body_id)
 );
@@ -125,8 +128,13 @@ CREATE TABLE ATMOSPHERES_ELEMENTS
 -- Create Departure table
 CREATE TABLE DEPARTURES
 (
-    departure_id   INT AUTO_INCREMENT PRIMARY KEY,
-    departure_date DATETIME NOT NULL,
+    departure_id             INT AUTO_INCREMENT PRIMARY KEY,
+    departure_date           DATETIME NOT NULL,
+    celestial_body_origin_id INT,
+    celestial_body_dest_id   INT,
+
+    FOREIGN KEY (celestial_body_origin_id) references CELESTIAL_BODIES (celestial_body_id),
+    FOREIGN KEY (celestial_body_dest_id) references CELESTIAL_BODIES (celestial_body_id),
 
     INDEX idx_departure_date (departure_date)
 );

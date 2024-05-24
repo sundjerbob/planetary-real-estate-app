@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 
 public class CelestialTypeDto {
 
-    private int celestialTypeId;
+    private int id;
     private String name;
     private String description;
 

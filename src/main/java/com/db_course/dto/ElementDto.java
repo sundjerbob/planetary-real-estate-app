@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 
 public class ElementDto {
 
-    private int elementId;
+    private int id;
     private String name;
     private double minPercentage;
     private double maxPercentage;

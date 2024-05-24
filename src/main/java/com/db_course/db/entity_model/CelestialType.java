@@ -11,7 +11,7 @@ public enum CelestialType {
     DWARF_PLANET("A celestial body that orbits the sun and is spherical in shape but has not cleared its orbit of other debris."),
     ASTEROID("A small rocky body orbiting the sun, often found in the asteroid belt between Mars and Jupiter.");
 
-    public final String description;
+    private final String description;
 
     CelestialType(String description) {
         this.description = description;

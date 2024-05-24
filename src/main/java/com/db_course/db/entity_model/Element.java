@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 
 public class Element {
 
-    private int elementId;
+    private int id;
     private String name;
     private double minPercentage;
     private double maxPercentage;

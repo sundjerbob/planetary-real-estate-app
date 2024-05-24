@@ -8,10 +8,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class Atmosphere {
+
+public class CelestialPathway {
 
     private int id;
-    private int celestialBodyId;
-    private int atmosphereHeight;
-
+    private int bodyAId;
+    private int bodyBId;
+    private double distanceKm;
 }

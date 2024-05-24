@@ -27,9 +27,15 @@ public class DepartureDao {
 
                 int departureId = resultSet.getInt("departure_id");
                 Timestamp departureDate = resultSet.getTimestamp("departure_date");
-                int passengerId = resultSet.getInt("passenger_id");
+                int originBodyId = resultSet.getInt("celestial_origin_id");
+                int destinationBodyId = resultSet.getInt("celestial_destination_id");
 
-                Departure departure = new Departure(departureId, departureDate.toLocalDateTime(), passengerId);
+                Departure departure = new Departure(
+                        departureId,
+                        departureDate.toLocalDateTime(),
+                        originBodyId,
+                        destinationBodyId
+                );
 
                 departureConsumer.accept(departure);
             }
@@ -41,7 +47,7 @@ public class DepartureDao {
 
         try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             statement.setTimestamp(1, Timestamp.valueOf(departure.getDepartureDate()));
-            statement.setInt(2, departure.getPassengerId());
+            statement.setInt(2, departure.getId());
 
             int affectedRows = statement.executeUpdate();
 
@@ -51,7 +57,7 @@ public class DepartureDao {
 
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
-                    departure.setDepartureId(generatedKeys.getInt(1));
+                    departure.setId(generatedKeys.getInt(1));
                 } else {
                     throw new SQLException("Creating departure failed, no ID obtained.");
                 }

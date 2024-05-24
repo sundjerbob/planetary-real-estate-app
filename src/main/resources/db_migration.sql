@@ -136,11 +136,11 @@ CREATE TABLE DEPARTURES
 (
     departure_id             INT AUTO_INCREMENT PRIMARY KEY,
     departure_date           DATETIME NOT NULL,
-    celestial_body_origin_id INT,
-    celestial_body_dest_id   INT,
+    celestial_origin_id INT,
+    celestial__dest_id   INT,
 
-    FOREIGN KEY (celestial_body_origin_id) references CELESTIAL_BODIES (celestial_body_id),
-    FOREIGN KEY (celestial_body_dest_id) references CELESTIAL_BODIES (celestial_body_id),
+    FOREIGN KEY (celestial_origin_id) references CELESTIAL_BODIES (celestial_body_id),
+    FOREIGN KEY (celestial__dest_id) references CELESTIAL_BODIES (celestial_body_id),
 
     INDEX idx_departure_date (departure_date)
 );

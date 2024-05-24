@@ -46,7 +46,12 @@ public class CelestialBodyDao {
         String description = resultSet.getString("description");
 
         CelestialType type = CelestialType.values()[typeId - 1]; // Adjusting for 0-based index
+        CelestialBody celestialBody = new CelestialBody();
+        celestialBody.setId(id);
+        celestialBody.setName(name);
+        celestialBody.setType(type);
+        celestialBody.setDescription(description);
 
-        return new CelestialBody(id, name, type, description);
+        return celestialBody;
     }
 }

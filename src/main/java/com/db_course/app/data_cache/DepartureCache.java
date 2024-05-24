@@ -1,6 +1,6 @@
 package com.db_course.app.data_cache;
 
-import com.db_course.db.entity_model.Departure;
+import com.db_course.dto.DepartureDto;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -9,25 +9,33 @@ import java.util.NavigableSet;
 import java.util.TreeSet;
 
 public class DepartureCache {
-    private final TreeSet<Departure> departures;
+    private final TreeSet<DepartureDto> departures;
 
     public DepartureCache() {
-        departures = new TreeSet<>(Comparator.comparing(Departure::getDepartureDate).thenComparing(Departure::getDepartureId));
+        departures = new TreeSet<>(Comparator.comparing(DepartureDto::getDepartureDate).thenComparing(DepartureDto::getId));
     }
 
-    public void addDeparture(Departure departure) {
+    public void addDeparture(DepartureDto departure) {
+
         departures.add(departure);
     }
 
-    public NavigableSet<Departure> getDeparturesBetween(LocalDateTime start, LocalDateTime end) {
+    public NavigableSet<DepartureDto> getDeparturesBetween(LocalDateTime start, LocalDateTime end) {
+
+        DepartureDto departure = new DepartureDto(), departure1 = new DepartureDto();
+        departure.setDepartureDate(start);
+        departure.setId(0);
+        departure1.setDepartureDate(end);
+        departure1.setId(Integer.MAX_VALUE);
+
         return departures.subSet(
-                new Departure(0, start, 0),
+                departure,
                 true,
-                new Departure(Integer.MAX_VALUE, end, Integer.MAX_VALUE),
+                departure1,
                 true);
     }
 
-    public NavigableSet<Departure> getDeparturesOn(LocalDate date) {
+    public NavigableSet<DepartureDto> getDeparturesOn(LocalDate date) {
         LocalDateTime startOfDay = date.atStartOfDay();
         LocalDateTime endOfDay = startOfDay.plusDays(1L).minusNanos(1L);
         return getDeparturesBetween(startOfDay, endOfDay);

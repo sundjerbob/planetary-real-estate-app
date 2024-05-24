@@ -1,4 +1,4 @@
-package com.db_course.app.data;
+package com.db_course.data_cache;
 
 import com.db_course.db.entity_model.Mission;
 

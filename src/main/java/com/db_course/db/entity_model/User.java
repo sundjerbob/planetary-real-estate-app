@@ -8,14 +8,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class Person {
-    private int personId;
+public class User {
+    private int userId;
     private String name;
     private String lastName;
     private String username;
     private String password;
 
-    public Person(String name, String lastName, String username, String password) {
+    public User(String name, String lastName, String username, String password) {
         this.name = name;
         this.lastName = lastName;
         this.username = username;

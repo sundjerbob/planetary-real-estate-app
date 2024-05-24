@@ -1,4 +1,3 @@
-
 DROP DATABASE IF EXISTS planetary_real_estate_db;
 
 CREATE DATABASE planetary_real_estate_db;
@@ -6,19 +5,19 @@ CREATE DATABASE planetary_real_estate_db;
 -- Work with created db
 USE planetary_real_estate_db;
 
-
 -- Create User table
-CREATE TABLE PERSON
+CREATE TABLE USERS
 (
-    person_id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id   INT AUTO_INCREMENT PRIMARY KEY,
     name      VARCHAR(50)  NOT NULL,
     last_name VARCHAR(50)  NOT NULL,
     username  VARCHAR(20)  NOT NULL UNIQUE,
-    password  VARCHAR(255) NOT NULL
+    password  VARCHAR(255) NOT NULL,
+
+    -- Adding index for username
+    INDEX idx_username (username)
 );
 
--- Explicitly adding an index for the username column
-CREATE INDEX idx_username ON PERSON (username);
 
 -- Create CelestialType table
 CREATE TABLE CELESTIAL_TYPES
@@ -32,7 +31,7 @@ CREATE TABLE CELESTIAL_BODIES
 (
     celestial_body_id          INT AUTO_INCREMENT PRIMARY KEY,
     name                       VARCHAR(50) NOT NULL UNIQUE,
-    type                       INT         NOT NULL,
+    type_id                    INT         NOT NULL,
     description                TEXT,
     surface_pressure           DECIMAL(10, 2),
     surface_temperature        DECIMAL(10, 2),
@@ -47,9 +46,20 @@ CREATE TABLE CELESTIAL_BODIES
     rotates_around_id          INT,
     moving_speed               DECIMAL(20, 2),
     rotation_speed             DECIMAL(20, 2),
-    FOREIGN KEY (type) REFERENCES CELESTIAL_TYPES (celestial_type_id),
+    FOREIGN KEY (type_id) REFERENCES CELESTIAL_TYPES (celestial_type_id),
     FOREIGN KEY (rotates_around_id) REFERENCES CELESTIAL_BODIES (celestial_body_id)
 );
+
+CREATE TABLE CELESTIAL_PATHWAYS
+(
+    pathway_id  INT AUTO_INCREMENT PRIMARY KEY,
+    body_a_id   INT    NOT NULL,
+    body_b_id   INT    NOT NULL,
+    distance_km DOUBLE NOT NULL,
+    FOREIGN KEY (body_a_id) REFERENCES CELESTIAL_BODIES (celestial_body_id),
+    FOREIGN KEY (body_b_id) REFERENCES CELESTIAL_BODIES (celestial_body_id)
+);
+
 
 -- Create Mission table
 CREATE TABLE MISSIONS
@@ -58,8 +68,15 @@ CREATE TABLE MISSIONS
     name              VARCHAR(50) NOT NULL,
     launch_date       DATE,
     celestial_body_id INT         NOT NULL,
-    FOREIGN KEY (celestial_body_id) REFERENCES CELESTIAL_BODIES (celestial_body_id)
+    FOREIGN KEY (celestial_body_id) REFERENCES CELESTIAL_BODIES (celestial_body_id),
+
+    -- Adding index for launch_date
+    INDEX idx_launch_date (launch_date),
+
+    -- Adding index for celestial_body_id
+    INDEX idx_celestial_body_id (celestial_body_id)
 );
+
 
 -- Create Property table (Residential Facilities)
 CREATE TABLE PROPERTIES
@@ -81,14 +98,18 @@ CREATE TABLE ELEMENTS
     max_percentage DECIMAL(5, 2)  -- Maximum percentage for human habitability
 );
 
--- Modify the ATMOSPHERES table (remove element columns)
+
 CREATE TABLE ATMOSPHERES
 (
     atmosphere_id     INT AUTO_INCREMENT PRIMARY KEY,
     celestial_body_id INT UNIQUE,
     FOREIGN KEY (celestial_body_id) REFERENCES CELESTIAL_BODIES (celestial_body_id),
-    atmosphere_height INT -- Height of the atmosphere in kilometers
+    atmosphere_height INT, -- Height of the atmosphere in kilometers
+
+    -- Adding an index for celestial_body_id
+    INDEX idx_celestial_body_id (celestial_body_id)
 );
+
 
 -- Create the linking table ATMOSPHERES_ELEMENTS
 CREATE TABLE ATMOSPHERES_ELEMENTS
@@ -106,11 +127,39 @@ CREATE TABLE DEPARTURES
 (
     departure_id   INT AUTO_INCREMENT PRIMARY KEY,
     departure_date DATETIME NOT NULL,
-    passenger_id   INT      NOT NULL,
-    FOREIGN KEY (passenger_id) REFERENCES PERSON (person_id)
+
+    INDEX idx_departure_date (departure_date)
 );
 
-CREATE INDEX idx_departure_date ON DEPARTURES (departure_date);
+
+CREATE TABLE SPACESHIPS
+(
+    spaceship_id INT AUTO_INCREMENT PRIMARY KEY,
+    name         VARCHAR(50) NOT NULL,
+    model        VARCHAR(50),
+    capacity     INT,
+    manufacturer VARCHAR(50),
+    launch_date  DATE,
+    FOREIGN KEY (launch_date) REFERENCES MISSIONS (launch_date)
+);
+
+
+-- Create Tickets table with (ticket_id, departure_id, passenger_id) combination as primary key
+CREATE TABLE TICKETS
+(
+    ticket_id    INT AUTO_INCREMENT,
+    departure_id INT            NOT NULL,
+    passenger_id INT            NOT NULL,
+    price        DECIMAL(10, 2) NOT NULL,
+    room_number  VARCHAR(10)    NOT NULL,
+    spaceship_id INT            NOT NULL,
+
+    PRIMARY KEY (ticket_id, departure_id, passenger_id),
+
+    FOREIGN KEY (departure_id) REFERENCES DEPARTURES (departure_id),
+    FOREIGN KEY (passenger_id) REFERENCES USERS (user_id),
+    FOREIGN KEY (spaceship_id) REFERENCES SPACESHIPS (spaceship_id)
+);
 
 -- Populate CelestialType table with data (optional)
 INSERT INTO CELESTIAL_TYPES (name)
@@ -122,7 +171,7 @@ VALUES ('Planet'),
 
 -- Sample Data (consider adjusting based on your needs)
 -- User table
-INSERT INTO PERSON (name, last_name, username, password)
+INSERT INTO USERS (name, last_name, username, password)
 VALUES ('Neel ', 'Armstrong', 'neal123', 'password1'),
        ('Jane', 'Smith', 'janesmith', 'password2'),
        ('Alice', 'Williams', 'alicew', 'password3'),
@@ -131,7 +180,7 @@ VALUES ('Neel ', 'Armstrong', 'neal123', 'password1'),
 
 
 -- Insert other celestial bodies excluding rotates_around_id
-INSERT INTO CELESTIAL_BODIES (name, type, description, surface_pressure, surface_temperature, core_temperature,
+INSERT INTO CELESTIAL_BODIES (name, type_id, description, surface_pressure, surface_temperature, core_temperature,
                               has_been_explored, radiation_levels, has_water, surface_area, is_surface_hard, mass,
                               gravitational_field_height, moving_speed, rotation_speed)
 
@@ -243,7 +292,9 @@ VALUES
 -- Bodies that rotate around the Sun
 UPDATE CELESTIAL_BODIES
 SET rotates_around_id = 1
-WHERE name IN ('Earth', 'Mars', 'Mercury', 'Venus', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Vesta', 'Pallas', 'Hygeia', 'Bennu', 'Ryugu');
+WHERE name IN
+      ('Earth', 'Mars', 'Mercury', 'Venus', 'Jupiter', 'Saturn', 'Uranus', 'Neptune', 'Vesta', 'Pallas', 'Hygeia',
+       'Bennu', 'Ryugu');
 
 -- Jupiter's moons
 UPDATE CELESTIAL_BODIES
@@ -269,6 +320,26 @@ WHERE name = 'Charon';
 UPDATE CELESTIAL_BODIES
 SET rotates_around_id = 14
 WHERE name = 'Dysnomia';
+
+
+
+INSERT INTO CELESTIAL_PATHWAYS (body_a_id, body_b_id, distance_km)
+VALUES (1, 2, 57900000),   -- Sun to Mercury: ~57.9 million km
+       (1, 3, 108200000),  -- Sun to Venus: ~108.2 million km
+       (1, 4, 149600000),  -- Sun to Earth: ~149.6 million km
+       (1, 5, 227900000),  -- Sun to Mars: ~227.9 million km
+       (1, 6, 778500000),  -- Sun to Jupiter: ~778.5 million km
+       (1, 7, 1433500000), -- Sun to Saturn: ~1,433.5 million km
+       (1, 8, 2872500000), -- Sun to Uranus: ~2,872.5 million km
+       (1, 9, 4495100000), -- Sun to Neptune: ~4,495.1 million km
+       (1, 10, 5906400000),-- Sun to Pluto: ~5,906.4 million km
+       (4, 5, 78300000),   -- Earth to Mars: ~78.3 million km
+       (5, 6, 550600000),  -- Mars to Jupiter: ~550.6 million km
+       (6, 7, 655000000),  -- Jupiter to Saturn: ~655.0 million km
+       (7, 8, 1439000000), -- Saturn to Uranus: ~1,439.0 million km
+       (8, 9, 1623600000), -- Uranus to Neptune: ~1,623.6 million km
+       (9, 10, 2411300000) -- Neptune to Pluto: ~2,411.3 million km
+;
 
 
 -- Insert data into ATMOSPHERES table

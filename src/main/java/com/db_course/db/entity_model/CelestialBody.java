@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 public class CelestialBody {
     private int celestialBodyId;
     private String name;
-    private int type;
+    private CelestialType type;
     private String description;
 }

@@ -1,5 +1,8 @@
 package com.db_course.db.entity_model;
 
+import lombok.Getter;
+
+@Getter
 public enum CelestialType {
 
     PLANET("A celestial body that orbits a star and is massive enough to be rounded by its own gravity."),
@@ -14,7 +17,4 @@ public enum CelestialType {
         this.description = description;
     }
 
-    public String getDescription() {
-        return description;
-    }
 }

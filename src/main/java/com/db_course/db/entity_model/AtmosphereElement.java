@@ -7,8 +7,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+
 public class AtmosphereElement {
+
     private int atmosphereId;
     private int elementId;
     private double percentage;
+
 }

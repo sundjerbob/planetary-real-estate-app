@@ -7,8 +7,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+
 public class Atmosphere {
+
     private int atmosphereId;
     private int celestialBodyId;
     private int atmosphereHeight;
+
 }

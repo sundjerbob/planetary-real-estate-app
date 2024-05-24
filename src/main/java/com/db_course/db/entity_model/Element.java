@@ -1,6 +1,5 @@
 package com.db_course.db.entity_model;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 
 public class Element {
+
     private int elementId;
     private String name;
     private double minPercentage;

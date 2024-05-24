@@ -8,10 +8,11 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class ElementDto {
+public class UserDto {
 
-    private int elementId;
+    private int userId;
     private String name;
-    private double minPercentage;
-    private double maxPercentage;
+    private String lastName;
+    private String username;
+
 }

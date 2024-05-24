@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 @Builder
 
 public class Departure {
+
     private int departureId;
     private LocalDateTime departureDate;
     private int passengerId;

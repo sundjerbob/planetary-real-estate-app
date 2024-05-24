@@ -3,9 +3,12 @@ package com.db_course.db.service;
 import com.db_course.db.config.DB_Client;
 import com.db_course.db.dao.UserDao;
 import com.db_course.db.entity_model.User;
+import com.db_course.dto.UserDto;
 
 import java.sql.SQLException;
 import java.util.function.Consumer;
+
+import static com.db_course.db.obj_mapper.DtoMapper.userToDto;
 
 public class UserService {
 
@@ -28,7 +31,7 @@ public class UserService {
         return instance;
     }
 
-    public User login(String username, String password) {
+    public UserDto login(String username, String password) {
         try {
 
             User person = userDao.getUserByUsername(username);
@@ -39,7 +42,7 @@ public class UserService {
                 throw new RuntimeException("password does not match");
 
 
-            return person;
+            return userToDto(person);
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -47,12 +50,12 @@ public class UserService {
     }
 
 
-    public User createUser(String username, String name, String lastName, String password) {
+    public UserDto createUser(String username, String name, String lastName, String password) {
         try {
             if (userDao.getUserByUsername(username) != null)
                 throw new RuntimeException("username already exists, please choose another one.");
 
-            return userDao.insertUser(new User(username, name, lastName, password));
+            return userToDto(userDao.insertUser(new User(username, name, lastName, password)));
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -60,13 +63,13 @@ public class UserService {
     }
 
 
-    public void processAllUsers(Consumer<User> consumer) {
+    public void processAllUsers(Consumer<UserDto> consumer) {
 
         try {
             userDao.processAllUsers(
                     user -> {
-                        /*System.out.println(user);*/
-                        consumer.accept(user);
+                        UserDto userDto = userToDto(user);
+                        consumer.accept(userDto);
                     });
 
         } catch (SQLException e) {

@@ -6,7 +6,8 @@ import com.db_course.dto.*;
 public class DtoMapper {
 
 
-    static UserDto userToDto(User user) {
+    public static UserDto userToDto(User user) {
+
         UserDto userDto = new UserDto();
         userDto.setId(user.getUserId());
         userDto.setName(user.getName());

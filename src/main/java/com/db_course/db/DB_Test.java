@@ -1,6 +1,7 @@
 package com.db_course.db;
 
 import com.db_course.db.service.UserService;
+import com.db_course.dto.UserDto;
 
 public class DB_Test {
 
@@ -18,7 +19,8 @@ public class DB_Test {
         );
 
         // login success test
-        UserService.getInstance().login("cacaj", "123");
+        UserDto user = UserService.getInstance().login("cacaj", "123");
+        System.out.println(user);
         // login failed test
         UserService.getInstance().login("cacaj", "123");
         // list all people

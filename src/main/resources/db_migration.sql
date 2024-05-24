@@ -1,22 +1,11 @@
 DROP DATABASE IF EXISTS planetary_real_estate_db;
 
+
 CREATE DATABASE planetary_real_estate_db;
+
 
 -- Work with created db
 USE planetary_real_estate_db;
-
--- Create User table
-CREATE TABLE USERS
-(
-    user_id   INT AUTO_INCREMENT PRIMARY KEY,
-    name      VARCHAR(50)  NOT NULL,
-    last_name VARCHAR(50)  NOT NULL,
-    username  VARCHAR(20)  NOT NULL UNIQUE,
-    password  VARCHAR(255) NOT NULL,
-
-    -- Adding index for username
-    INDEX idx_username (username)
-);
 
 
 -- Create CelestialType table
@@ -25,6 +14,7 @@ CREATE TABLE CELESTIAL_TYPES
     celestial_type_id INT AUTO_INCREMENT PRIMARY KEY,
     name              VARCHAR(50) NOT NULL UNIQUE
 );
+
 
 -- Create Celestial Body table (Planets and Satellites) with additional columns
 CREATE TABLE CELESTIAL_BODIES
@@ -50,15 +40,17 @@ CREATE TABLE CELESTIAL_BODIES
     FOREIGN KEY (rotates_around_id) REFERENCES CELESTIAL_BODIES (celestial_body_id)
 );
 
+
 -- Create Celestial Pathways connecting the reachable cosmos-points (celestial bodies)
-CREATE TABLE CELESTIAL_PATHWAYS
+CREATE TABLE CELESTIAL_PATHS
 (
     pathway_id  INT AUTO_INCREMENT,
     body_a_id   INT    NOT NULL,
     body_b_id   INT    NOT NULL,
     distance_km DOUBLE NOT NULL,
 
-    PRIMARY KEY (pathway_id, body_a_id, body_a_id),
+    PRIMARY KEY (pathway_id, body_a_id, body_b_id),
+
     FOREIGN KEY (body_a_id) REFERENCES CELESTIAL_BODIES (celestial_body_id),
     FOREIGN KEY (body_b_id) REFERENCES CELESTIAL_BODIES (celestial_body_id)
 );
@@ -78,6 +70,20 @@ CREATE TABLE MISSIONS
 
     -- Adding index for celestial_body_id
     INDEX idx_celestial_body_id (celestial_body_id)
+);
+
+
+-- Create User table
+CREATE TABLE USERS
+(
+    user_id   INT AUTO_INCREMENT PRIMARY KEY,
+    name      VARCHAR(50)  NOT NULL,
+    last_name VARCHAR(50)  NOT NULL,
+    username  VARCHAR(20)  NOT NULL UNIQUE,
+    password  VARCHAR(255) NOT NULL,
+
+    -- Adding index for username
+    INDEX idx_username (username)
 );
 
 
@@ -330,8 +336,7 @@ SET rotates_around_id = 14
 WHERE name = 'Dysnomia';
 
 
-
-INSERT INTO CELESTIAL_PATHWAYS (body_a_id, body_b_id, distance_km)
+INSERT INTO CELESTIAL_PATHS (body_a_id, body_b_id, distance_km)
 VALUES (1, 2, 57900000),   -- Sun to Mercury: ~57.9 million km
        (1, 3, 108200000),  -- Sun to Venus: ~108.2 million km
        (1, 4, 149600000),  -- Sun to Earth: ~149.6 million km
@@ -349,7 +354,6 @@ VALUES (1, 2, 57900000),   -- Sun to Mercury: ~57.9 million km
        (9, 10, 2411300000) -- Neptune to Pluto: ~2,411.3 million km
 ;
 
-
 -- Insert data into ATMOSPHERES table
 INSERT INTO ATMOSPHERES (celestial_body_id, atmosphere_height)
 VALUES ((SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Earth'), 480),
@@ -362,6 +366,7 @@ VALUES ('Nitrogen', 78, 78),
        ('Oxygen', 19.5, 23.5),
        ('Carbon Dioxide', 0, 0.04),
        ('Argon', 0, 1);
+
 
 -- Insert data into ATMOSPHERES_ELEMENTS table
 INSERT INTO ATMOSPHERES_ELEMENTS (atmosphere_id, element_id, percentage)

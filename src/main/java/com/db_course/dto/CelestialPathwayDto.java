@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -13,6 +15,6 @@ public class CelestialPathwayDto {
     private int id;
     private String bodyA;
     private String bodyB;
-    private double distance_km;
+    private BigDecimal distance_km;
 
 }

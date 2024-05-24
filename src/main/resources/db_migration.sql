@@ -24,7 +24,8 @@ CREATE TABLE CELESTIAL_BODIES
     type_id                    INT         NOT NULL,
     description                TEXT,
     surface_pressure           DECIMAL(10, 2),
-    surface_temperature        DECIMAL(10, 2),
+    surface_temperature_min    DECIMAL(10, 2),
+    surface_temperature_max    DECIMAL(10, 2),
     core_temperature           DECIMAL(10, 2),
     has_been_explored          BOOLEAN,
     radiation_levels           VARCHAR(255),
@@ -134,10 +135,10 @@ CREATE TABLE ATMOSPHERES_ELEMENTS
 -- Create Departure table
 CREATE TABLE DEPARTURES
 (
-    departure_id             INT AUTO_INCREMENT PRIMARY KEY,
-    departure_date           DATETIME NOT NULL,
+    departure_id        INT AUTO_INCREMENT PRIMARY KEY,
+    departure_date      DATETIME NOT NULL,
     celestial_origin_id INT,
-    celestial__dest_id   INT,
+    celestial__dest_id  INT,
 
     FOREIGN KEY (celestial_origin_id) references CELESTIAL_BODIES (celestial_body_id),
     FOREIGN KEY (celestial__dest_id) references CELESTIAL_BODIES (celestial_body_id),

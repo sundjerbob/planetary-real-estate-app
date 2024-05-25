@@ -1,6 +1,6 @@
 package com.db_course.app.data_cache;
 
-import com.db_course.db.entity_model.Mission;
+import com.db_course.entity_model.Mission;
 
 import java.time.LocalDate;
 import java.util.Comparator;

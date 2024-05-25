@@ -1,6 +1,6 @@
 package com.db_course.test;
 
-import com.db_course.db.service.CelestialBodyService;
+import com.db_course.service.CelestialBodyService;
 import com.db_course.dto.CelestialBodyDto;
 
 import java.util.function.Consumer;
@@ -14,6 +14,8 @@ public class CelestialBodyTest {
     }
 
     public void testProcessAllCelestialBodies() {
+        System.out.println("testProcessAllCelestialBodies");
+
         CelestialBodyService service = CelestialBodyService.getInstance();
 
         service.processAllCelestialBodies(new Consumer<CelestialBodyDto>() {
@@ -25,6 +27,7 @@ public class CelestialBodyTest {
     }
 
     public void testProcessCelestialBodiesByType() {
+        System.out.println("testProcessCelestialBodiesByType");
         CelestialBodyService service = CelestialBodyService.getInstance();
         String type = "PLANET"; // Assuming CelestialType enum has PLANET
 

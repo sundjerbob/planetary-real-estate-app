@@ -13,23 +13,27 @@ import java.util.function.Consumer;
 public class CelestialBodyDao {
 
     private final Connection connection;
+    private static final String TABLE = "CELESTIAL_BODIES";
 
     public CelestialBodyDao(Connection connection) {
         this.connection = connection;
     }
 
-    public void processAllCelestialBodies(Consumer<CelestialBody> celestialBodyConsumer) throws SQLException {
-        String sql = "SELECT * FROM CELESTIAL_BODIES";
+    public void processAllCelestialBodies(Consumer<CelestialBody> celestialBodyConsumer) {
+        String sql = "SELECT * FROM " + TABLE;
         try (PreparedStatement statement = connection.prepareStatement(sql);
              ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
                 celestialBodyConsumer.accept(mapToCelestialBody(resultSet));
             }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
+
     }
 
-    public void processCelestialBodiesByType(CelestialType type, Consumer<CelestialBody> celestialBodyConsumer) throws SQLException {
-        String sql = "SELECT * FROM CELESTIAL_BODIES WHERE type_id = ?";
+    public void processCelestialBodiesByType(CelestialType type, Consumer<CelestialBody> celestialBodyConsumer) throws RuntimeException {
+        String sql = "SELECT * FROM " + TABLE + " WHERE type_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, type.ordinal() + 1); // Adjusting for 1-based index in the database
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -37,6 +41,24 @@ public class CelestialBodyDao {
                     celestialBodyConsumer.accept(mapToCelestialBody(resultSet));
                 }
             }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public CelestialBody getCelestialBodyById(int id) throws RuntimeException {
+        String sql = "SELECT * FROM " + TABLE + " WHERE celestial_body_id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, id);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return mapToCelestialBody(resultSet);
+                } else {
+                    return null; // Handle case where no record is found
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -58,14 +80,15 @@ public class CelestialBodyDao {
         BigDecimal gravitationalFieldHeight = resultSet.getBigDecimal("gravitational_field_height");
         Integer rotatesAroundId = resultSet.getInt("rotates_around_id");
 
+        if (resultSet.wasNull()) {
+            rotatesAroundId = null;
+        }
 
-  /*      if (resultSet.wasNull()) {
-            rotatesAroundId = null; // Handle null values
-        }*/
         BigDecimal movingSpeed = resultSet.getBigDecimal("moving_speed");
         BigDecimal rotationSpeed = resultSet.getBigDecimal("rotation_speed");
+        CelestialType type = CelestialType.values()[typeId - 1];
 
-        CelestialType type = CelestialType.values()[typeId - 1]; // Adjusting for 0-based index
+
         return new CelestialBody(
                 id,
                 name,
@@ -86,4 +109,6 @@ public class CelestialBodyDao {
                 movingSpeed,
                 rotationSpeed);
     }
+
+
 }

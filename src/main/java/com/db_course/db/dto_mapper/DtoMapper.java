@@ -1,7 +1,9 @@
-package com.db_course.db.obj_mapper;
+package com.db_course.db.dto_mapper;
 
 import com.db_course.db.entity_model.*;
 import com.db_course.dto.*;
+
+import java.math.BigDecimal;
 
 public class DtoMapper {
 
@@ -17,34 +19,33 @@ public class DtoMapper {
     }
 
 
-    static DepartureDto departureToDto(
+    public static DepartureDto departureToDto(
             Departure departure,
-            CelestialBody origin,
-            CelestialBody destination,
-            CelestialPathway pathway
+            String origin,
+            String destination,
+            BigDecimal pathway
     ) {
 
         return new DepartureDto(
                 departure.getId(),
                 departure.getDepartureDate(),
-                origin.getName(),
-                destination.getName(),
-                pathway.getDistanceKm()
+                origin,
+                destination,
+                pathway
         );
     }
 
 
-    static CelestialPathwayDto celestialPathwayToDto(CelestialPathway celestialPathway, CelestialBody bodyA, CelestialBody bodyB) {
+    public static CelestialPathwayDto celestialPathwayToDto(CelestialPathway celestialPathway, String bodyA, String bodyB) {
         return new CelestialPathwayDto(
                 celestialPathway.getId(),
-                bodyA.getName(),
-                bodyB.getName(),
+                bodyA,
+                bodyB,
                 celestialPathway.getDistanceKm()
-
         );
     }
 
-    static CelestialBodyDto celestialBodyToDto(CelestialBody celestialBody, CelestialBody rotatesAround) {
+    public static CelestialBodyDto celestialBodyToDto(CelestialBody celestialBody, String rotatesAround) {
 
         return new CelestialBodyDto(
                 celestialBody.getId(),
@@ -52,7 +53,8 @@ public class DtoMapper {
                 celestialTypeToDto(celestialBody.getType()),
                 celestialBody.getDescription(),
                 celestialBody.getSurfacePressure(),
-                celestialBody.getSurfaceTemperature(),
+                celestialBody.getSurfaceTemperatureMin(),
+                celestialBody.getSurfaceTemperatureMax(),
                 celestialBody.getCoreTemperature(),
                 celestialBody.isHasBeenExplored(),
                 celestialBody.getRadiationLevels(),
@@ -62,7 +64,7 @@ public class DtoMapper {
                 celestialBody.getMass(),
                 celestialBody.getGravitationalFieldHeight(),
                 // *********************
-                rotatesAround.getName(),
+                rotatesAround,
                 // *********************
                 celestialBody.getMovingSpeed(),
                 celestialBody.getRotationSpeed()

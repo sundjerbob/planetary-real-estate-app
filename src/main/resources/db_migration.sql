@@ -195,111 +195,112 @@ VALUES ('Neel ', 'Armstrong', 'neal123', 'password1'),
 
 
 -- Insert other celestial bodies excluding rotates_around_id
-INSERT INTO CELESTIAL_BODIES (name, type_id, description, surface_pressure, surface_temperature, core_temperature,
+INSERT INTO CELESTIAL_BODIES (name, type_id, description, surface_pressure, surface_temperature_min,
+                              surface_temperature_max, core_temperature,
                               has_been_explored, radiation_levels, has_water, surface_area, is_surface_hard, mass,
                               gravitational_field_height, moving_speed, rotation_speed)
 
 VALUES
 -- 1
 ('Sun', (SELECT celestial_type_id FROM CELESTIAL_TYPES WHERE name = 'Star'),
- 'The star at the center of our solar system', NULL, 5778, 15000000, true, 'High', false, 608320000000,
+ 'The star at the center of our solar system', NULL, NULL, 5778, 15000000, true, 'High', false, 608320000000,
  false,
  1988500, NULL, NULL, NULL),
 -- 2
 ('Mars', (SELECT celestial_type_id FROM CELESTIAL_TYPES WHERE name = 'Planet'),
- 'The red planet, known for its canyons and potential for life', 0.636, -63, 1700, true, 'Low', true,
+ 'The red planet, known for its canyons and potential for life', 0.636, -63, -63, 1700, true, 'Low', true,
  144798500,
  true, 0.64171, 210, 24.077, 0.004),
 -- 3
 ('Earth', (SELECT celestial_type_id FROM CELESTIAL_TYPES WHERE name = 'Planet'),
- 'Our home planet, teeming with life', 101.325, 15, 6000, true, 'Low', true, 510072000, true, 5.97237, 100, -- 3
+ 'Our home planet, teeming with life', 101.325, 15, 15, 6000, true, 'Low', true, 510072000, true, 5.97237, 100, -- 3
  29.78, 0.4651),
 -- 4
 ('Jupiter', (SELECT celestial_type_id FROM CELESTIAL_TYPES WHERE name = 'Planet'),
- 'The largest planet in our solar system, a gas giant with a Great Red Spot', 1000, -108, 30000, true,
+ 'The largest planet in our solar system, a gas giant with a Great Red Spot', 1000, -108, -108, 30000, true,
  'High', false, 61420000000, false, 1898.19, 1000, 13.07, 0.001),
 -- 5
 ('Saturn', (SELECT celestial_type_id FROM CELESTIAL_TYPES WHERE name = 'Planet'),
- 'Known for its stunning ring system, another gas giant', 140, -139, 11700, true, 'High', false, 42700000000,
+ 'Known for its stunning ring system, another gas giant', 140, -139, -139, 11700, true, 'High', false, 42700000000,
  false, 568.34, 1000, 9.68, 0.0009),
 -- 6
 ('Venus', (SELECT celestial_type_id FROM CELESTIAL_TYPES WHERE name = 'Planet'),
  'Similar in size to Earth but with a thick, toxic atmosphere and surface temperatures hot enough to melt lead',
- 9200, 464, 6000, false, 'High', false, 460200000, true, 4.8675, 100, 35.02, -0.002),
+ 9200, 464, 464, 6000, false, 'High', false, 460200000, true, 4.8675, 100, 35.02, -0.002),
 -- 7
 ('Mercury', (SELECT celestial_type_id FROM CELESTIAL_TYPES WHERE name = 'Planet'),
- 'The closest planet to the Sun, known for its extreme temperature variations', 0, 167, 1800, false, 'Medium',
+ 'The closest planet to the Sun, known for its extreme temperature variations', 0, 167, 167, 1800, false, 'Medium',
  false, 74800000, true, 0.33011, 100, 47.87, 0.001),
 -- 8
 ('Neptune', (SELECT celestial_type_id FROM CELESTIAL_TYPES WHERE name = 'Planet'),
- 'A blue gas giant, known for its strong winds and large storms', 1000, -201, 7000, false, 'High', false,
+ 'A blue gas giant, known for its strong winds and large storms', 1000, -201, -201, 7000, false, 'High', false,
  76400000000, false, 102.413, 200, 5.43, 0.0005),
 -- 9
 ('Uranus', (SELECT celestial_type_id FROM CELESTIAL_TYPES WHERE name = 'Planet'),
- 'An ice giant with a unique tilted rotation axis', 800, -224, 5000, false, 'High', false, 80830000000, false,
+ 'An ice giant with a unique tilted rotation axis', 800, -224, -224, 5000, false, 'High', false, 80830000000, false,
  86.8103, 200, 6.81, -0.0007),
 -- 10
 ('Pluto', (SELECT celestial_type_id FROM CELESTIAL_TYPES WHERE name = 'Dwarf Planet'),
- 'Once considered the ninth planet, now classified as a dwarf planet in the Kuiper belt', 0, -229, 2400, true,
+ 'Once considered the ninth planet, now classified as a dwarf planet in the Kuiper belt', 0, -229, -229, 2400, true,
  'Low', false, 16700000, true, 0.01303, 200, 4.74, -0.0002),
 -- 11
 ('Ceres', (SELECT celestial_type_id FROM CELESTIAL_TYPES WHERE name = 'Dwarf Planet'),
- 'The largest object in the asteroid belt between Mars and Jupiter', 0, -105, 200, true, 'Low', false, 2791000,
+ 'The largest object in the asteroid belt between Mars and Jupiter', 0, -105, -105, 200, true, 'Low', false, 2791000,
  true, 0.000938, 100, 17.9, 0.003),
 -- 12
 ('Haumea', (SELECT celestial_type_id FROM CELESTIAL_TYPES WHERE name = 'Dwarf Planet'),
- 'A rapidly spinning elongated dwarf planet in the Kuiper belt', 0, -241, 1700, false, 'Medium', false, 1170000,
+ 'A rapidly spinning elongated dwarf planet in the Kuiper belt', 0, -241, -241, 1700, false, 'Medium', false, 1170000,
  true, 0.004006, 200, 4.53, -0.0033),
 -- 13
 ('Makemake', (SELECT celestial_type_id FROM CELESTIAL_TYPES WHERE name = 'Dwarf Planet'),
- 'Another dwarf planet in the Kuiper belt, known for its bright surface', 0, -243, 1600, false, 'Low', false,
+ 'Another dwarf planet in the Kuiper belt, known for its bright surface', 0, -243, -243, 1600, false, 'Low', false,
  1240000, true, 0.0032, 200, 4.41, -0.0014),
 -- 14
 ('Eris', (SELECT celestial_type_id FROM CELESTIAL_TYPES WHERE name = 'Dwarf Planet'),
- 'A distant dwarf planet, one of the largest known in our solar system', 0, -231, 200, false, 'Low', false,
+ 'A distant dwarf planet, one of the largest known in our solar system', 0, -231, -231, 200, false, 'Low', false,
  2700000, true, 0.0167, 100, 3.5, 0.009),
 -- 15
 ('Ganymede', (SELECT celestial_type_id FROM CELESTIAL_TYPES WHERE name = 'Satellite'),
- 'The largest moon of Jupiter and the largest in the solar system', 0, -163, 1200, true, 'Low', true, 87000000,
+ 'The largest moon of Jupiter and the largest in the solar system', 0, -163, -163, 1200, true, 'Low', true, 87000000,
  true, 0.0148, 200, 10.88, 0.001),
 -- 16
 ('Callisto', (SELECT celestial_type_id FROM CELESTIAL_TYPES WHERE name = 'Satellite'),
- 'A heavily cratered moon of Jupiter', 0, -139, 1200, true, 'Low', false, 73400000, true, 0.018, 200, 8.2,
+ 'A heavily cratered moon of Jupiter', 0, -139, -139, 1200, true, 'Low', false, 73400000, true, 0.018, 200, 8.2,
  0.001),
 -- 17
 ('Io', (SELECT celestial_type_id FROM CELESTIAL_TYPES WHERE name = 'Satellite'),
- 'A volcanically active moon of Jupiter', 0, -130, 1200, true, 'Low', false, 42000000, true, 0.015, 200, 17.3,
+ 'A volcanically active moon of Jupiter', 0, -130, -130, 1200, true, 'Low', false, 42000000, true, 0.015, 200, 17.3,
  0.001),
 -- 18
 ('Enceladus', (SELECT celestial_type_id FROM CELESTIAL_TYPES WHERE name = 'Satellite'),
- 'A moon of Saturn with geysers of water ice', 0, -201, 1000, true, 'Low', true, 8000000, true, 0.0002, 100,
+ 'A moon of Saturn with geysers of water ice', 0, -201, -201, 1000, true, 'Low', true, 8000000, true, 0.0002, 100,
  12.63, 0.001),
 -- 19
 ('Triton', (SELECT celestial_type_id FROM CELESTIAL_TYPES WHERE name = 'Satellite'),
- 'The largest moon of Neptune, known for its retrograde orbit', 0, -235, 1000, true, 'Low', false, 23000000,
+ 'The largest moon of Neptune, known for its retrograde orbit', 0, -235, -235, 1000, true, 'Low', false, 23000000,
  true, 0.021, 200, 4.39, 0.002),
 -- 20
 ('Charon', (SELECT celestial_type_id FROM CELESTIAL_TYPES WHERE name = 'Satellite'),
- 'The largest moon of Pluto, half the size of its parent dwarf planet', 0, -220, 1000, true, 'Low', false,
+ 'The largest moon of Pluto, half the size of its parent dwarf planet', 0, -220, -220, 1000, true, 'Low', false,
  4600000, true, 0.001, 200, 4.64, 0.002),
 -- 21
 ('Vesta', (SELECT celestial_type_id FROM CELESTIAL_TYPES WHERE name = 'Asteroid'),
- 'One of the largest asteroids in the asteroid belt', 0, -20, 1000, true, 'Low', false, 520000, true, 0.0003,
+ 'One of the largest asteroids in the asteroid belt', 0, -20, -20, 1000, true, 'Low', false, 520000, true, 0.0003,
  100, 19.34, 0.002),
 ('Pallas', (SELECT celestial_type_id FROM CELESTIAL_TYPES WHERE name = 'Asteroid'),
- 'A large asteroid with an irregular shape', 0, -20, 1000, true, 'Low', false, 610000, true, 0.0003, 100, 17.65,
+ 'A large asteroid with an irregular shape', 0, -20, -20, 1000, true, 'Low', false, 610000, true, 0.0003, 100, 17.65,
  0.002),
 -- 22
 ('Hygeia', (SELECT celestial_type_id FROM CELESTIAL_TYPES WHERE name = 'Asteroid'),
- 'The fourth largest asteroid in the asteroid belt', 0, -20, 1000, true, 'Low', false, 350000, true, 0.0003, 100,
+ 'The fourth largest asteroid in the asteroid belt', 0, -20, -20, 1000, true, 'Low', false, 350000, true, 0.0003, 100,
  17.91, 0.002),
 -- 23
 ('Bennu', (SELECT celestial_type_id FROM CELESTIAL_TYPES WHERE name = 'Asteroid'),
- 'A near-Earth asteroid, the target of the OSIRIS-REx mission', 0, -20, 1000, true, 'Low', false, 78.8, true,
+ 'A near-Earth asteroid, the target of the OSIRIS-REx mission', 0, -20, -20, 1000, true, 'Low', false, 78.8, true,
  0.0000000075, 100, 28.07, 0.004),
 -- 24
 ('Ryugu', (SELECT celestial_type_id FROM CELESTIAL_TYPES WHERE name = 'Asteroid'),
- 'A near-Earth asteroid, explored by the Hayabusa2 mission', 0, -20, 1000, true, 'Low', false, 33.5, true,
+ 'A near-Earth asteroid, explored by the Hayabusa2 mission', 0, -20, -20, 1000, true, 'Low', false, 33.5, true,
  0.00000000075, 100, 28.29, 0.004);
 
 -- Update statements to set the rotates_around_id values with constant int values
@@ -335,6 +336,7 @@ WHERE name = 'Charon';
 UPDATE CELESTIAL_BODIES
 SET rotates_around_id = 14
 WHERE name = 'Dysnomia';
+
 
 
 INSERT INTO CELESTIAL_PATHS (body_a_id, body_b_id, distance_km)

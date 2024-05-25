@@ -23,7 +23,7 @@ public class CelestialBodyDto {
     private boolean hasBeenExplored;
     private String radiationLevels;
     private boolean hasWater;
-    private double surfaceArea;
+    private BigDecimal surfaceArea;
     private boolean isSurfaceHard;
     private BigDecimal mass;
     private BigDecimal gravitationalFieldHeight;

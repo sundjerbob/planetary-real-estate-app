@@ -1,5 +1,6 @@
 package com.db_course.test;
 
+import com.db_course.dto.CelestialPathDto;
 import com.db_course.entity_model.CelestialPath;
 import com.db_course.service.CelestialPathService;
 
@@ -30,9 +31,9 @@ public class CelestialPathTest {
 
     private static void testProcessPathsByBodyId(CelestialPathService celestialPathService, int bodyId) {
         System.out.println("Testing processPathsByBodyId method for body ID: " + bodyId + "...");
-        celestialPathService.processPathsByBodyId(bodyId, new Consumer<CelestialPath>() {
+        celestialPathService.processPathsByBodyId(bodyId, new Consumer<CelestialPathDto>() {
             @Override
-            public void accept(CelestialPath celestialPath) {
+            public void accept(CelestialPathDto celestialPath) {
                 System.out.println(celestialPath.toString());
             }
         });

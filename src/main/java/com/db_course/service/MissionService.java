@@ -1,31 +1,29 @@
 package com.db_course.service;
 
-import com.db_course.dao.PropertyDao;
+import com.db_course.dao.MissionDao;
 import com.db_course.db_config.DB_Client;
 
-public class PropertyService {
-
-    private static PropertyService instance;
+public class MissionService {
+    private static MissionService instance;
     private static final Object mutex = new Object();
-    private final PropertyDao propertyDao;
+    private final MissionDao celestialPathDao;
 
 
-    private PropertyService() {
-        propertyDao = new PropertyDao(
+    private MissionService() {
+        celestialPathDao = new MissionDao(
                 DB_Client.getInstance().getConnection()
         );
-
     }
 
-    public static PropertyService getInstance() {
+
+    public static MissionService getInstance() {
         if (instance == null) {
             synchronized (mutex) {
                 if (instance == null) {
-                    instance = new PropertyService();
+                    instance = new MissionService();
                 }
             }
         }
         return instance;
     }
-
 }

@@ -7,12 +7,7 @@ import java.math.BigDecimal;
 
 public class DepartureMapper {
 
-    public static DepartureDto departureToDto(
-            Departure departure,
-            String origin,
-            String destination,
-            BigDecimal pathway
-    ) {
+    public static DepartureDto departureToDto(Departure departure, String origin, String destination, BigDecimal pathway) {
 
         return new DepartureDto(
                 departure.getId(),

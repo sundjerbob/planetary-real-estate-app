@@ -13,8 +13,8 @@ import java.math.BigDecimal;
 public class CelestialPathDto {
 
     private int id;
-    private String bodyA;
-    private String bodyB;
+    private int bodyA_Id;
+    private int bodyB_Id;
     private BigDecimal distance_km;
 
 }

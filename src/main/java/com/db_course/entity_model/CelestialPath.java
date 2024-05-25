@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 public class CelestialPath {
 
     private int id;
-    private int bodyAId;
-    private int bodyBId;
+    private int bodyA_Id;
+    private int bodyB_Id;
     private BigDecimal distanceKm;
 }

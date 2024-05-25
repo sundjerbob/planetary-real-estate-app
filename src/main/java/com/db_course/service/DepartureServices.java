@@ -1,31 +1,29 @@
 package com.db_course.service;
 
-import com.db_course.dao.PropertyDao;
+import com.db_course.dao.CelestialPathDao;
 import com.db_course.db_config.DB_Client;
 
-public class PropertyService {
-
-    private static PropertyService instance;
+public class DepartureServices {
+    private static CelestialPathService instance;
     private static final Object mutex = new Object();
-    private final PropertyDao propertyDao;
+    private final CelestialPathDao celestialPathDao;
 
 
-    private PropertyService() {
-        propertyDao = new PropertyDao(
+    private CelestialPathService() {
+        celestialPathDao = new CelestialPathDao(
                 DB_Client.getInstance().getConnection()
         );
-
     }
 
-    public static PropertyService getInstance() {
+
+    public static CelestialPathService getInstance() {
         if (instance == null) {
             synchronized (mutex) {
                 if (instance == null) {
-                    instance = new PropertyService();
+                    instance = new CelestialPathService();
                 }
             }
         }
         return instance;
     }
-
 }

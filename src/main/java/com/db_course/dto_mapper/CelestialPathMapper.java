@@ -6,12 +6,14 @@ import com.db_course.entity_model.CelestialPath;
 public class CelestialPathMapper {
 
 
-    public static CelestialPathDto celestialPathwayToDto(CelestialPath celestialPath, String bodyA, String bodyB) {
+    public static CelestialPathDto celestialPathToDto(CelestialPath celestialPath) {
+
         return new CelestialPathDto(
                 celestialPath.getId(),
-                bodyA,
-                bodyB,
+                celestialPath.getBodyA_Id(),
+                celestialPath.getBodyB_Id(),
                 celestialPath.getDistanceKm()
         );
     }
+
 }

@@ -1,11 +1,24 @@
+-- Delete db
 DROP DATABASE IF EXISTS planetary_real_estate_db;
 
-
+-- Create db
 CREATE DATABASE planetary_real_estate_db;
 
-
--- Work with created db
 USE planetary_real_estate_db;
+
+
+-- Create User table
+CREATE TABLE USERS
+(
+    user_id   INT AUTO_INCREMENT PRIMARY KEY,
+    name      VARCHAR(50)  NOT NULL,
+    last_name VARCHAR(50)  NOT NULL,
+    username  VARCHAR(20)  NOT NULL UNIQUE,
+    password  VARCHAR(255) NOT NULL,
+
+    -- Adding index for username
+    INDEX idx_username (username)
+);
 
 
 -- Create CelestialType table
@@ -16,7 +29,8 @@ CREATE TABLE CELESTIAL_TYPES
 );
 
 
--- Create Celestial Body table (Planets and Satellites) with additional columns
+
+-- Create Celestial Body
 CREATE TABLE CELESTIAL_BODIES
 (
     celestial_body_id          INT AUTO_INCREMENT PRIMARY KEY,
@@ -49,6 +63,7 @@ CREATE TABLE CELESTIAL_PATHS
     body_a_id   INT    NOT NULL,
     body_b_id   INT    NOT NULL,
     distance_km DOUBLE NOT NULL,
+    description VARCHAR(1024),
 
     PRIMARY KEY (pathway_id, body_a_id, body_b_id),
 
@@ -56,48 +71,6 @@ CREATE TABLE CELESTIAL_PATHS
     FOREIGN KEY (body_b_id) REFERENCES CELESTIAL_BODIES (celestial_body_id)
 );
 
-
--- Create Mission table
-CREATE TABLE MISSIONS
-(
-    mission_id        INT AUTO_INCREMENT PRIMARY KEY,
-    name              VARCHAR(50) NOT NULL,
-    launch_date       DATE,
-    celestial_body_id INT         NOT NULL,
-    FOREIGN KEY (celestial_body_id) REFERENCES CELESTIAL_BODIES (celestial_body_id),
-
-    -- Adding index for launch_date
-    INDEX idx_launch_date (launch_date),
-
-    -- Adding index for celestial_body_id
-    INDEX idx_celestial_body_id (celestial_body_id)
-);
-
-
--- Create User table
-CREATE TABLE USERS
-(
-    user_id   INT AUTO_INCREMENT PRIMARY KEY,
-    name      VARCHAR(50)  NOT NULL,
-    last_name VARCHAR(50)  NOT NULL,
-    username  VARCHAR(20)  NOT NULL UNIQUE,
-    password  VARCHAR(255) NOT NULL,
-
-    -- Adding index for username
-    INDEX idx_username (username)
-);
-
-
--- Create Property table (Residential Facilities)
-CREATE TABLE PROPERTIES
-(
-    property_id       INT AUTO_INCREMENT PRIMARY KEY,
-    name              VARCHAR(50)    NOT NULL,
-    description       TEXT,
-    price             DECIMAL(10, 2) NOT NULL,
-    celestial_body_id INT            NOT NULL,
-    FOREIGN KEY (celestial_body_id) REFERENCES CELESTIAL_BODIES (celestial_body_id)
-);
 
 -- Create ELEMENTS table
 CREATE TABLE ELEMENTS
@@ -132,49 +105,96 @@ CREATE TABLE ATMOSPHERES_ELEMENTS
     FOREIGN KEY (element_id) REFERENCES ELEMENTS (element_id)
 );
 
+
+CREATE TABLE SPACESHIPS
+(
+    spaceship_id       INT AUTO_INCREMENT PRIMARY KEY,
+    name               VARCHAR(50) NOT NULL,
+    model              VARCHAR(50),
+    passenger_capacity INT,
+    fuel_capacity      DECIMAL(10, 2), -- Capacity of the fuel tank
+    max_travel_range   DECIMAL(10, 2), -- Maximum travel range in light-years
+    traveling_speed    DECIMAL(10, 2), -- Traveling speed in light-years per hour
+    manufacturer       VARCHAR(50),
+    launch_date        DATE,
+    FOREIGN KEY (launch_date) REFERENCES MISSIONS (launch_date)
+);
+
+
+CREATE TABLE SPACESHIP_ROOMS
+(
+    room_id                  INT AUTO_INCREMENT PRIMARY KEY,
+    spaceship_id             INT NOT NULL,
+    perks                    VARCHAR(255),
+    num_hibernation_capsules INT,
+    max_capacity             INT,
+    FOREIGN KEY (spaceship_id) REFERENCES SPACESHIPS (spaceship_id)
+);
+
+
+-- Create Mission table
+CREATE TABLE MISSIONS
+(
+    mission_id        INT AUTO_INCREMENT PRIMARY KEY,
+    name              VARCHAR(50) NOT NULL,
+    launch_date       DATE,
+    celestial_body_id INT         NOT NULL,
+    FOREIGN KEY (celestial_body_id) REFERENCES CELESTIAL_BODIES (celestial_body_id),
+
+    -- Adding index for launch_date
+    INDEX idx_launch_date (launch_date),
+
+    -- Adding index for celestial_body_id
+    INDEX idx_celestial_body_id (celestial_body_id)
+);
+
+
 -- Create Departure table
 CREATE TABLE DEPARTURES
 (
     departure_id        INT AUTO_INCREMENT PRIMARY KEY,
     departure_date      DATETIME NOT NULL,
     celestial_origin_id INT,
-    celestial__dest_id  INT,
+    celestial_dest_id   INT,
 
     FOREIGN KEY (celestial_origin_id) references CELESTIAL_BODIES (celestial_body_id),
-    FOREIGN KEY (celestial__dest_id) references CELESTIAL_BODIES (celestial_body_id),
+    FOREIGN KEY (celestial_dest_id) references CELESTIAL_BODIES (celestial_body_id),
 
     INDEX idx_departure_date (departure_date)
 );
 
-
-CREATE TABLE SPACESHIPS
-(
-    spaceship_id INT AUTO_INCREMENT PRIMARY KEY,
-    name         VARCHAR(50) NOT NULL,
-    model        VARCHAR(50),
-    capacity     INT,
-    manufacturer VARCHAR(50),
-    launch_date  DATE,
-    FOREIGN KEY (launch_date) REFERENCES MISSIONS (launch_date)
-);
-
-
--- Create Tickets table with (ticket_id, departure_id, passenger_id) combination as primary key
 CREATE TABLE TICKETS
 (
-    ticket_id    INT AUTO_INCREMENT,
+    ticket_id    INT AUTO_INCREMENT PRIMARY KEY,
     departure_id INT            NOT NULL,
     passenger_id INT            NOT NULL,
     price        DECIMAL(10, 2) NOT NULL,
-    room_number  VARCHAR(10)    NOT NULL,
+    room_id      INT            NOT NULL,
     spaceship_id INT            NOT NULL,
 
     PRIMARY KEY (ticket_id, departure_id, passenger_id),
 
     FOREIGN KEY (departure_id) REFERENCES DEPARTURES (departure_id),
     FOREIGN KEY (passenger_id) REFERENCES USERS (user_id),
-    FOREIGN KEY (spaceship_id) REFERENCES SPACESHIPS (spaceship_id)
+    FOREIGN KEY (room_id) REFERENCES SPACESHIP_ROOMS (room_id),
+    FOREIGN KEY (spaceship_id) REFERENCES SPACESHIPS (spaceship_id),
+
+    INDEX idx_departure_id (departure_id),
+    INDEX idx_spaceship_id (spaceship_id)
 );
+
+
+-- Create Property table (Residential Facilities)
+CREATE TABLE PROPERTIES
+(
+    property_id       INT AUTO_INCREMENT PRIMARY KEY,
+    name              VARCHAR(50)    NOT NULL,
+    description       TEXT,
+    price             DECIMAL(10, 2) NOT NULL,
+    celestial_body_id INT            NOT NULL,
+    FOREIGN KEY (celestial_body_id) REFERENCES CELESTIAL_BODIES (celestial_body_id)
+);
+
 
 -- Populate CelestialType table with data (optional)
 INSERT INTO CELESTIAL_TYPES (name)
@@ -184,7 +204,7 @@ VALUES ('Planet'),
        ('Dwarf Planet'),
        ('Asteroid');
 
--- Sample Data (consider adjusting based on your needs)
+
 -- User table
 INSERT INTO USERS (name, last_name, username, password)
 VALUES ('Neel ', 'Armstrong', 'neal123', 'password1'),
@@ -199,7 +219,6 @@ INSERT INTO CELESTIAL_BODIES (name, type_id, description, surface_pressure, surf
                               surface_temperature_max, core_temperature,
                               has_been_explored, radiation_levels, has_water, surface_area, is_surface_hard, mass,
                               gravitational_field_height, moving_speed, rotation_speed)
-
 VALUES
 -- 1
 ('Sun', (SELECT celestial_type_id FROM CELESTIAL_TYPES WHERE name = 'Star'),

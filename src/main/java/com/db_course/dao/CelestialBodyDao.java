@@ -46,16 +46,14 @@ public class CelestialBodyDao {
         }
     }
 
+
     public CelestialBody getCelestialBodyById(int id) throws RuntimeException {
         String sql = "SELECT * FROM " + TABLE + " WHERE celestial_body_id = ?";
+
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);
             try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
-                    return mapToCelestialBody(resultSet);
-                } else {
-                    return null; // Handle case where no record is found
-                }
+                return resultSet.next() ? mapToCelestialBody(resultSet) : null; // Handle case where no record is found
             }
         } catch (Exception e) {
             throw new RuntimeException("CelestialBodyDao.getCelestialBodyById() says: " + e.getMessage());

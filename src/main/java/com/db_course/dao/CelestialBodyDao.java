@@ -27,7 +27,7 @@ public class CelestialBodyDao {
                 celestialBodyConsumer.accept(mapToCelestialBody(resultSet));
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("CelestialBodyDao.processAllCelestialBodies() says: " + e.getMessage());
         }
 
     }
@@ -42,7 +42,7 @@ public class CelestialBodyDao {
                 }
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("CelestialBodyDao.processCelestialBodiesByType() says: " + e.getMessage());
         }
     }
 
@@ -58,56 +58,62 @@ public class CelestialBodyDao {
                 }
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("CelestialBodyDao.getCelestialBodyById() says: " + e.getMessage());
         }
     }
 
-    private CelestialBody mapToCelestialBody(ResultSet resultSet) throws SQLException {
-        int id = resultSet.getInt("celestial_body_id");
-        String name = resultSet.getString("name");
-        int typeId = resultSet.getInt("type_id");
-        String description = resultSet.getString("description");
-        BigDecimal surfacePressure = resultSet.getBigDecimal("surface_pressure");
-        BigDecimal surfaceTemperatureMin = resultSet.getBigDecimal("surface_temperature_min");
-        BigDecimal surfaceTemperatureMax = resultSet.getBigDecimal("surface_temperature_max");
-        BigDecimal coreTemperature = resultSet.getBigDecimal("core_temperature");
-        boolean hasBeenExplored = resultSet.getBoolean("has_been_explored");
-        String radiationLevels = resultSet.getString("radiation_levels");
-        boolean hasWater = resultSet.getBoolean("has_water");
-        BigDecimal surfaceArea = resultSet.getBigDecimal("surface_area");
-        boolean isSurfaceHard = resultSet.getBoolean("is_surface_hard");
-        BigDecimal mass = resultSet.getBigDecimal("mass");
-        BigDecimal gravitationalFieldHeight = resultSet.getBigDecimal("gravitational_field_height");
-        Integer rotatesAroundId = resultSet.getInt("rotates_around_id");
+    private CelestialBody mapToCelestialBody(ResultSet resultSet) {
 
-        if (resultSet.wasNull()) {
-            rotatesAroundId = null;
+        try {
+            int id = resultSet.getInt("celestial_body_id");
+            String name = resultSet.getString("name");
+            int typeId = resultSet.getInt("type_id");
+            String description = resultSet.getString("description");
+            BigDecimal surfacePressure = resultSet.getBigDecimal("surface_pressure");
+            BigDecimal surfaceTemperatureMin = resultSet.getBigDecimal("surface_temperature_min");
+            BigDecimal surfaceTemperatureMax = resultSet.getBigDecimal("surface_temperature_max");
+            BigDecimal coreTemperature = resultSet.getBigDecimal("core_temperature");
+            boolean hasBeenExplored = resultSet.getBoolean("has_been_explored");
+            String radiationLevels = resultSet.getString("radiation_levels");
+            boolean hasWater = resultSet.getBoolean("has_water");
+            BigDecimal surfaceArea = resultSet.getBigDecimal("surface_area");
+            boolean isSurfaceHard = resultSet.getBoolean("is_surface_hard");
+            BigDecimal mass = resultSet.getBigDecimal("mass");
+            BigDecimal gravitationalFieldHeight = resultSet.getBigDecimal("gravitational_field_height");
+            Integer rotatesAroundId = resultSet.getInt("rotates_around_id");
+
+            if (resultSet.wasNull()) {
+                rotatesAroundId = null;
+            }
+
+            BigDecimal movingSpeed = resultSet.getBigDecimal("moving_speed");
+            BigDecimal rotationSpeed = resultSet.getBigDecimal("rotation_speed");
+            CelestialType type = CelestialType.values()[typeId - 1];
+
+
+            return new CelestialBody(
+                    id,
+                    name,
+                    type,
+                    description,
+                    surfacePressure,
+                    surfaceTemperatureMin,
+                    surfaceTemperatureMax,
+                    coreTemperature,
+                    hasBeenExplored,
+                    radiationLevels,
+                    hasWater,
+                    surfaceArea,
+                    isSurfaceHard,
+                    mass,
+                    gravitationalFieldHeight,
+                    rotatesAroundId,
+                    movingSpeed,
+                    rotationSpeed);
+        } catch (SQLException e) {
+            throw new RuntimeException("CelestialBodyDao.mapToCelestialBody() says: " + e.getMessage());
+
         }
-
-        BigDecimal movingSpeed = resultSet.getBigDecimal("moving_speed");
-        BigDecimal rotationSpeed = resultSet.getBigDecimal("rotation_speed");
-        CelestialType type = CelestialType.values()[typeId - 1];
-
-
-        return new CelestialBody(
-                id,
-                name,
-                type,
-                description,
-                surfacePressure,
-                surfaceTemperatureMin,
-                surfaceTemperatureMax,
-                coreTemperature,
-                hasBeenExplored,
-                radiationLevels,
-                hasWater,
-                surfaceArea,
-                isSurfaceHard,
-                mass,
-                gravitationalFieldHeight,
-                rotatesAroundId,
-                movingSpeed,
-                rotationSpeed);
     }
 
 

@@ -40,7 +40,7 @@ public class DepartureDao {
             }
 
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("DepartureDao.processAllDepartures() says: " + e.getMessage());
         }
     }
 
@@ -55,7 +55,7 @@ public class DepartureDao {
             int affectedRows = statement.executeUpdate();
 
             if (affectedRows == 0) {
-                throw new SQLException("Creating departure failed, no rows affected.");
+                throw new RuntimeException("Creating departure failed, no rows affected.");
             }
 
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
@@ -66,7 +66,7 @@ public class DepartureDao {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("Creating departure failed: " + e.getMessage());
+            throw new RuntimeException("DepartureDao.insertDeparture() says: " + e.getMessage());
         }
 
         return departure;

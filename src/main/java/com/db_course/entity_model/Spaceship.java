@@ -21,4 +21,5 @@ public class Spaceship {
     private BigDecimal maxTravelRange;
     private BigDecimal travelingSpeed;
     private String manufacturer;
+
 }

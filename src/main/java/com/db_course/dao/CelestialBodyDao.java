@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.function.Consumer;
 
+
 public class CelestialBodyDao {
 
     private final Connection connection;

@@ -27,7 +27,8 @@ public class CelestialPathDao {
                 pathConsumer.accept(mapToCelestialPath(resultSet));
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("CelestialPathDao.processAllPaths() says: " + e.getMessage());
+
         }
     }
 
@@ -43,7 +44,7 @@ public class CelestialPathDao {
                 }
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("CelestialPathDao.processPathsByBodyId() says: " + e.getMessage());
         }
     }
 
@@ -58,7 +59,7 @@ public class CelestialPathDao {
                 }
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("CelestialPathDao.getPathByBodyIds() says: " + e.getMessage());
         }
         return null;
     }
@@ -71,7 +72,7 @@ public class CelestialPathDao {
             statement.setBigDecimal(3, celestialPath.getDistanceKm());
             return statement.executeUpdate() > 0;
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("CelestialPathDao.addCelestialPath() says: " + e.getMessage());
         }
     }
 
@@ -84,7 +85,7 @@ public class CelestialPathDao {
             statement.setInt(4, celestialPath.getId());
             return statement.executeUpdate() > 0;
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("CelestialPathDao.updateCelestialPath() says: " + e.getMessage());
         }
     }
 
@@ -94,15 +95,22 @@ public class CelestialPathDao {
             statement.setInt(1, pathId);
             return statement.executeUpdate() > 0;
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("CelestialPathDao.deleteCelestialPath() says: " + e.getMessage());
         }
     }
 
     private CelestialPath mapToCelestialPath(ResultSet resultSet) throws SQLException {
-        int pathwayId = resultSet.getInt("pathway_id");
-        int bodyAId = resultSet.getInt("body_a_id");
-        int bodyBId = resultSet.getInt("body_b_id");
-        BigDecimal distanceKm = resultSet.getBigDecimal("distance_km");
-        return new CelestialPath(pathwayId, bodyAId, bodyBId, distanceKm);
+        try {
+            int pathwayId = resultSet.getInt("pathway_id");
+            int bodyAId = resultSet.getInt("body_a_id");
+            int bodyBId = resultSet.getInt("body_b_id");
+            BigDecimal distanceKm = resultSet.getBigDecimal("distance_km");
+            return new CelestialPath(pathwayId, bodyAId, bodyBId, distanceKm);
+        } catch (SQLException e) {
+
+            throw new RuntimeException("CelestialPathDao.mapToCelestialPath() says: " + e.getMessage());
+        }
     }
+
+
 }

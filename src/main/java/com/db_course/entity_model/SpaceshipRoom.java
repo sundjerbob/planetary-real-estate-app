@@ -10,7 +10,8 @@ import lombok.NoArgsConstructor;
 public class SpaceshipRoom {
     private int roomId;
     private int spaceshipId;
+    private int roomNumber;
     private String perks;
     private int numHibernationCapsules;
-    private int numBeds;
+
 }

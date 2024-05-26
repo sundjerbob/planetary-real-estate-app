@@ -14,12 +14,11 @@ public class DepartureDao {
         this.connection = connection;
     }
 
-    public void processAllDepartures(Consumer<Departure> departureConsumer) throws SQLException {
+
+    public void processAllDepartures(Consumer<Departure> departureConsumer) {
 
         try (
-                PreparedStatement statement = connection.prepareStatement(
-                        "SELECT departure_id, departure_date, passenger_id FROM " + table
-                );
+                PreparedStatement statement = connection.prepareStatement("SELECT departure_id, departure_date, passenger_id FROM " + table);
                 ResultSet resultSet = statement.executeQuery()
         ) {
 
@@ -39,10 +38,14 @@ public class DepartureDao {
 
                 departureConsumer.accept(departure);
             }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    public Departure insertDeparture(Departure departure) throws SQLException {
+
+    public Departure insertDeparture(Departure departure) {
         String sql = "INSERT INTO " + table + " (departure_date, passenger_id) VALUES (?, ?)";
 
         try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -59,11 +62,14 @@ public class DepartureDao {
                 if (generatedKeys.next()) {
                     departure.setId(generatedKeys.getInt(1));
                 } else {
-                    throw new SQLException("Creating departure failed, no ID obtained.");
+                    throw new RuntimeException("Creating departure failed, no ID obtained.");
                 }
             }
+        } catch (SQLException e) {
+            throw new RuntimeException("Creating departure failed: " + e.getMessage());
         }
 
         return departure;
     }
+
 }

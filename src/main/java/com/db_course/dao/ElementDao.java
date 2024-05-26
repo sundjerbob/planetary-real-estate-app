@@ -2,9 +2,11 @@ package com.db_course.dao;
 
 import com.db_course.entity_model.Element;
 
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.function.Consumer;
 
 public class ElementDao {
 
@@ -14,32 +16,36 @@ public class ElementDao {
         this.connection = connection;
     }
 
-    public List<Element> getAllElements() throws SQLException {
-        List<Element> elementList = new ArrayList<>();
 
-        // Prepare SQL query
+    public void processAllElements(Consumer<Element> consumer) throws SQLException {
+
         String sql = "SELECT element_id, name, min_percentage, max_percentage FROM ELEMENTS";
 
         try (
-                // Create PreparedStatement
                 PreparedStatement statement = connection.prepareStatement(sql);
-                // Execute query and get ResultSet
                 ResultSet resultSet = statement.executeQuery()
         ) {
-            // Iterate over the result set
-            while (resultSet.next()) {
-                // Retrieve element data from the result set
-                int elementId = resultSet.getInt("element_id");
-                String name = resultSet.getString("name");
-                double minPercentage = resultSet.getDouble("min_percentage");
-                double maxPercentage = resultSet.getDouble("max_percentage");
+            while (resultSet.next())
+                consumer.accept(mapToElement(resultSet));
 
-                // Create an Element object and add it to the list
-                Element element = new Element(elementId, name, minPercentage, maxPercentage);
-                elementList.add(element);
-            }
+        } catch (SQLException e) {
+
+            throw new SQLException("ElementDao.getAllElements() says: " + e.getMessage());
+
         }
 
-        return elementList;
+    }
+
+    private Element mapToElement(ResultSet resultSet) {
+        try {
+            int elementId = resultSet.getInt("element_id");
+            String name = resultSet.getString("name");
+            double minPercentage = resultSet.getDouble("min_percentage");
+            double maxPercentage = resultSet.getDouble("max_percentage");
+
+            return new Element(elementId, name, minPercentage, maxPercentage);
+        } catch (SQLException e) {
+            throw new RuntimeException("ElementDao.mapToElement() says: " + e.getMessage());
+        }
     }
 }

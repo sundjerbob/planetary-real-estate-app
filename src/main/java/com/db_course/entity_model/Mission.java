@@ -13,7 +13,11 @@ import java.time.LocalDate;
 public class Mission {
 
     private int id;
+    private int exploredBodyId;
+    private int spaceshipId;
     private String name;
-    private LocalDate launchDate;
-    private int celestialBodyId;
+    private String description;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private boolean completed;
 }

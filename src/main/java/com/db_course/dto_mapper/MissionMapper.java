@@ -7,10 +7,6 @@ public class MissionMapper {
 
     public static MissionDto missionToDto(Mission mission) {
         return new MissionDto(
-                mission.getId(),
-                mission.getName(),
-                mission.getLaunchDate(),
-                mission.getCelestialBodyId()
         );
     }
 }

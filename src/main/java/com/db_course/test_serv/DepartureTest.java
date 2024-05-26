@@ -1,4 +1,4 @@
-package com.db_course.test;
+package com.db_course.test_serv;
 
 public class DepartureTest {
 

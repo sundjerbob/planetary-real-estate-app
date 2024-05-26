@@ -29,7 +29,6 @@ CREATE TABLE CELESTIAL_TYPES
 );
 
 
-
 -- Create Celestial Body
 CREATE TABLE CELESTIAL_BODIES
 (
@@ -115,9 +114,7 @@ CREATE TABLE SPACESHIPS
     fuel_capacity      DECIMAL(10, 2), -- Capacity of the fuel tank
     max_travel_range   DECIMAL(10, 2), -- Maximum travel range in light-years
     traveling_speed    DECIMAL(10, 2), -- Traveling speed in light-years per hour
-    manufacturer       VARCHAR(50),
-    launch_date        DATE,
-    FOREIGN KEY (launch_date) REFERENCES MISSIONS (launch_date)
+    manufacturer       VARCHAR(50)
 );
 
 
@@ -139,7 +136,9 @@ CREATE TABLE MISSIONS
     name              VARCHAR(50) NOT NULL,
     launch_date       DATE,
     celestial_body_id INT         NOT NULL,
+    spaceship_id      INT         NOT NULL,
     FOREIGN KEY (celestial_body_id) REFERENCES CELESTIAL_BODIES (celestial_body_id),
+    FOREIGN KEY (spaceship_id) REFERENCES SPACESHIPS (spaceship_id),
 
     -- Adding index for launch_date
     INDEX idx_launch_date (launch_date),
@@ -154,18 +153,21 @@ CREATE TABLE DEPARTURES
 (
     departure_id        INT AUTO_INCREMENT PRIMARY KEY,
     departure_date      DATETIME NOT NULL,
-    celestial_origin_id INT,
-    celestial_dest_id   INT,
+    celestial_origin_id INT      NOT NULL,
+    celestial_dest_id   INT      NOT NULL,
+    spaceship_id        INT      NOT NULL,
 
-    FOREIGN KEY (celestial_origin_id) references CELESTIAL_BODIES (celestial_body_id),
-    FOREIGN KEY (celestial_dest_id) references CELESTIAL_BODIES (celestial_body_id),
+    FOREIGN KEY (celestial_origin_id) REFERENCES CELESTIAL_BODIES (celestial_body_id),
+    FOREIGN KEY (celestial_dest_id) REFERENCES CELESTIAL_BODIES (celestial_body_id),
+    FOREIGN KEY (spaceship_id) REFERENCES SPACESHIPS (spaceship_id),
 
     INDEX idx_departure_date (departure_date)
 );
 
+
 CREATE TABLE TICKETS
 (
-    ticket_id    INT AUTO_INCREMENT PRIMARY KEY,
+    ticket_id    INT AUTO_INCREMENT,
     departure_id INT            NOT NULL,
     passenger_id INT            NOT NULL,
     price        DECIMAL(10, 2) NOT NULL,
@@ -428,3 +430,6 @@ VALUES ((SELECT atmosphere_id
          FROM ATMOSPHERES
          WHERE celestial_body_id = (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Venus')),
         (SELECT element_id FROM ELEMENTS WHERE name = 'Nitrogen'), 3.5);
+
+
+

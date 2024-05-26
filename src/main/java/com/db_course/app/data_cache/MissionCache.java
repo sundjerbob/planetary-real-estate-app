@@ -11,7 +11,7 @@ public class MissionCache {
     private final TreeSet<Mission> missions;
 
     public MissionCache() {
-        missions = new TreeSet<>(Comparator.comparing(Mission::getLaunchDate).thenComparing(Mission::getCelestialBodyId));
+        missions = new TreeSet<>(Comparator.comparing(Mission::getStartDate).thenComparing(Mission::getExploredBodyId));
     }
 
     public void addMission(Mission mission) {
@@ -19,35 +19,51 @@ public class MissionCache {
     }
 
     public NavigableSet<Mission> getMissionsOn(LocalDate date) {
-        return missions.subSet(
-                new Mission(0, "", date, 0),
-                true,
-                new Mission(Integer.MAX_VALUE, "", date, Integer.MAX_VALUE),
-                true);
+        Mission lowerBound = new Mission();
+        lowerBound.setExploredBodyId(0);
+        lowerBound.setStartDate(date);
+
+        Mission upperBound = new Mission();
+        upperBound.setStartDate(date);
+        upperBound.setExploredBodyId(Integer.MAX_VALUE);
+
+        return missions.subSet(lowerBound, true, upperBound, true);
     }
 
     public NavigableSet<Mission> getMissionsBetween(LocalDate start, LocalDate end) {
-        return missions.subSet(
-                new Mission(0, "", start, 0),
-                true,
-                new Mission(Integer.MAX_VALUE, "", end, Integer.MAX_VALUE),
-                true);
+        Mission lowerBound = new Mission();
+        lowerBound.setExploredBodyId(0);
+        lowerBound.setStartDate(start);
+
+        Mission upperBound = new Mission();
+        upperBound.setStartDate(end);
+        upperBound.setExploredBodyId(Integer.MAX_VALUE);
+
+        return missions.subSet(lowerBound, true, upperBound, true);
     }
 
-    public NavigableSet<Mission> getMissionsBetweenForCelestialBody(LocalDate start, LocalDate end, int celestialBodyId) {
-        return getMissionsBetween(start, end).subSet(
-                new Mission(0, "", start, celestialBodyId),
-                true,
-                new Mission(Integer.MAX_VALUE, "", end, celestialBodyId),
-                true);
+    public NavigableSet<Mission> getMissionsBetweenForCelestialBody(LocalDate start, LocalDate end, int exploredBodyId) {
+        Mission lowerBound = new Mission();
+        lowerBound.setExploredBodyId(exploredBodyId);
+        lowerBound.setStartDate(start);
+
+        Mission upperBound = new Mission();
+        upperBound.setStartDate(end);
+        upperBound.setExploredBodyId(exploredBodyId);
+
+        return missions.subSet(lowerBound, true, upperBound, true);
     }
 
     public NavigableSet<Mission> getMissionsOnForCelestialBody(LocalDate date, int celestialBodyId) {
-        return getMissionsOn(date).subSet(
-                new Mission(0, "", date, celestialBodyId),
-                true,
-                new Mission(Integer.MAX_VALUE, "", date, celestialBodyId),
-                true);
+        Mission lowerBound = new Mission();
+        lowerBound.setExploredBodyId(celestialBodyId);
+        lowerBound.setStartDate(date);
+
+        Mission upperBound = new Mission();
+        upperBound.setStartDate(date);
+        upperBound.setExploredBodyId(celestialBodyId);
+
+        return missions.subSet(lowerBound, true, upperBound, true);
     }
 
     // other potential methods here e.g., removeMission(), getMissions(), etc.

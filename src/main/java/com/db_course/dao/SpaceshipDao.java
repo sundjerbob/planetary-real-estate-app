@@ -26,7 +26,7 @@ public class SpaceshipDao {
         }
     }
 
-    /********************************************************************************************/
+    /******************************************************************************************************************/
     public Spaceship getSpaceship(int spaceshipId) throws SQLException {
         String sql = "SELECT * FROM SPACESHIPS WHERE spaceship_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -50,7 +50,7 @@ public class SpaceshipDao {
     }
 
 
-    /********************************************************************************************/
+    /******************************************************************************************************************/
     public void getAllSpaceships(Consumer<Spaceship> consumer) throws SQLException {
         String sql = "SELECT * FROM SPACESHIPS";
         try (
@@ -66,7 +66,8 @@ public class SpaceshipDao {
         }
     }
 
-    /********************************************************************************************/
+
+    /******************************************************************************************************************/
     public void updateSpaceship(Spaceship spaceship) throws SQLException {
         String sql = "UPDATE SPACESHIPS SET name = ?, model = ?, passenger_capacity = ?, fuel_capacity = ?, max_travel_range = ?, traveling_speed = ?, manufacturer = ?, launch_date = ? WHERE spaceship_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -79,7 +80,7 @@ public class SpaceshipDao {
     }
 
 
-    /********************************************************************************************/
+    /******************************************************************************************************************/
     public void deleteSpaceship(int spaceshipId) throws SQLException {
         String sql = "DELETE FROM SPACESHIPS WHERE spaceship_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -91,7 +92,7 @@ public class SpaceshipDao {
     }
 
 
-    /********************************************************************************************/
+    /******************************************************************************************************************/
     private Spaceship mapToSpaceship(ResultSet resultSet) {
         try {
             return new Spaceship(
@@ -111,7 +112,7 @@ public class SpaceshipDao {
     }
 
 
-    /********************************************************************************************/
+    /******************************************************************************************************************/
     private void mapSpaceshipToStatement(Spaceship spaceship, PreparedStatement statement) {
         try {
             statement.setString(1, spaceship.getName());

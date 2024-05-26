@@ -7,6 +7,7 @@
     <file url="file://$PROJECT_DIR$/src/main/java/com/db_course/dao/DepartureDao.java" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/src/main/java/com/db_course/dao/ElementDao.java" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/src/main/java/com/db_course/dao/MissionDao.java" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/db_course/dao/PropertyDao.java" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/src/main/java/com/db_course/dao/SpaceshipDao.java" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/src/main/java/com/db_course/dao/SpaceshipRoomDao.java" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/src/main/java/com/db_course/dao/TicketDao.java" dialect="GenericSQL" />

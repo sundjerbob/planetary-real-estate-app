@@ -11,13 +11,17 @@ import java.util.function.Consumer;
 
 public class CelestialPathDao {
 
+
     private final Connection connection;
     private static final String TABLE = "CELESTIAL_PATHS";
+
 
     public CelestialPathDao(Connection connection) {
         this.connection = connection;
     }
 
+
+    /******************************************************************************************************************/
     public void processAllPaths(Consumer<CelestialPath> pathConsumer) {
         String sql = "SELECT * FROM " + TABLE;
 
@@ -33,6 +37,7 @@ public class CelestialPathDao {
     }
 
 
+    /******************************************************************************************************************/
     public void processPathsByBodyId(int bodyId, Consumer<CelestialPath> pathConsumer) {
         String sql = "SELECT * FROM " + TABLE + " WHERE body_a_id = ? OR body_b_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -48,6 +53,8 @@ public class CelestialPathDao {
         }
     }
 
+
+    /******************************************************************************************************************/
     public CelestialPath getPathByBodyIds(int bodyAId, int bodyBId) {
         String sql = "SELECT * FROM " + TABLE + " WHERE body_a_id = ? AND body_b_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -64,6 +71,8 @@ public class CelestialPathDao {
         return null;
     }
 
+
+    /******************************************************************************************************************/
     public boolean addCelestialPath(CelestialPath celestialPath) {
         String sql = "INSERT INTO " + TABLE + " (body_a_id, body_b_id, distance_km) VALUES (?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -76,6 +85,8 @@ public class CelestialPathDao {
         }
     }
 
+
+    /******************************************************************************************************************/
     public boolean updateCelestialPath(CelestialPath celestialPath) {
         String sql = "UPDATE " + TABLE + " SET body_a_id = ?, body_b_id = ?, distance_km = ? WHERE pathway_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -89,6 +100,8 @@ public class CelestialPathDao {
         }
     }
 
+
+    /******************************************************************************************************************/
     public boolean deleteCelestialPath(int pathId) {
         String sql = "DELETE FROM " + TABLE + " WHERE pathway_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -99,6 +112,8 @@ public class CelestialPathDao {
         }
     }
 
+
+    /******************************************************************************************************************/
     private CelestialPath mapToCelestialPath(ResultSet resultSet) throws SQLException {
         try {
             int pathwayId = resultSet.getInt("pathway_id");

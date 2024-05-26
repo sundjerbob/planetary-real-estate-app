@@ -13,13 +13,17 @@ import java.util.function.Consumer;
 
 public class CelestialBodyDao {
 
+
     private final Connection connection;
     private static final String TABLE = "CELESTIAL_BODIES";
+
 
     public CelestialBodyDao(Connection connection) {
         this.connection = connection;
     }
 
+
+    /******************************************************************************************************************/
     public void processAllCelestialBodies(Consumer<CelestialBody> celestialBodyConsumer) {
         String sql = "SELECT * FROM " + TABLE;
         try (PreparedStatement statement = connection.prepareStatement(sql);
@@ -33,6 +37,7 @@ public class CelestialBodyDao {
 
     }
 
+    /******************************************************************************************************************/
     public void processCelestialBodiesByType(CelestialType type, Consumer<CelestialBody> celestialBodyConsumer) throws RuntimeException {
         String sql = "SELECT * FROM " + TABLE + " WHERE type_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -48,6 +53,7 @@ public class CelestialBodyDao {
     }
 
 
+    /******************************************************************************************************************/
     public CelestialBody getCelestialBodyById(int id) throws RuntimeException {
         String sql = "SELECT * FROM " + TABLE + " WHERE celestial_body_id = ?";
 
@@ -61,6 +67,8 @@ public class CelestialBodyDao {
         }
     }
 
+
+    /******************************************************************************************************************/
     private CelestialBody mapToCelestialBody(ResultSet resultSet) {
 
         try {

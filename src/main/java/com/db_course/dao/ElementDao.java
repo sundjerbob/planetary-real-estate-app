@@ -12,11 +12,13 @@ public class ElementDao {
 
     private final Connection connection;
 
+
     public ElementDao(Connection connection) {
         this.connection = connection;
     }
 
 
+    /******************************************************************************************************************/
     public void processAllElements(Consumer<Element> consumer) throws SQLException {
 
         String sql = "SELECT element_id, name, min_percentage, max_percentage FROM ELEMENTS";
@@ -36,6 +38,8 @@ public class ElementDao {
 
     }
 
+
+    /******************************************************************************************************************/
     private Element mapToElement(ResultSet resultSet) {
         try {
             int elementId = resultSet.getInt("element_id");
@@ -48,4 +52,6 @@ public class ElementDao {
             throw new RuntimeException("ElementDao.mapToElement() says: " + e.getMessage());
         }
     }
+
+
 }

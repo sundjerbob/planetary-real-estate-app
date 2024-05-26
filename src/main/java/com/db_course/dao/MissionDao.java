@@ -8,13 +8,17 @@ import java.util.function.Consumer;
 
 public class MissionDao {
 
+
     private static final String TABLE = "MISSIONS";
     private final Connection connection;
+
 
     public MissionDao(Connection connection) {
         this.connection = connection;
     }
 
+
+    /******************************************************************************************************************/
     public void processAllMissions(Consumer<Mission> consumer) {
         String sql = "SELECT * FROM " + TABLE + " ORDER BY start_date DESC";
         try (
@@ -29,6 +33,8 @@ public class MissionDao {
         }
     }
 
+
+    /******************************************************************************************************************/
     public void processMissionsByExploredBodyId(int exploredBodyId, Consumer<Mission> mission) {
         String sql = "SELECT * FROM " + TABLE + " WHERE explored_body_id = ? ORDER BY start_date DESC";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -43,6 +49,8 @@ public class MissionDao {
         }
     }
 
+
+    /******************************************************************************************************************/
     public void processMissionsByStartDate(LocalDate startDate, Consumer<Mission> consumer) {
         String sql = "SELECT * FROM " + TABLE + " WHERE start_date = ? ORDER BY start_date DESC";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -57,6 +65,8 @@ public class MissionDao {
         }
     }
 
+
+    /******************************************************************************************************************/
     public void processMissionsByStartDateBetween(LocalDate startDate, LocalDate endDate, Consumer<Mission> consumer) {
         String sql = "SELECT * FROM " + TABLE + " WHERE start_date BETWEEN ? AND ? ORDER BY start_date DESC";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -72,6 +82,8 @@ public class MissionDao {
         }
     }
 
+
+    /******************************************************************************************************************/
     public void processMissionsByEndDate(LocalDate endDate, Consumer<Mission> consumer) {
         String sql = "SELECT * FROM " + TABLE + " WHERE end_date = ? ORDER BY start_date DESC";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -86,6 +98,8 @@ public class MissionDao {
         }
     }
 
+
+    /******************************************************************************************************************/
     public void processMissionsByStatus(boolean completed, Consumer<Mission> consumer) {
         String sql = "SELECT * FROM " + TABLE + " WHERE completed = ? ORDER BY start_date DESC";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -100,6 +114,8 @@ public class MissionDao {
         }
     }
 
+
+    /******************************************************************************************************************/
     private Mission mapToMission(ResultSet resultSet) {
         try {
             int id = resultSet.getInt("id");

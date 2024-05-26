@@ -7,13 +7,17 @@ import java.util.function.Consumer;
 
 public class UserDao {
 
+
     private final Connection connection;
     private static final String table = "USERS";
+
 
     public UserDao(Connection connection) {
         this.connection = connection;
     }
 
+
+    /******************************************************************************************************************/
     public void processAllUsers(Consumer<User> personConsumer) throws SQLException {
 
         try (
@@ -40,6 +44,7 @@ public class UserDao {
     }
 
 
+    /******************************************************************************************************************/
     public User getUserByUsername(String username) throws SQLException {
         String sql = "SELECT user_id, name, last_name, username, password FROM " + table + " WHERE username = ?";
 
@@ -59,6 +64,7 @@ public class UserDao {
     }
 
 
+    /******************************************************************************************************************/
     public User insertUser(User user) throws SQLException {
         String sql = "INSERT INTO " + table + " (name, last_name, username, password) VALUES (?, ?, ?, ?)";
 

@@ -4,14 +4,20 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 
 public class Property {
+
     private int propertyId;
-    private String name;
-    private String description;
-    private double price;
     private int celestialBodyId;
+    private Integer soldToUserId;
+    private int globalRegistryNb;
+    private String address;
+    private BigDecimal squareMeters;
+    private String description;
+    private BigDecimal price;
 }

@@ -7,14 +7,17 @@ import java.util.function.Consumer;
 
 public class DepartureDao {
 
+
     private final Connection connection;
     private static final String table = "DEPARTURES";
+
 
     public DepartureDao(Connection connection) {
         this.connection = connection;
     }
 
 
+    /******************************************************************************************************************/
     public void processAllDepartures(Consumer<Departure> departureConsumer) {
 
         try (
@@ -45,6 +48,7 @@ public class DepartureDao {
     }
 
 
+    /******************************************************************************************************************/
     public Departure insertDeparture(Departure departure) {
         String sql = "INSERT INTO " + table + " (departure_date, passenger_id) VALUES (?, ?)";
 
@@ -71,5 +75,6 @@ public class DepartureDao {
 
         return departure;
     }
+
 
 }

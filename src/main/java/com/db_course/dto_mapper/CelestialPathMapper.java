@@ -12,7 +12,8 @@ public class CelestialPathMapper {
                 celestialPath.getId(),
                 bodyOrigin,
                 bodyDestination,
-                celestialPath.getDistanceKm()
+                celestialPath.getDistanceKm(),
+                celestialPath.getDescription()
         );
     }
 

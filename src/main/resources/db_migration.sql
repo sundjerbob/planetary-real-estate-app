@@ -58,13 +58,13 @@ CREATE TABLE CELESTIAL_BODIES
 -- Create Celestial Pathways connecting the reachable cosmos-points (celestial bodies)
 CREATE TABLE CELESTIAL_PATHS
 (
-    pathway_id  INT AUTO_INCREMENT,
+    path_id     INT AUTO_INCREMENT,
     body_a_id   INT    NOT NULL,
     body_b_id   INT    NOT NULL,
     distance_km DOUBLE NOT NULL,
     description VARCHAR(1024),
 
-    PRIMARY KEY (pathway_id, body_a_id, body_b_id),
+    PRIMARY KEY (body_a_id, body_b_id),
 
     FOREIGN KEY (body_a_id) REFERENCES CELESTIAL_BODIES (celestial_body_id),
     FOREIGN KEY (body_b_id) REFERENCES CELESTIAL_BODIES (celestial_body_id)
@@ -85,8 +85,13 @@ CREATE TABLE ATMOSPHERES
 (
     atmosphere_id     INT AUTO_INCREMENT PRIMARY KEY,
     celestial_body_id INT UNIQUE,
-    FOREIGN KEY (celestial_body_id) REFERENCES CELESTIAL_BODIES (celestial_body_id),
+    max_temperature   DECIMAL(10, 2),
+    min_temperature   DECIMAL(10, 2),
     atmosphere_height INT, -- Height of the atmosphere in kilometers
+    ampere_pressure   DECIMAL(10, 2),
+
+
+    FOREIGN KEY (celestial_body_id) REFERENCES CELESTIAL_BODIES (celestial_body_id),
 
     -- Adding an index for celestial_body_id
     INDEX idx_celestial_body_id (celestial_body_id)
@@ -151,14 +156,15 @@ CREATE TABLE MISSIONS
 -- Create Departure table
 CREATE TABLE DEPARTURES
 (
-    departure_id        INT AUTO_INCREMENT PRIMARY KEY,
-    departure_date      DATETIME NOT NULL,
-    celestial_origin_id INT      NOT NULL,
-    celestial_dest_id   INT      NOT NULL,
-    spaceship_id        INT      NOT NULL,
+    departure_id             INT AUTO_INCREMENT PRIMARY KEY,
+    departure_date           DATETIME NOT NULL,
+    celestial_origin_id      INT      NOT NULL,
+    celestial_destination_id INT      NOT NULL,
+    spaceship_id             INT      NOT NULL,
 
-    FOREIGN KEY (celestial_origin_id) REFERENCES CELESTIAL_BODIES (celestial_body_id),
-    FOREIGN KEY (celestial_dest_id) REFERENCES CELESTIAL_BODIES (celestial_body_id),
+
+    FOREIGN KEY (celestial_origin_id) REFERENCES CELESTIAL_PATHS (body_a_id),
+    FOREIGN KEY (celestial_destination_id) REFERENCES CELESTIAL_PATHS (body_b_id),
     FOREIGN KEY (spaceship_id) REFERENCES SPACESHIPS (spaceship_id),
 
     INDEX idx_departure_date (departure_date)

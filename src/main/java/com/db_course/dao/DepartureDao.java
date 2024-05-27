@@ -27,18 +27,7 @@ public class DepartureDao {
 
             while (resultSet.next()) {
 
-                int departureId = resultSet.getInt("departure_id");
-                Timestamp departureDate = resultSet.getTimestamp("departure_date");
-                int originBodyId = resultSet.getInt("celestial_origin_id");
-                int destinationBodyId = resultSet.getInt("celestial_destination_id");
-
-                Departure departure = new Departure(
-                        departureId,
-                        departureDate.toLocalDateTime(),
-                        originBodyId,
-                        destinationBodyId
-                );
-
+                Departure departure = mapToDeparture(resultSet);
                 departureConsumer.accept(departure);
             }
 
@@ -74,6 +63,30 @@ public class DepartureDao {
         }
 
         return departure;
+    }
+
+    private Departure mapToDeparture(ResultSet resultSet) {
+        try {
+
+            int departureId = resultSet.getInt("departure_id");
+            Timestamp departureDate = resultSet.getTimestamp("departure_date");
+            int originBodyId = resultSet.getInt("celestial_origin_id");
+            int destinationBodyId = resultSet.getInt("celestial_destination_id");
+            int spaceshipId = resultSet.getInt("spaceship_id");
+
+            return new Departure(
+                    departureId,
+                    originBodyId,
+                    destinationBodyId,
+                    spaceshipId,
+                    departureDate.toLocalDateTime()
+            );
+
+        } catch (Exception e) {
+            throw new RuntimeException("DepartureDao.mapToDeparture() says: " + e.getMessage());
+
+        }
+
     }
 
 

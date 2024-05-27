@@ -17,4 +17,5 @@ public class CelestialPath {
     private int bodyA_Id;
     private int bodyB_Id;
     private BigDecimal distanceKm;
+    private String description;
 }

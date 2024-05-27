@@ -80,7 +80,7 @@ public class CelestialBodyDao {
             BigDecimal surfaceTemperatureMin = resultSet.getBigDecimal("surface_temperature_min");
             BigDecimal surfaceTemperatureMax = resultSet.getBigDecimal("surface_temperature_max");
             BigDecimal coreTemperature = resultSet.getBigDecimal("core_temperature");
-            boolean hasBeenExplored = resultSet.getBoolean("has_been_explored");
+            boolean explored = resultSet.getBoolean("has_been_explored");
             String radiationLevels = resultSet.getString("radiation_levels");
             boolean hasWater = resultSet.getBoolean("has_water");
             BigDecimal surfaceArea = resultSet.getBigDecimal("surface_area");
@@ -100,6 +100,7 @@ public class CelestialBodyDao {
 
             return new CelestialBody(
                     id,
+                    rotatesAroundId,
                     name,
                     type,
                     description,
@@ -107,14 +108,13 @@ public class CelestialBodyDao {
                     surfaceTemperatureMin,
                     surfaceTemperatureMax,
                     coreTemperature,
-                    hasBeenExplored,
+                    explored,
                     radiationLevels,
                     hasWater,
                     surfaceArea,
                     isSurfaceHard,
                     mass,
                     gravitationalFieldHeight,
-                    rotatesAroundId,
                     movingSpeed,
                     rotationSpeed);
         } catch (SQLException e) {

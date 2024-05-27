@@ -3,7 +3,10 @@ package com.db_course.dao;
 import com.db_course.entity_model.Atmosphere;
 
 import java.math.BigDecimal;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.function.Consumer;
 
 public class AtmosphereDao {
@@ -75,12 +78,17 @@ public class AtmosphereDao {
     }
 
     private Atmosphere mapToAtmosphere(ResultSet resultSet) throws SQLException {
-        int id = resultSet.getInt("id");
-        int celestialBodyId = resultSet.getInt("celestial_body_id");
-        BigDecimal maxTemperature = resultSet.getBigDecimal("max_temperature");
-        BigDecimal minTemperature = resultSet.getBigDecimal("min_temperature");
-        BigDecimal atmosphereHeight = resultSet.getBigDecimal("atmosphere_height");
-        BigDecimal amperePressure = resultSet.getBigDecimal("ampere_pressure");
-        return new Atmosphere(id, celestialBodyId, maxTemperature, minTemperature, atmosphereHeight, amperePressure);
+        try {
+            int id = resultSet.getInt("id");
+            int celestialBodyId = resultSet.getInt("celestial_body_id");
+            BigDecimal maxTemperature = resultSet.getBigDecimal("max_temperature");
+            BigDecimal minTemperature = resultSet.getBigDecimal("min_temperature");
+            BigDecimal atmosphereHeight = resultSet.getBigDecimal("atmosphere_height");
+            BigDecimal amperePressure = resultSet.getBigDecimal("ampere_pressure");
+            return new Atmosphere(id, celestialBodyId, maxTemperature, minTemperature, atmosphereHeight, amperePressure);
+        } catch (Exception e) {
+
+            throw new RuntimeException("AtmosphereDao.mapToAtmosphere() says: " + e.getMessage());
+        }
     }
 }

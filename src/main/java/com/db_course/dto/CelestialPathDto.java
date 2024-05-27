@@ -16,5 +16,6 @@ public class CelestialPathDto {
     private String bodyA;
     private String bodyB;
     private BigDecimal distance_km;
+    private String description;
 
 }

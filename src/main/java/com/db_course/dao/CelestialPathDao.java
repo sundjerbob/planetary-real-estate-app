@@ -120,7 +120,8 @@ public class CelestialPathDao {
             int bodyAId = resultSet.getInt("body_a_id");
             int bodyBId = resultSet.getInt("body_b_id");
             BigDecimal distanceKm = resultSet.getBigDecimal("distance_km");
-            return new CelestialPath(pathwayId, bodyAId, bodyBId, distanceKm);
+            String description = resultSet.getString("description");
+            return new CelestialPath(pathwayId, bodyAId, bodyBId, distanceKm, description);
         } catch (SQLException e) {
 
             throw new RuntimeException("CelestialPathDao.mapToCelestialPath() says: " + e.getMessage());

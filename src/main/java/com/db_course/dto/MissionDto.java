@@ -12,8 +12,13 @@ import java.time.LocalDate;
 
 public class MissionDto {
 
+
     private int id;
+    private CelestialBodyDto celestialBody;
+    private SpaceshipDto spaceship;
     private String name;
-    private LocalDate launchDate;
-    private int celestialBodyId;
+    private String description;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private boolean completed;
 }

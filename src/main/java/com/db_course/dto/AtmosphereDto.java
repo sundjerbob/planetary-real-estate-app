@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -11,6 +13,8 @@ import lombok.NoArgsConstructor;
 public class AtmosphereDto {
 
     private int atmosphereId;
-    private int celestialBodyId;
-    private int atmosphereHeight;
+    private BigDecimal maxTemperature;
+    private BigDecimal minTemperature;
+    private BigDecimal atmosphereHeight;
+    private BigDecimal amperePressure;
 }

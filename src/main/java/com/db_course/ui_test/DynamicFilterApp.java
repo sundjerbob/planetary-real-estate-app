@@ -9,11 +9,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DynamicFilterApp {
+
+
     private List<UserDto> allUsers = new ArrayList<>();
     private List<UserDto> filteredUsers = new ArrayList<>();
     private JTable userTable;
     private UserTableModel tableModel;
     private DynamicFilterPanel filterPanel;
+
 
     public DynamicFilterApp() {
         JFrame frame = new JFrame("Dynamic Filter Components");

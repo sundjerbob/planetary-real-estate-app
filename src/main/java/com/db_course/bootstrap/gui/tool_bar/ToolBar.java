@@ -1,4 +1,4 @@
-package com.db_course.app.gui.tool_bar;
+package com.db_course.bootstrap.gui.tool_bar;
 
 import javax.swing.JButton;
 import javax.swing.JToolBar;

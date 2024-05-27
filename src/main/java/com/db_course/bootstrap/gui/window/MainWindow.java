@@ -1,6 +1,6 @@
-package com.db_course.app.gui.window;
+package com.db_course.bootstrap.gui.window;
 
-import com.db_course.app.gui.tool_bar.ToolBar;
+import com.db_course.bootstrap.gui.tool_bar.ToolBar;
 
 import javax.swing.JFrame;
 

@@ -15,4 +15,6 @@ public class Element {
     private String name;
     private double minPercentage;
     private double maxPercentage;
+    private boolean radioactive;
+
 }

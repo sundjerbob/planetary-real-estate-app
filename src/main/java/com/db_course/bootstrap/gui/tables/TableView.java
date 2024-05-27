@@ -1,4 +1,4 @@
-package com.db_course.app.gui.tables;
+package com.db_course.bootstrap.gui.tables;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;

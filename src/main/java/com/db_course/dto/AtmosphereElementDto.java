@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -11,7 +13,6 @@ import lombok.NoArgsConstructor;
 public class AtmosphereElementDto {
 
     private int atmosphereId;
-    private int elementId;
-    private double percentage;
-
+    private ElementDto elementDto;
+    private BigDecimal percentage;
 }

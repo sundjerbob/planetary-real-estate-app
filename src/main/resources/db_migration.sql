@@ -169,7 +169,8 @@ CREATE TABLE TICKETS
 (
     ticket_id    INT AUTO_INCREMENT,
     departure_id INT            NOT NULL,
-    passenger_id INT            NOT NULL,
+    passenger_id INT, --
+    soled        boolean,
     price        DECIMAL(10, 2) NOT NULL,
     room_id      INT            NOT NULL,
     spaceship_id INT            NOT NULL,
@@ -190,11 +191,20 @@ CREATE TABLE TICKETS
 CREATE TABLE PROPERTIES
 (
     property_id       INT AUTO_INCREMENT PRIMARY KEY,
+    property_reg_nb   INT            NOT NULL,
+    address           VARCHAR(50)    NOT NULL,
+    square_meters     DECIMAL(10, 2) NOT NULL,
     name              VARCHAR(50)    NOT NULL,
     description       TEXT,
     price             DECIMAL(10, 2) NOT NULL,
-    celestial_body_id INT            NOT NULL,
-    FOREIGN KEY (celestial_body_id) REFERENCES CELESTIAL_BODIES (celestial_body_id)
+    celestial_body_id INT            NOT NULL, -- The celestial body that property is located on
+    soled_to_user_id  INT,                     -- User who bought the property, if property has not been bought this field is NULL
+
+    FOREIGN KEY (celestial_body_id) REFERENCES CELESTIAL_BODIES (celestial_body_id),
+    FOREIGN KEY (soled_to_user_id) REFERENCES USERS (user_id),
+
+    INDEX idx_soled_to_user_id (soled_to_user_id)
+
 );
 
 
@@ -213,7 +223,9 @@ VALUES ('Neel ', 'Armstrong', 'neal123', 'password1'),
        ('Jane', 'Smith', 'janesmith', 'password2'),
        ('Alice', 'Williams', 'alicew', 'password3'),
        ('Bob', 'Johnson', 'bob', 'password4'),
-       ('Michael', 'Brown', 'mikeb', 'password5');
+       ('Michael', 'Brown', 'mikeb', 'password5'),
+       ('Milan', 'Jermeci', 'Milanac123', 'password5');
+;
 
 
 -- Insert other celestial bodies excluding rotates_around_id

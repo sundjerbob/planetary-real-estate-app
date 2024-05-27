@@ -13,9 +13,8 @@ import java.time.LocalDateTime;
 public class Departure {
 
     private int id;
+    private int spaceshipId;
+    private int celestialPathId;
     private LocalDateTime departureDate;
-    private int celestialBodyOriginId;
-    private int celestialBodyDestId;
-
-
+    private int departureFromBodyId;
 }

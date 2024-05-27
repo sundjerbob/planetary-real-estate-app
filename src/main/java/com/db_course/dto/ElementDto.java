@@ -14,4 +14,5 @@ public class ElementDto {
     private String name;
     private double minPercentage;
     private double maxPercentage;
+    private boolean radioactive;
 }

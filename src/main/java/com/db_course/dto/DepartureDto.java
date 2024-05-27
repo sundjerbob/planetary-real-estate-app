@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
@@ -16,10 +15,11 @@ import java.time.LocalDateTime;
 public class DepartureDto {
 
     private int id;
+    private SpaceshipDto spaceship;
+    private CelestialPathDto celestialPath;
+    private String departureFromBody;
     private LocalDateTime departureDate;
-    private String celestialBodyOrigin;
-    private String celestialBodyDest;
-    private BigDecimal pathwayLengthKm;
+    private long travelDurationDays;
 }
 
 

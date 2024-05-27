@@ -11,6 +11,7 @@ public class CelestialBodyMapper {
 
         return new CelestialBodyDto(
                 celestialBody.getId(),
+                rotatesAround,
                 celestialBody.getName(),
                 celestialTypeToDto(celestialBody.getType()),
                 celestialBody.getDescription(),
@@ -18,16 +19,13 @@ public class CelestialBodyMapper {
                 celestialBody.getSurfaceTemperatureMin(),
                 celestialBody.getSurfaceTemperatureMax(),
                 celestialBody.getCoreTemperature(),
-                celestialBody.isHasBeenExplored(),
+                celestialBody.isExplored(),
                 celestialBody.getRadiationLevels(),
                 celestialBody.isHasWater(),
                 celestialBody.getSurfaceArea(),
                 celestialBody.isSurfaceHard(),
                 celestialBody.getMass(),
                 celestialBody.getGravitationalFieldHeight(),
-                // *********************
-                rotatesAround,
-                // *********************
                 celestialBody.getMovingSpeed(),
                 celestialBody.getRotationSpeed()
         );

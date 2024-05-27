@@ -12,12 +12,13 @@ import java.math.BigDecimal;
 
 public class Property {
 
-    private int propertyId;
+    private int id;
     private int celestialBodyId;
-    private Integer soldToUserId;
-    private int globalRegistryNb;
+    private Integer soledToUserId;
+    private int propertyRegNb;
     private String address;
     private BigDecimal squareMeters;
+    private String name;
     private String description;
     private BigDecimal price;
 }

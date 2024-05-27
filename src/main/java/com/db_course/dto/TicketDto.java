@@ -1,4 +1,4 @@
-package com.db_course.entity_model;
+package com.db_course.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,13 +10,14 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 
-public class Ticket {
+
+public class TicketDto {
 
 
     private int id;
     private int departureId;
     private int spaceshipId;
-    private int roomId;
+    private SpaceshipRoomDto room;
     private BigDecimal price;
     private boolean soled;
     private Integer passengerId;

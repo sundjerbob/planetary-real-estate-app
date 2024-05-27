@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 public class CelestialBodyDto {
 
     private int id;
+    private String rotatesAroundBody;
     private String name;
     private CelestialTypeDto type;
     private String description;
@@ -20,14 +21,13 @@ public class CelestialBodyDto {
     private BigDecimal surfaceTemperatureMin;
     private BigDecimal surfaceTemperatureMax;
     private BigDecimal coreTemperature;
-    private boolean hasBeenExplored;
+    private boolean explored;
     private String radiationLevels;
     private boolean hasWater;
     private BigDecimal surfaceArea;
     private boolean isSurfaceHard;
     private BigDecimal mass;
     private BigDecimal gravitationalFieldHeight;
-    private String rotatesAroundBody;
     private BigDecimal movingSpeed;
     private BigDecimal rotationSpeed;
 }

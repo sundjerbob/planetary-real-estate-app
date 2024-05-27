@@ -11,7 +11,8 @@ public class ElementMapper {
                 element.getId(),
                 element.getName(),
                 element.getMinPercentage(),
-                element.getMaxPercentage()
+                element.getMaxPercentage(),
+                element.isRadioactive()
         );
     }
 }

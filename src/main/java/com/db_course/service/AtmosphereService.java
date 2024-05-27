@@ -1,23 +1,27 @@
 package com.db_course.service;
 
-import com.db_course.dao.AtmosphereElementDao;
+import com.db_course.dao.AtmosphereDao;
 import com.db_course.db_config.DB_Client;
+import com.db_course.dto.AtmosphereDto;
+import com.db_course.entity_model.Atmosphere;
+
+import static com.db_course.dto_mapper.AtmosphereMapper.atmosphereToDto;
 
 public class AtmosphereService {
 
 
-    private static AtmosphereService instance;
+    private static volatile AtmosphereService instance;
     private static final Object mutex = new Object();
-    private final AtmosphereElementDao atmosphereElementDao;
+    private final AtmosphereDao atmosphereDao;
 
 
     private AtmosphereService() {
-        atmosphereElementDao = new AtmosphereElementDao(
+        atmosphereDao = new AtmosphereDao(
                 DB_Client.getInstance().getConnection()
         );
     }
 
-
+    /******************************************************************************************************************/
     public static AtmosphereService getInstance() {
         if (instance == null) {
             synchronized (mutex) {
@@ -28,4 +32,12 @@ public class AtmosphereService {
         }
         return instance;
     }
+
+    /******************************************************************************************************************/
+    public AtmosphereDto getAtmosphereByCelestialBodyId(int celestialBodyId) {
+        Atmosphere atmosphere = atmosphereDao.getAtmosphereByCelestialBodyId(celestialBodyId);
+        return atmosphereToDto(atmosphere);
+    }
+
+
 }

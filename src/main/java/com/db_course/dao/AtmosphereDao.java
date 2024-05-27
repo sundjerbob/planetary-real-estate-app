@@ -7,17 +7,20 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.function.Consumer;
 
 public class AtmosphereDao {
 
+
     private final Connection connection;
     private static final String TABLE = "ATMOSPHERES";
+
 
     public AtmosphereDao(Connection connection) {
         this.connection = connection;
     }
 
+
+    /******************************************************************************************************************/
     public void insert(Atmosphere atmosphere) {
         String sql = "INSERT INTO " + TABLE + " (id, celestial_body_id, max_temperature, min_temperature, atmosphere_height, ampere_pressure) VALUES (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -33,6 +36,8 @@ public class AtmosphereDao {
         }
     }
 
+
+    /******************************************************************************************************************/
     public void update(Atmosphere atmosphere) {
         String sql = "UPDATE " + TABLE + " SET celestial_body_id = ?, max_temperature = ?, min_temperature = ?, atmosphere_height = ?, ampere_pressure = ? WHERE id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
@@ -48,35 +53,49 @@ public class AtmosphereDao {
         }
     }
 
-    public Atmosphere searchById(int id) {
+
+    /******************************************************************************************************************/
+    public Atmosphere getAtmosphereById(int id) {
+
         String sql = "SELECT * FROM " + TABLE + " WHERE id = ?";
+
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);
+
             try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
+                if (resultSet.next())
                     return mapToAtmosphere(resultSet);
-                }
+                return null;
+
             }
+
         } catch (SQLException e) {
-            throw new RuntimeException("AtmosphereDao.searchById() says: " + e.getMessage());
+            throw new RuntimeException("AtmosphereDao.getAtmosphereById() says: " + e.getMessage());
         }
-        return null; // Return null if no atmosphere is found
+
     }
 
-    public void processAtmospheresByCelestialBodyId(int celestialBodyId, Consumer<Atmosphere> consumer) {
+
+    /******************************************************************************************************************/
+    public Atmosphere getAtmosphereByCelestialBodyId(int celestialBodyId) {
+
         String sql = "SELECT * FROM " + TABLE + " WHERE celestial_body_id = ?";
+
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, celestialBodyId);
+
             try (ResultSet resultSet = statement.executeQuery()) {
-                while (resultSet.next()) {
-                    consumer.accept(mapToAtmosphere(resultSet));
-                }
+                if (resultSet.next())
+                    return mapToAtmosphere(resultSet);
+                return null;
             }
         } catch (SQLException e) {
             throw new RuntimeException("AtmosphereDao.processAtmospheresByCelestialBodyId() says: " + e.getMessage());
         }
     }
 
+
+    /******************************************************************************************************************/
     private Atmosphere mapToAtmosphere(ResultSet resultSet) throws SQLException {
         try {
             int id = resultSet.getInt("id");
@@ -91,4 +110,6 @@ public class AtmosphereDao {
             throw new RuntimeException("AtmosphereDao.mapToAtmosphere() says: " + e.getMessage());
         }
     }
+
+
 }

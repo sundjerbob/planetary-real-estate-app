@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class AtmosphereElementDao {
 
@@ -18,7 +19,7 @@ public class AtmosphereElementDao {
         this.connection = connection;
     }
 
-    public List<AtmosphereElement> getAllAtmosphereElements() throws SQLException {
+    public void getAllAtmosphereElements(Consumer<AtmosphereElement> consumer) {
         List<AtmosphereElement> atmosphereElementList = new ArrayList<>();
 
         String sql = "SELECT atmosphere_id, element_id, percentage FROM ATMOSPHERES_ELEMENTS";
@@ -34,9 +35,21 @@ public class AtmosphereElementDao {
 
                 AtmosphereElement atmosphereElement = new AtmosphereElement(atmosphereId, elementId, percentage);
                 atmosphereElementList.add(atmosphereElement);
+
             }
+        } catch (Exception e) {
+            throw new RuntimeException("AtmosphereElementDao.getAllAtmosphereElements() says " + e.getMessage());
         }
 
-        return atmosphereElementList;
+    }
+
+
+    private AtmosphereElement mapToAtmosphereElement(ResultSet resultSet) throws SQLException {
+
+        int atmosphereId = resultSet.getInt("atmosphere_id");
+        int elementId = resultSet.getInt("element_id");
+        BigDecimal percentage = resultSet.getBigDecimal("percentage");
+
+        return new AtmosphereElement(atmosphereId, elementId, percentage);
     }
 }

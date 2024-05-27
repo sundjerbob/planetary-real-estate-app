@@ -38,8 +38,15 @@ public class CelestialPathService {
     }
 
 
-    public void processAllPaths(Consumer<CelestialPath> pathConsumer) {
-        celestialPathDao.processAllPaths(pathConsumer);
+    public void processAllPaths(Consumer<CelestialPathDto> consumer) {
+        celestialPathDao.processAllPaths(
+                path -> {
+                    CelestialBodyDto bodyA = CelestialBodyService.getInstance().getCelestialBodyById(path.getBodyA_Id());
+                    CelestialBodyDto bodyB = CelestialBodyService.getInstance().getCelestialBodyById(path.getBodyB_Id());
+                    CelestialPathDto pathDto = celestialPathToDto(path, bodyA.getName(), bodyB.getName());
+                    consumer.accept(pathDto);
+                }
+        );
     }
 
 

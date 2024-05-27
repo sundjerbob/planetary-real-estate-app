@@ -52,7 +52,7 @@ public class SpaceshipRoomDao {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("SpaceshipRoomDao.searchById() says: " + e.getMessage());
+            throw new RuntimeException("SpaceshipRoomDao.getAtmosphereById() says: " + e.getMessage());
         }
         return null; // Return null if no room is found
     }

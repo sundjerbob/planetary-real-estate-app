@@ -2,11 +2,18 @@ package com.db_course.service;
 
 import com.db_course.dao.AtmosphereElementDao;
 import com.db_course.db_config.DB_Client;
+import com.db_course.dto.AtmosphereElementDto;
+import com.db_course.dto.ElementDto;
+import com.db_course.entity_model.AtmosphereElement;
+
+import java.util.function.Consumer;
+
+import static com.db_course.dto_mapper.AtmosphereElementMapper.atmosphereElementToDto;
 
 public class AtmosphereElementService {
 
 
-    private static AtmosphereElementService instance;
+    private static volatile AtmosphereElementService instance;
     private static final Object mutex = new Object();
     private final AtmosphereElementDao atmosphereElementDao;
 
@@ -17,7 +24,7 @@ public class AtmosphereElementService {
         );
     }
 
-
+    /****************************************************************************************************************/
     public static AtmosphereElementService getInstance() {
         if (instance == null) {
             synchronized (mutex) {
@@ -28,4 +35,17 @@ public class AtmosphereElementService {
         }
         return instance;
     }
+
+
+    /****************************************************************************************************************/
+    public void processAtmosphereElementByAtmosphereId(int atmosphereId, Consumer<AtmosphereElementDto> consumer) {
+        Consumer<AtmosphereElement> dbObjConsumer = atmosphereElement -> {
+
+            ElementDto elementDto = ElementService.getInstance().getElementById(atmosphereElement.getElementId());
+
+            atmosphereElementToDto(atmosphereElement, elementDto);
+        };
+
+    }
+
 }

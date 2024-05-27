@@ -1,7 +1,6 @@
 package com.db_course.test_serv;
 
 import com.db_course.dto.CelestialPathDto;
-import com.db_course.entity_model.CelestialPath;
 import com.db_course.service.CelestialPathService;
 
 import java.util.function.Consumer;
@@ -20,9 +19,9 @@ public class CelestialPathTest {
 
     private static void testProcessAllPaths(CelestialPathService celestialPathService) {
         System.out.println("Testing processAllPaths method...");
-        celestialPathService.processAllPaths(new Consumer<CelestialPath>() {
+        celestialPathService.processAllPaths(new Consumer<CelestialPathDto>() {
             @Override
-            public void accept(CelestialPath celestialPath) {
+            public void accept(CelestialPathDto celestialPath) {
                 System.out.println(celestialPath.toString());
             }
         });

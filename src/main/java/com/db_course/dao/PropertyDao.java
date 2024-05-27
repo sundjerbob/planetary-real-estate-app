@@ -67,7 +67,7 @@ public class PropertyDao {
                 }
             }
         } catch (SQLException e) {
-            throw new RuntimeException("PropertyDao.searchById() says: " + e.getMessage());
+            throw new RuntimeException("PropertyDao.getAtmosphereById() says: " + e.getMessage());
         }
         return null; // Return null if no property is found
     }

@@ -19,7 +19,7 @@ public class ElementDao {
 
 
     /******************************************************************************************************************/
-    public void processAllElements(Consumer<Element> consumer) throws SQLException {
+    public void processAllElements(Consumer<Element> consumer) {
 
         String sql = "SELECT element_id, name, min_percentage, max_percentage FROM ELEMENTS";
 
@@ -32,7 +32,31 @@ public class ElementDao {
 
         } catch (SQLException e) {
 
-            throw new SQLException("ElementDao.getAllElements() says: " + e.getMessage());
+            throw new RuntimeException("ElementDao.getAllElements() says: " + e.getMessage());
+
+        }
+
+    }
+
+    /******************************************************************************************************************/
+    public Element getElementById(int elementId) {
+        String sql = "SELECT element_id, name, min_percentage, max_percentage FROM ELEMENTS WHERE element_id = ?";
+
+        try (
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+        ) {
+            preparedStatement.setInt(1, elementId);
+
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next())
+                    return mapToElement(resultSet);
+                return null;
+            }
+
+        } catch (SQLException e) {
+
+            throw new RuntimeException("ElementDao.getElementById() says: " + e.getMessage());
 
         }
 

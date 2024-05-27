@@ -14,7 +14,7 @@ public class Property {
 
     private int id;
     private int celestialBodyId;
-    private Integer soledToUserId;
+    private Integer soldToUserId;
     private int propertyRegNb;
     private String address;
     private BigDecimal squareMeters;

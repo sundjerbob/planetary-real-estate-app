@@ -46,8 +46,8 @@ public class ElementDao {
             String name = resultSet.getString("name");
             double minPercentage = resultSet.getDouble("min_percentage");
             double maxPercentage = resultSet.getDouble("max_percentage");
-
-            return new Element(elementId, name, minPercentage, maxPercentage);
+            boolean radioactive = resultSet.getBoolean("radioactive");
+            return new Element(elementId, name, minPercentage, maxPercentage, radioactive);
         } catch (SQLException e) {
             throw new RuntimeException("ElementDao.mapToElement() says: " + e.getMessage());
         }

@@ -39,9 +39,12 @@ public class DepartureDao {
 
     /******************************************************************************************************************/
     public Departure insertDeparture(Departure departure) {
+
         String sql = "INSERT INTO " + table + " (departure_date, passenger_id) VALUES (?, ?)";
 
+
         try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
             statement.setTimestamp(1, Timestamp.valueOf(departure.getDepartureDate()));
             statement.setInt(2, departure.getId());
 
@@ -58,6 +61,8 @@ public class DepartureDao {
                     throw new RuntimeException("Creating departure failed, no ID obtained.");
                 }
             }
+
+
         } catch (SQLException e) {
             throw new RuntimeException("DepartureDao.insertDeparture() says: " + e.getMessage());
         }

@@ -18,5 +18,4 @@ public class Departure {
     private int celestialBodyToId;
     private LocalDateTime departureDate;
 
-
 }

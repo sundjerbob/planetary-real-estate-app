@@ -14,7 +14,7 @@ public class PropertyDto {
 
     private int id;
     private CelestialBodyDto celestialBody;
-    private Integer soledToUserId;
+    private Integer soldToUserId;
     private int propertyRegNb;
     private String address;
     private BigDecimal squareMeters;

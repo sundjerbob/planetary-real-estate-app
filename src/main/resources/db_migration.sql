@@ -77,7 +77,8 @@ CREATE TABLE ELEMENTS
     element_id     INT AUTO_INCREMENT PRIMARY KEY,
     name           VARCHAR(50) NOT NULL UNIQUE,
     min_percentage DECIMAL(5, 2), -- Minimum percentage for human habitability
-    max_percentage DECIMAL(5, 2)  -- Maximum percentage for human habitability
+    max_percentage DECIMAL(5, 2), -- Maximum percentage for human habitability
+    radioactive    BOOLEAN        -- Is element radioactive
 );
 
 
@@ -176,7 +177,7 @@ CREATE TABLE TICKETS
     ticket_id    INT AUTO_INCREMENT,
     departure_id INT            NOT NULL,
     passenger_id INT, --
-    soled        boolean,
+    sold        boolean,
     price        DECIMAL(10, 2) NOT NULL,
     room_id      INT            NOT NULL,
     spaceship_id INT            NOT NULL,

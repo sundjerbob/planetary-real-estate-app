@@ -22,10 +22,10 @@ public class PropertyDao {
     public void insert(Property property) {
         String sql = "INSERT INTO " + TABLE + " (property_id, celestial_body_id, sold_to_user_id, global_registry_nb, address, square_meters, description, price) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, property.getPropertyId());
+            statement.setInt(1, property.getId());
             statement.setInt(2, property.getCelestialBodyId());
             statement.setObject(3, property.getSoldToUserId(), Types.INTEGER);
-            statement.setInt(4, property.getGlobalRegistryNb());
+            statement.setInt(4, property.getPropertyRegNb());
             statement.setString(5, property.getAddress());
             statement.setBigDecimal(6, property.getSquareMeters());
             statement.setString(7, property.getDescription());
@@ -43,12 +43,12 @@ public class PropertyDao {
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, property.getCelestialBodyId());
             statement.setObject(2, property.getSoldToUserId(), Types.INTEGER);
-            statement.setInt(3, property.getGlobalRegistryNb());
+            statement.setInt(3, property.getPropertyRegNb());
             statement.setString(4, property.getAddress());
             statement.setBigDecimal(5, property.getSquareMeters());
             statement.setString(6, property.getDescription());
             statement.setBigDecimal(7, property.getPrice());
-            statement.setInt(8, property.getPropertyId());
+            statement.setInt(8, property.getId());
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException("PropertyDao.update() says: " + e.getMessage());
@@ -97,8 +97,11 @@ public class PropertyDao {
         int globalRegistryNb = resultSet.getInt("global_registry_nb");
         String address = resultSet.getString("address");
         BigDecimal squareMeters = resultSet.getBigDecimal("square_meters");
+        String name = resultSet.getString("name");
         String description = resultSet.getString("description");
         BigDecimal price = resultSet.getBigDecimal("price");
-        return new Property(propertyId, celestialBodyId, soldToUserId, globalRegistryNb, address, squareMeters, description, price);
+        return new Property(propertyId, celestialBodyId, soldToUserId, globalRegistryNb, address, squareMeters, name, description, price);
     }
+
+
 }

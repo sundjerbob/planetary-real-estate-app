@@ -1,9 +1,9 @@
 package com.db_course.ui_test.test1;
 
 
+import com.db_course.dto.DepartureDto;
 import com.db_course.dto.UserDto;
 import com.db_course.entity_model.Mission;
-import com.db_course.dto.DepartureDto;
 
 import javax.swing.*;
 import java.awt.*;
@@ -91,10 +91,9 @@ public class DynamicFilterPanel extends JPanel {
     private boolean matchesDepartureFilter(DepartureDto departure, String key, String value) {
         return switch (key) {
             case "departureId" -> String.valueOf(departure.getId()).contains(value);
-            case "departureSpaceshipId" -> String.valueOf(departure.getSpaceshipId()).contains(value);
+            case "departureSpaceshipId" -> String.valueOf(departure.getSpaceship().getName()).contains(value);
             case "departureDate" -> departure.getDepartureDate().toString().contains(value);
 
-            // Add other fields if necessary
             default -> false;
         };
     }

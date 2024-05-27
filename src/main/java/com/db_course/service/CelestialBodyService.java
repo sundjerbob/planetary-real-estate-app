@@ -2,9 +2,9 @@ package com.db_course.service;
 
 import com.db_course.dao.CelestialBodyDao;
 import com.db_course.db_config.DB_Client;
+import com.db_course.dto.CelestialBodyDto;
 import com.db_course.entity_model.CelestialBody;
 import com.db_course.entity_model.CelestialType;
-import com.db_course.dto.CelestialBodyDto;
 
 import java.util.Locale;
 import java.util.function.Consumer;
@@ -13,7 +13,8 @@ import static com.db_course.dto_mapper.CelestialBodyMapper.celestialBodyToDto;
 
 public class CelestialBodyService {
 
-    private static CelestialBodyService instance;
+
+    private static volatile CelestialBodyService instance;
     private static final Object mutex = new Object();
     private final CelestialBodyDao celestialBodyDao;
 
@@ -24,6 +25,7 @@ public class CelestialBodyService {
         );
 
     }
+
 
     public static CelestialBodyService getInstance() {
         if (instance == null) {
@@ -37,6 +39,19 @@ public class CelestialBodyService {
     }
 
 
+    public CelestialBodyDto getCelestialBodyById(int id) {
+
+        CelestialBody celestialBody = celestialBodyDao.getCelestialBodyById(id);
+
+        if (celestialBody.getRotatesAroundId() == null)
+            return celestialBodyToDto(celestialBody, null);
+
+        CelestialBody rotatesAround = celestialBodyDao.getCelestialBodyById(celestialBody.getRotatesAroundId());
+
+        return celestialBodyToDto(celestialBodyDao.getCelestialBodyById(id), rotatesAround.getName());
+    }
+
+
     public void processAllCelestialBodies(Consumer<CelestialBodyDto> consumer) {
 
         Consumer<CelestialBody> dbObjConsumer = celestialBody -> {
@@ -44,7 +59,7 @@ public class CelestialBodyService {
             String rotatesAroundObj = null;
             Integer rotatesAroundId = celestialBody.getRotatesAroundId();
 
-            if (rotatesAroundId != null && rotatesAroundId > 0)
+            if (rotatesAroundId != null)
                 rotatesAroundObj = celestialBodyDao.getCelestialBodyById(celestialBody.getRotatesAroundId()).getName();
 
             CelestialBodyDto dto = celestialBodyToDto(celestialBody, rotatesAroundObj);
@@ -73,8 +88,6 @@ public class CelestialBodyService {
 
         celestialBodyDao.processCelestialBodiesByType(type, dbObjConsumer);
     }
-
-
 
 
 }

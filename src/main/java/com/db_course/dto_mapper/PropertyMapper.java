@@ -6,12 +6,12 @@ import com.db_course.entity_model.Property;
 
 public class PropertyMapper {
 
-    public static PropertyDto propertyToDto(Property property, CelestialBodyDto celestialLocation) {
+    public static PropertyDto propertyToDto(Property property, CelestialBodyDto celestialBody) {
 
         return new PropertyDto(
                 property.getId(),
-                celestialLocation,
-                property.getSoledToUserId(),
+                celestialBody,
+                property.getSoldToUserId(),
                 property.getPropertyRegNb(),
                 property.getAddress(),
                 property.getSquareMeters(),

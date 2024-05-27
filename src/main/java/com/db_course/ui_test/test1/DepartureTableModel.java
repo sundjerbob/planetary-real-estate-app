@@ -8,7 +8,7 @@ import javax.swing.table.AbstractTableModel;
 import java.util.List;
 
 public class DepartureTableModel extends AbstractTableModel {
-    private final String[] columnNames = {"ID", "Spaceship ID", "Departure Date", "Destination"};
+    private final String[] columnNames = {"ID", "Spaceship", "Departure Date", "Destination"};
     private final List<DepartureDto> departures;
 
     public DepartureTableModel(List<DepartureDto> departures) {
@@ -32,10 +32,11 @@ public class DepartureTableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
+
         DepartureDto departure = departures.get(rowIndex);
         return switch (columnIndex) {
             case 0 -> departure.getId();
-            case 1 -> departure.getSpaceshipId();
+            case 1 -> departure.getSpaceship().getName();
             case 2 -> departure.getDepartureDate();
             default -> null;
         };

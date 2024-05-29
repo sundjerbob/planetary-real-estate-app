@@ -18,6 +18,6 @@ public class DB_Constants {
         DB_CONNECTION_PROPERTIES.setProperty("password", PASSWORD);
     }
 
-    private Constants() {
+    private DB_Constants() {
     }
 }

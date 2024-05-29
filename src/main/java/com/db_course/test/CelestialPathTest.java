@@ -1,4 +1,4 @@
-package com.db_course.test_serv;
+package com.db_course.test;
 
 import com.db_course.dto.CelestialPathDto;
 import com.db_course.service.CelestialPathService;

@@ -8,28 +8,31 @@ import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 
-public class PersonTable extends JTable {
+public class ResidentTable extends JTable {
 
-    private ResidentTableModel residentTableModel;
+
+    private final ResidentTableModel personTableModel;
+
     @Getter
-    private ResidentDto selectedPerson;
+    private ResidentDto selectedResident;
 
-    public PersonTable() {
+
+    public ResidentTable() {
         this(new ResidentTableModel());
     }
 
-    public PersonTable(ResidentTableModel model) {
+
+    public ResidentTable(ResidentTableModel model) {
         super(model);
-        this.residentTableModel = model;
+        this.personTableModel = model;
         this.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         this.getSelectionModel().addListSelectionListener(e -> {
             int selectedRow = getSelectedRow();
             if (selectedRow != -1) {
-                selectedPerson = residentTableModel.getPersonAt(selectedRow);
+                selectedResident = personTableModel.getPersonAt(selectedRow);
             }
         });
     }
-
 
 
     @Override

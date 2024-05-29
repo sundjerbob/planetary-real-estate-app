@@ -12,6 +12,7 @@ public class SpaceshipDao {
 
     private Connection connection;
 
+
     public SpaceshipDao(Connection connection) {
         this.connection = connection;
     }
@@ -25,6 +26,7 @@ public class SpaceshipDao {
             statement.executeUpdate();
         }
     }
+
 
     /******************************************************************************************************************/
     public Spaceship getSpaceshipById(int spaceshipId) {
@@ -74,7 +76,7 @@ public class SpaceshipDao {
         String sql = "UPDATE SPACESHIPS SET name = ?, model = ?, passenger_capacity = ?, fuel_capacity = ?, max_travel_range = ?, traveling_speed = ?, manufacturer = ?, launch_date = ? WHERE spaceship_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             mapSpaceshipToStatement(spaceship, statement);
-            statement.setInt(9, spaceship.getSpaceshipId());
+            statement.setInt(9, spaceship.getId());
             statement.executeUpdate();
         } catch (Exception e) {
             throw new RuntimeException("SpaceshipDao.updateSpaceship() says: " + e.getMessage());

@@ -40,19 +40,14 @@ public class ResidentTableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        ResidentDto person = filteredData.get(rowIndex);
-        switch (columnIndex) {
-            case 0:
-                return person.getFullName();
-            case 1:
-                return person.getGender();
-            case 2:
-                return person.getBirthDate();
-            case 3:
-                return person.getDeathDate();
-            default:
-                return null;
-        }
+        ResidentDto residentDto = filteredData.get(rowIndex);
+        return switch (columnIndex) {
+            case 0 -> residentDto.getFullName();
+            case 1 -> residentDto.getGender();
+            case 2 -> residentDto.getBirthDate();
+            case 3 -> residentDto.getDeathDate();
+            default -> throw new RuntimeException("ResidentTableModel says: error occurred.");
+        };
     }
 
     @Override
@@ -66,14 +61,11 @@ public class ResidentTableModel extends AbstractTableModel {
         } else {
             filteredData = personData.stream()
                     .filter(person -> {
-                        switch (column) {
-                            case 0:
-                                return person.getFullName().toLowerCase().contains(query.toLowerCase());
-                            case 1:
-                                return person.getGender().toLowerCase().contains(query.toLowerCase());
-                            default:
-                                return true;
-                        }
+                        return switch (column) {
+                            case 0 -> person.getFullName().toLowerCase().contains(query.toLowerCase());
+                            case 1 -> person.getGender().toLowerCase().contains(query.toLowerCase());
+                            default -> true;
+                        };
                     }).collect(Collectors.toList());
         }
         fireTableDataChanged();

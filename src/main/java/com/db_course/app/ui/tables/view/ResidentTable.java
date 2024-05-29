@@ -1,6 +1,6 @@
-package com.db_course.app.view.tables.view;
+package com.db_course.app.ui.tables.view;
 
-import com.db_course.app.view.tables.model.ResidentTableModel;
+import com.db_course.app.ui.tables.model.ResidentTableModel;
 import com.db_course.dto.ResidentDto;
 import lombok.Getter;
 
@@ -10,17 +10,13 @@ import java.awt.*;
 
 public class ResidentTable extends JTable {
 
-
-    private final ResidentTableModel personTableModel;
-
+    private ResidentTableModel personTableModel;
     @Getter
-    private ResidentDto selectedResident;
-
+    private ResidentDto selectedPerson;
 
     public ResidentTable() {
         this(new ResidentTableModel());
     }
-
 
     public ResidentTable(ResidentTableModel model) {
         super(model);
@@ -29,11 +25,10 @@ public class ResidentTable extends JTable {
         this.getSelectionModel().addListSelectionListener(e -> {
             int selectedRow = getSelectedRow();
             if (selectedRow != -1) {
-                selectedResident = personTableModel.getPersonAt(selectedRow);
+                selectedPerson = personTableModel.getPersonAt(selectedRow);
             }
         });
     }
-
 
     @Override
     public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {

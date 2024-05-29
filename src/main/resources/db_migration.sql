@@ -64,7 +64,7 @@ CREATE TABLE CELESTIAL_PATHS
     distance_km DOUBLE NOT NULL,
     description VARCHAR(1024),
 
-    PRIMARY KEY (body_a_id, body_b_id),
+    PRIMARY KEY (path_id, body_a_id, body_b_id),
 
     FOREIGN KEY (body_a_id) REFERENCES CELESTIAL_BODIES (celestial_body_id),
     FOREIGN KEY (body_b_id) REFERENCES CELESTIAL_BODIES (celestial_body_id)
@@ -129,7 +129,7 @@ CREATE TABLE CELESTIAL_BODY_RESIDENTS
     resident_from     DATE NOT NULL,
     resident_until    DATE,
 
-    PRIMARY KEY (resident_id, celestial_body_id, id),
+    PRIMARY KEY (id, resident_id, celestial_body_id),
 
     FOREIGN KEY (resident_id) REFERENCES RESIDENTS (resident_id),
     FOREIGN KEY (celestial_body_id) REFERENCES CELESTIAL_BODIES (celestial_body_id)
@@ -425,11 +425,13 @@ VALUES (1, 2, 57900000),   -- Sun to Mercury: ~57.9 million km
        (9, 10, 2411300000) -- Neptune to Pluto: ~2,411.3 million km
 ;
 
+
 -- Insert data into ATMOSPHERES table
 INSERT INTO ATMOSPHERES (celestial_body_id, atmosphere_height)
 VALUES ((SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Earth'), 480),
        ((SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Mars'), 11),
        ((SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Venus'), 250);
+
 
 -- Insert data into ELEMENTS table
 INSERT INTO ELEMENTS (name, min_percentage, max_percentage)
@@ -477,6 +479,13 @@ VALUES ((SELECT atmosphere_id
          FROM ATMOSPHERES
          WHERE celestial_body_id = (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Venus')),
         (SELECT element_id FROM ELEMENTS WHERE name = 'Nitrogen'), 3.5);
+
+
+
+INSERT INTO planetary_real_estate_db.residents (gender, full_name, birth_date, death_date)
+VALUES ('F', 'Cacajlo Arandjelovski', '2000-03-7', NULL),
+       ('M', 'Acetto Balsamico', '2016-05-11', '2022-09-30'),
+       ('F', 'Rozalija Achmedovski', '1979-12-31', '2025-2-28');
 
 
 

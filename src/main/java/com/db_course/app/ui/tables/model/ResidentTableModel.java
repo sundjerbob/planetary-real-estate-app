@@ -1,4 +1,4 @@
-package com.db_course.app.view.tables.model;
+package com.db_course.app.ui.tables.model;
 
 import com.db_course.dto.ResidentDto;
 import com.db_course.service.ResidentService;
@@ -40,13 +40,13 @@ public class ResidentTableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        ResidentDto residentDto = filteredData.get(rowIndex);
+        ResidentDto resident = filteredData.get(rowIndex);
         return switch (columnIndex) {
-            case 0 -> residentDto.getFullName();
-            case 1 -> residentDto.getGender();
-            case 2 -> residentDto.getBirthDate();
-            case 3 -> residentDto.getDeathDate();
-            default -> throw new RuntimeException("ResidentTableModel says: error occurred.");
+            case 0 -> resident.getFullName();
+            case 1 -> resident.getGender();
+            case 2 -> resident.getBirthDate();
+            case 3 -> resident.getDeathDate();
+            default -> null;
         };
     }
 

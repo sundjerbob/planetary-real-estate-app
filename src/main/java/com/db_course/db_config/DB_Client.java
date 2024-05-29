@@ -1,19 +1,21 @@
 package com.db_course.db_config;
 
+import com.db_course.service.CelestialBodyService;
 import lombok.Getter;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Properties;
 
-import static com.db_course.db_config.Constants.*;
+import static com.db_course.db_config.DB_Constants.DB_CONNECTION_POINT_URL;
+import static com.db_course.db_config.DB_Constants.DB_CONNECTION_PROPERTIES;
 
 public class DB_Client {
 
     @Getter
     private Connection connection;
-
+    private static volatile DB_Client instance;
+    private static final Object mutex = new Object();
 
     // Changed to non-static
     private void connect() {
@@ -29,13 +31,17 @@ public class DB_Client {
         connect();
     }
 
-    private static final class SingleInstanceHolder {
-        private static final DB_Client singleInstance = new DB_Client();
+
+    public static DB_Client getInstance() {
+        if (instance == null) {
+            synchronized (mutex) {
+                if (instance == null) {
+                    instance = new DB_Client();
+                }
+            }
+        }
+        return instance;
     }
 
-    // Thread safe implementation of singleton
-    public static DB_Client getInstance() {
-        return SingleInstanceHolder.singleInstance;
-    }
 
 }

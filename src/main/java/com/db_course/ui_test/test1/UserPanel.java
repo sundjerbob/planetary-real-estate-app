@@ -3,13 +3,11 @@ package com.db_course.ui_test.test1;
 
 import com.db_course.dto.UserDto;
 import com.db_course.service.UserService;
-import com.db_course.ui_test.UserTableModel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class UserPanel extends JPanel {
     private JTable userTable;

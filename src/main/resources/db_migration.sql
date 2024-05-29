@@ -106,9 +106,36 @@ CREATE TABLE ATMOSPHERES_ELEMENTS
     element_id    INT,
     percentage    DECIMAL(5, 2),
     PRIMARY KEY (atmosphere_id, element_id),
+
     FOREIGN KEY (atmosphere_id) REFERENCES ATMOSPHERES (atmosphere_id),
     FOREIGN KEY (element_id) REFERENCES ELEMENTS (element_id)
 );
+
+CREATE TABLE RESIDENTS
+(
+    resident_id INT AUTO_INCREMENT PRIMARY KEY,
+    gender      CHAR(1) NOT NULL CHECK (gender IN ('M', 'F')),
+    full_name   VARCHAR(256),
+    birth_date  DATE    NOT NULL,
+    death_date  DATE
+);
+
+
+CREATE TABLE CELESTIAL_BODY_RESIDENTS
+(
+    id                INT AUTO_INCREMENT,
+    resident_id       INT  NOT NULL,
+    celestial_body_id INT  NOT NULL,
+    resident_from     DATE NOT NULL,
+    resident_until    DATE,
+
+    PRIMARY KEY (resident_id, celestial_body_id, id),
+
+    FOREIGN KEY (resident_id) REFERENCES RESIDENTS (resident_id),
+    FOREIGN KEY (celestial_body_id) REFERENCES CELESTIAL_BODIES (celestial_body_id)
+
+);
+
 
 
 CREATE TABLE SPACESHIPS
@@ -122,6 +149,7 @@ CREATE TABLE SPACESHIPS
     traveling_speed    DECIMAL(10, 2), -- Traveling speed in light-years per hour
     manufacturer       VARCHAR(50)
 );
+
 
 
 CREATE TABLE SPACESHIP_ROOMS
@@ -177,7 +205,7 @@ CREATE TABLE TICKETS
     ticket_id    INT AUTO_INCREMENT,
     departure_id INT            NOT NULL,
     passenger_id INT, --
-    sold        boolean,
+    sold         boolean,
     price        DECIMAL(10, 2) NOT NULL,
     room_id      INT            NOT NULL,
     spaceship_id INT            NOT NULL,

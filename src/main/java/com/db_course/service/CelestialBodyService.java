@@ -9,7 +9,7 @@ import com.db_course.entity_model.CelestialType;
 import java.util.Locale;
 import java.util.function.Consumer;
 
-import static com.db_course.dto_mapper.CelestialBodyMapper.celestialBodyToDto;
+import static com.db_course.obj_mapper.CelestialBodyMapper.celestialBodyToDto;
 
 public class CelestialBodyService {
 

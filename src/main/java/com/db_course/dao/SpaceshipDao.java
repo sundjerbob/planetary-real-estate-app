@@ -27,7 +27,7 @@ public class SpaceshipDao {
     }
 
     /******************************************************************************************************************/
-    public Spaceship getSpaceship(int spaceshipId) throws SQLException {
+    public Spaceship getSpaceshipById(int spaceshipId) {
         String sql = "SELECT * FROM SPACESHIPS WHERE spaceship_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, spaceshipId);
@@ -45,6 +45,8 @@ public class SpaceshipDao {
                     );
                 }
             }
+        } catch (Exception e) {
+            throw new RuntimeException("SpaceshipDao.getSpaceshipById() says: " + e.getMessage());
         }
         return null;
     }

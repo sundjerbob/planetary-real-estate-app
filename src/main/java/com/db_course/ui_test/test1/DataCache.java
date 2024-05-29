@@ -1,7 +1,7 @@
 package com.db_course.ui_test.test1;
 
-import com.db_course.cache.DepartureCache;
-import com.db_course.cache.MissionCache;
+import com.db_course.cache.struct.DepartureCache;
+import com.db_course.cache.struct.MissionCache;
 import lombok.Getter;
 
 @Getter

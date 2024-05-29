@@ -2,15 +2,19 @@ package com.db_course.service;
 
 import com.db_course.dao.SpaceshipDao;
 import com.db_course.db_config.DB_Client;
+import com.db_course.dto.SpaceshipDto;
+import com.db_course.entity_model.Spaceship;
+
+import static com.db_course.obj_mapper.SpaceshipMapper.spaceshipToDto;
 
 public class SpaceshipService {
-    private static SpaceshipService instance;
+    private static volatile SpaceshipService instance;
     private static final Object mutex = new Object();
-    private final SpaceshipDao celestialPathDao;
+    private final SpaceshipDao spaceshipDao;
 
 
     private SpaceshipService() {
-        celestialPathDao = new SpaceshipDao(
+        spaceshipDao = new SpaceshipDao(
                 DB_Client.getInstance().getConnection()
         );
     }
@@ -25,6 +29,11 @@ public class SpaceshipService {
             }
         }
         return instance;
+    }
+
+    public SpaceshipDto getSpaceshipById(int spaceshipId) {
+        Spaceship spaceship = spaceshipDao.getSpaceshipById(spaceshipId);
+        return spaceshipToDto(spaceship);
     }
 
 }

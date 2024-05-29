@@ -17,7 +17,6 @@ public class DepartureDto {
     private int id;
     private SpaceshipDto spaceship;
     private CelestialPathDto celestialPath;
-    private String departureFromBody;
     private LocalDateTime departureDate;
     private long travelDurationDays;
 }

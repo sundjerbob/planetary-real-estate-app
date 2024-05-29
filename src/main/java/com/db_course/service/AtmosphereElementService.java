@@ -8,7 +8,7 @@ import com.db_course.entity_model.AtmosphereElement;
 
 import java.util.function.Consumer;
 
-import static com.db_course.dto_mapper.AtmosphereElementMapper.atmosphereElementToDto;
+import static com.db_course.obj_mapper.AtmosphereElementMapper.atmosphereElementToDto;
 
 public class AtmosphereElementService {
 
@@ -42,7 +42,6 @@ public class AtmosphereElementService {
         Consumer<AtmosphereElement> dbObjConsumer = atmosphereElement -> {
 
             ElementDto elementDto = ElementService.getInstance().getElementById(atmosphereElement.getElementId());
-
             atmosphereElementToDto(atmosphereElement, elementDto);
         };
 

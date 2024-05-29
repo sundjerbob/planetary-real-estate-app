@@ -7,7 +7,7 @@ import com.db_course.entity_model.Element;
 
 import java.util.function.Consumer;
 
-import static com.db_course.dto_mapper.ElementMapper.elementToDto;
+import static com.db_course.obj_mapper.ElementMapper.elementToDto;
 
 public class ElementService {
 

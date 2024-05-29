@@ -8,7 +8,7 @@ import com.db_course.entity_model.CelestialPath;
 
 import java.util.function.Consumer;
 
-import static com.db_course.dto_mapper.CelestialPathMapper.celestialPathToDto;
+import static com.db_course.obj_mapper.CelestialPathMapper.celestialPathToDto;
 
 
 public class CelestialPathService {

@@ -2,7 +2,7 @@ package com.db_course.db_config;
 
 import java.util.Properties;
 
-public class Constants {
+public class DB_Constants {
 
     private static final String CONNECTION_PREFIX = "jdbc:mysql://";
     private static final String IP_ADDR = "localhost";

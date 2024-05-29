@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
-import java.sql.Date;
 
 @Data
 @AllArgsConstructor
@@ -13,7 +12,7 @@ import java.sql.Date;
 
 public class Spaceship {
 
-    private int spaceshipId;
+    private int id;
     private String name;
     private String model;
     private int passengerCapacity;

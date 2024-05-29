@@ -36,9 +36,9 @@ public class DeparturePanel extends JPanel {
     }
 
     private void loadDepartures() {
-        NavigableSet<DepartureDto> cachedDepartures = DataCache.getInstance().getDepartureCache().getDeparturesBetween(LocalDateTime.now().minusYears(1), LocalDateTime.now().plusYears(1));
-        departures.addAll(cachedDepartures);
-        tableModel.fireTableDataChanged();
+//        NavigableSet<DepartureDto> cachedDepartures = DataCache.getInstance().getDepartureCache().getDeparturesBetween(LocalDateTime.now().minusYears(1), LocalDateTime.now().plusYears(1));
+//        departures.addAll(cachedDepartures);
+//        tableModel.fireTableDataChanged();
     }
 
     private void applyFilters(DynamicFilterPanel filterPanel) {

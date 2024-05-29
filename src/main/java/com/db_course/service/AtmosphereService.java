@@ -5,7 +5,7 @@ import com.db_course.db_config.DB_Client;
 import com.db_course.dto.AtmosphereDto;
 import com.db_course.entity_model.Atmosphere;
 
-import static com.db_course.dto_mapper.AtmosphereMapper.atmosphereToDto;
+import static com.db_course.obj_mapper.AtmosphereMapper.atmosphereToDto;
 
 public class AtmosphereService {
 

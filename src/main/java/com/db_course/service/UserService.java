@@ -8,7 +8,7 @@ import com.db_course.entity_model.User;
 import java.sql.SQLException;
 import java.util.function.Consumer;
 
-import static com.db_course.dto_mapper.UserMapper.userToDto;
+import static com.db_course.obj_mapper.UserMapper.userToDto;
 
 public class UserService {
 

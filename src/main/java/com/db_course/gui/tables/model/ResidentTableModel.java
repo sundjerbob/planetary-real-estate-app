@@ -1,4 +1,4 @@
-package com.db_course.app.ui.tables.model;
+package com.db_course.gui.tables.model;
 
 import com.db_course.dto.ResidentDto;
 import com.db_course.service.ResidentService;
@@ -6,6 +6,7 @@ import com.db_course.service.ResidentService;
 import javax.swing.table.AbstractTableModel;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -17,7 +18,7 @@ public class ResidentTableModel extends AbstractTableModel {
     private List<ResidentDto> filteredData;
 
     public ResidentTableModel() {
-        this.personData = new TreeSet<>((p1, p2) -> p1.getFullName().compareTo(p2.getFullName()));
+        this.personData = new TreeSet<>(Comparator.comparing(ResidentDto::getFullName).thenComparing(ResidentDto::getBirthDate));
         this.filteredData = new ArrayList<>();
         populateData();
     }
@@ -60,13 +61,14 @@ public class ResidentTableModel extends AbstractTableModel {
             filteredData = new ArrayList<>(personData);
         } else {
             filteredData = personData.stream()
-                    .filter(person -> {
-                        return switch (column) {
-                            case 0 -> person.getFullName().toLowerCase().contains(query.toLowerCase());
-                            case 1 -> person.getGender().toLowerCase().contains(query.toLowerCase());
-                            default -> true;
-                        };
-                    }).collect(Collectors.toList());
+                    .filter(
+                            person ->
+                                    switch (column) {
+                                        case 0 -> person.getFullName().toLowerCase().contains(query.toLowerCase());
+                                        case 1 -> person.getGender().toLowerCase().contains(query.toLowerCase());
+                                        default -> true;
+                                    }
+                    ).collect(Collectors.toList());
         }
         fireTableDataChanged();
     }

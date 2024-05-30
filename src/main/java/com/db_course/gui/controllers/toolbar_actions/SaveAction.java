@@ -1,4 +1,4 @@
-package com.db_course.app.controller.actions;
+package com.db_course.gui.controllers.toolbar_actions;
 
 
 import javax.swing.*;

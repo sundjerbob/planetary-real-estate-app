@@ -40,14 +40,18 @@ public class ResidentDao {
 
     public void processResidentsWhoDiedBetweenAge20And40(int celestialBodyId, Consumer<Resident> consumer) {
 
-        String sql = "SELECT r.resident_id, r.full_name, r.gender, r.birth_date, r.death_date " +
-                "FROM RESIDENTS r " +
-                "JOIN CELESTIAL_BODY_RESIDENTS cbr ON r.resident_id = cbr.resident_id " +
-                "WHERE cbr.celestial_body_id = ? " +
-                "AND cbr.resident_until IS NULL " +
-                "AND r.death_date IS NOT NULL " +
-                "AND TIMESTAMPDIFF(YEAR, r.birth_date, r.death_date) BETWEEN 20 AND 40 " +
-                "AND TIMESTAMPDIFF(YEAR, cbr.resident_from, IFNULL(cbr.resident_until, NOW())) > 1";
+
+        String sql = """
+                    SELECT r.resident_id, r.full_name, r.gender, r.birth_date, r.death_date
+                    FROM RESIDENTS r
+                    JOIN CELESTIAL_BODY_RESIDENTS cbr ON r.resident_id = cbr.resident_id
+                    WHERE cbr.celestial_body_id = ?
+                    AND cbr.resident_until IS NULL
+                    AND r.death_date IS NOT NULL
+                    AND TIMESTAMPDIFF(YEAR, r.birth_date, r.death_date) BETWEEN 20 AND 40
+                    AND TIMESTAMPDIFF(YEAR, r.resident_from, IFNULL(cbr.resident_until, NOW())) > 1
+                """;
+
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, celestialBodyId);
@@ -61,6 +65,7 @@ public class ResidentDao {
         } catch (Exception e) {
             throw new RuntimeException("ResidentDao.processResidentsWhoDiedBetweenAge20And40() says: " + e.getMessage());
         }
+
 
     }
 

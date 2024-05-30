@@ -1,8 +1,8 @@
-package com.db_course.app.controller;
+package com.db_course.gui.controllers;
 
-import com.db_course.app.controller.actions.DeleteAction;
-import com.db_course.app.controller.actions.ReloadDataAction;
-import com.db_course.app.controller.actions.SaveAction;
+import com.db_course.gui.controllers.toolbar_actions.DeleteAction;
+import com.db_course.gui.controllers.toolbar_actions.ReloadDataAction;
+import com.db_course.gui.controllers.toolbar_actions.SaveAction;
 import lombok.Getter;
 
 @Getter

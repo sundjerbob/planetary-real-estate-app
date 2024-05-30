@@ -1,6 +1,6 @@
-package com.db_course.app;
+package com.db_course.gui;
 
-import com.db_course.app.ui.window.MainFrame;
+import com.db_course.gui.window.MainFrame;
 
 import javax.swing.*;
 

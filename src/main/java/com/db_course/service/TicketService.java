@@ -10,9 +10,7 @@ public class TicketService {
 
 
     private TicketService() {
-        celestialPathDao = new TicketDao(
-                DB_Client.getInstance().getConnection()
-        );
+        celestialPathDao = new TicketDao();
     }
 
 

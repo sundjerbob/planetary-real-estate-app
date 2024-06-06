@@ -17,7 +17,7 @@ public class ResidentDao {
     private final static String TABLE = "RESIDENTS";
 
 
-    public ResidentDao(Connection connection) {
+    public ResidentDao() {
         this.connection = DB_Client.getInstance().getConnection();
     }
 
@@ -74,11 +74,10 @@ public class ResidentDao {
 
         int residentId = rs.getInt("resident_id");
         String fullName = rs.getString("full_name");
-        String gender = rs.getString("gender");
+        Resident.Gender gender = Resident.Gender.valueOf(rs.getString("gender").toUpperCase());
         LocalDate birthDate = rs.getDate("birth_date").toLocalDate();
         LocalDate deathDate = rs.getDate("death_date") == null ? null : rs.getDate("death_date").toLocalDate();
         return new Resident(residentId, fullName, gender, birthDate, deathDate);
-
     }
 
 

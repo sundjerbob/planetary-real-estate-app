@@ -1,5 +1,6 @@
 package com.db_course.dao;
 
+import com.db_course.db_config.DB_Client;
 import com.db_course.entity_model.Mission;
 
 import java.sql.*;
@@ -13,8 +14,8 @@ public class MissionDao {
     private final Connection connection;
 
 
-    public MissionDao(Connection connection) {
-        this.connection = connection;
+    public MissionDao() {
+        this.connection = DB_Client.getInstance().getConnection();
     }
 
 

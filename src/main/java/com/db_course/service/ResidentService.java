@@ -9,6 +9,7 @@ import java.util.function.Consumer;
 
 import static com.db_course.obj_mapper.ResidentMapper.residentToDto;
 
+
 public class ResidentService {
 
 
@@ -18,7 +19,7 @@ public class ResidentService {
 
 
     private ResidentService() {
-        this.residentDao = new ResidentDao(DB_Client.getInstance().getConnection());
+        this.residentDao = new ResidentDao();
     }
 
 
@@ -35,7 +36,9 @@ public class ResidentService {
         return instance;
     }
 
+
     public void processAllResidents(Consumer<ResidentDto> consumer) {
+
         Consumer<Resident> dbObjConsumer =
                 resident -> {
                     ResidentDto residentDto = residentToDto(resident);
@@ -43,6 +46,7 @@ public class ResidentService {
                 };
         residentDao.processAllResident(dbObjConsumer);
     }
+
 
     public void processResidentsWhoDiedBetweenAge20And40(int celestialBodyId, Consumer<ResidentDto> consumer) {
 

@@ -29,9 +29,8 @@ public class CelestialBodyTest {
     public void testProcessCelestialBodiesByType() {
         System.out.println("testProcessCelestialBodiesByType");
         CelestialBodyService service = CelestialBodyService.getInstance();
-        String type = "PLANET"; // Assuming CelestialType enum has PLANET
 
-        service.processCelestialBodiesByType(type, new Consumer<CelestialBodyDto>() {
+        service.processCelestialBodiesByTypeId(2, new Consumer<CelestialBodyDto>() {
             @Override
             public void accept(CelestialBodyDto celestialBodyDto) {
                 System.out.println(celestialBodyDto);

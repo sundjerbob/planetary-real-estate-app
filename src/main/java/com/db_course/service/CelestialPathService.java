@@ -20,9 +20,7 @@ public class CelestialPathService {
 
 
     private CelestialPathService() {
-        celestialPathDao = new CelestialPathDao(
-                DB_Client.getInstance().getConnection()
-        );
+        celestialPathDao = new CelestialPathDao();
     }
 
 

@@ -14,7 +14,7 @@ public class CelestialBodyResident {
     private int id;
     private int celestialBodyId;
     private int residentId;
-    private LocalDate resident_form;
-    private LocalDate resident_until;
+    private LocalDate residentFrom;
+    private LocalDate residentUntil;
 
 }

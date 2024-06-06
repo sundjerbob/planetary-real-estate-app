@@ -20,9 +20,7 @@ public class DepartureServices {
 
 
     private DepartureServices() {
-        departureDao = new DepartureDao(
-                DB_Client.getInstance().getConnection()
-        );
+        departureDao = new DepartureDao();
     }
 
     /******************************************************************************************************************/

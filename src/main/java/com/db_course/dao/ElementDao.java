@@ -1,5 +1,6 @@
 package com.db_course.dao;
 
+import com.db_course.db_config.DB_Client;
 import com.db_course.entity_model.Element;
 
 import java.sql.Connection;
@@ -13,8 +14,9 @@ public class ElementDao {
     private final Connection connection;
 
 
-    public ElementDao(Connection connection) {
-        this.connection = connection;
+    public ElementDao() {
+        this.connection = DB_Client.getInstance().getConnection();
+
     }
 
 

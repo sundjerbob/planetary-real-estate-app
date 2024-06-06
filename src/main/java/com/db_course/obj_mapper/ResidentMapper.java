@@ -12,7 +12,7 @@ public class ResidentMapper {
         return new ResidentDto(
                 resident.getId(),
                 resident.getFullName(),
-                resident.getGender(),
+                resident.getGender() == Resident.Gender.F ? "Female" : "Male",
                 resident.getBirthDate(),
                 resident.getDeathDate()
         );

@@ -1,5 +1,6 @@
 package com.db_course.dao;
 
+import com.db_course.db_config.DB_Client;
 import com.db_course.entity_model.User;
 
 import java.sql.*;
@@ -12,8 +13,8 @@ public class UserDao {
     private static final String table = "USERS";
 
 
-    public UserDao(Connection connection) {
-        this.connection = connection;
+    public UserDao() {
+        this.connection = DB_Client.getInstance().getConnection();
     }
 
 

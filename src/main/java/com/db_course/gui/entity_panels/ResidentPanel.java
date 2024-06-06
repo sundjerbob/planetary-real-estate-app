@@ -48,6 +48,7 @@ public class ResidentPanel extends JPanel {
         residentTableModel.filterByDate(deathStartDate, deathEndDate, deathDateColumn);
     }
 
+
     private void clearFilters() {
         residentFilterPanel.getNameFilterPanel().setValue("");
         residentFilterPanel.getBirthDateFilterPanel().setStartDate("");

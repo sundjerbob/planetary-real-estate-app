@@ -1,7 +1,11 @@
 package com.db_course;
 
+import java.math.BigDecimal;
+
 public class AppBootstrap {
     public static void main(String[] args) {
-        System.out.println("hi");
+        BigDecimal num = new BigDecimal("0.01");
+        boolean what =  num instanceof Number;
+        System.out.println(what);
     }
 }

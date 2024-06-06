@@ -1,4 +1,4 @@
-package com.db_course.dao;
+package com.db_course.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -6,13 +6,15 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
-public class CelestialBodyResident {
+
+public class CelestialBodyResidentDto {
+
     private int id;
     private int residentId;
-    private int celestialBodyId;
+    private String celestialBody;
     private LocalDate residentFrom;
     private LocalDate residentUntil;
 

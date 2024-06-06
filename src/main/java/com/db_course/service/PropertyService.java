@@ -11,9 +11,7 @@ public class PropertyService {
 
 
     private PropertyService() {
-        propertyDao = new PropertyDao(
-                DB_Client.getInstance().getConnection()
-        );
+        propertyDao = new PropertyDao();
 
     }
 

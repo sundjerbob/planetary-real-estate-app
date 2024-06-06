@@ -13,9 +13,11 @@ import java.util.stream.Collectors;
 
 public class ResidentTableModel extends AbstractTableModel {
 
+
     private final String[] columnNames = {"Full Name", "Gender", "Birth Date", "Death Date"};
     private final TreeSet<ResidentDto> personData;
     private List<ResidentDto> filteredData;
+
 
     public ResidentTableModel() {
         this.personData = new TreeSet<>(Comparator.comparing(ResidentDto::getFullName).thenComparing(ResidentDto::getBirthDate));
@@ -23,21 +25,25 @@ public class ResidentTableModel extends AbstractTableModel {
         populateData();
     }
 
+
     private void populateData() {
         ResidentService.getInstance().processAllResidents(personData::add);
         filteredData = new ArrayList<>(personData);
         fireTableDataChanged();
     }
 
+
     @Override
     public int getRowCount() {
         return filteredData.size();
     }
 
+
     @Override
     public int getColumnCount() {
         return columnNames.length;
     }
+
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
@@ -51,10 +57,12 @@ public class ResidentTableModel extends AbstractTableModel {
         };
     }
 
+
     @Override
     public String getColumnName(int column) {
         return columnNames[column];
     }
+
 
     public void filterByString(String query, int column) {
         if (query == null || query.isEmpty()) {
@@ -73,6 +81,7 @@ public class ResidentTableModel extends AbstractTableModel {
         fireTableDataChanged();
     }
 
+
     public void filterByDate(LocalDate startDate, LocalDate endDate, int column) {
         filteredData = personData.stream()
                 .filter(person -> {
@@ -84,7 +93,10 @@ public class ResidentTableModel extends AbstractTableModel {
         fireTableDataChanged();
     }
 
+
     public ResidentDto getPersonAt(int row) {
         return filteredData.get(row);
     }
+
+
 }

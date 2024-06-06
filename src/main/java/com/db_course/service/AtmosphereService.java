@@ -1,7 +1,6 @@
 package com.db_course.service;
 
 import com.db_course.dao.AtmosphereDao;
-import com.db_course.db_config.DB_Client;
 import com.db_course.dto.AtmosphereDto;
 import com.db_course.entity_model.Atmosphere;
 
@@ -16,9 +15,7 @@ public class AtmosphereService {
 
 
     private AtmosphereService() {
-        atmosphereDao = new AtmosphereDao(
-                DB_Client.getInstance().getConnection()
-        );
+        atmosphereDao = new AtmosphereDao();
     }
 
     /******************************************************************************************************************/

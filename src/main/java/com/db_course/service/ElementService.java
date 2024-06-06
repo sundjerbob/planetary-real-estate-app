@@ -17,9 +17,7 @@ public class ElementService {
 
 
     private ElementService() {
-        elementDao = new ElementDao(
-                DB_Client.getInstance().getConnection()
-        );
+        elementDao = new ElementDao();
     }
 
     /******************************************************************************************************************/

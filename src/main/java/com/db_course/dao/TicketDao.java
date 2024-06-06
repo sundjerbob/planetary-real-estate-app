@@ -1,5 +1,6 @@
 package com.db_course.dao;
 
+import com.db_course.db_config.DB_Client;
 import com.db_course.entity_model.Ticket;
 
 import java.sql.Connection;
@@ -14,8 +15,10 @@ public class TicketDao {
     private final Connection connection;
 
 
-    public TicketDao(Connection connection) {
-        this.connection = connection;
+    public TicketDao() {
+
+        this.connection = DB_Client.getInstance().getConnection();
+
     }
 
 

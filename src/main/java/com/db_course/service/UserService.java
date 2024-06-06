@@ -1,7 +1,6 @@
 package com.db_course.service;
 
 import com.db_course.dao.UserDao;
-import com.db_course.db_config.DB_Client;
 import com.db_course.dto.UserDto;
 import com.db_course.entity_model.User;
 
@@ -12,12 +11,12 @@ import static com.db_course.obj_mapper.UserMapper.userToDto;
 
 public class UserService {
 
-    private static UserService instance;
+    private static volatile UserService instance;
     private static final Object mutex = new Object();
     private final UserDao userDao;
 
     private UserService() {
-        this.userDao = new UserDao(DB_Client.getInstance().getConnection());
+        this.userDao = new UserDao();
     }
 
     public static UserService getInstance() {

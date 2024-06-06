@@ -10,9 +10,7 @@ public class MissionService {
 
 
     private MissionService() {
-        celestialPathDao = new MissionDao(
-                DB_Client.getInstance().getConnection()
-        );
+        celestialPathDao = new MissionDao();
     }
 
 

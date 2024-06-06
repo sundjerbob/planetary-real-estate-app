@@ -8,11 +8,7 @@ public class CelestialTypeMapper {
 
     static public CelestialTypeDto celestialTypeToDto(CelestialType celestialType) {
 
-        return new CelestialTypeDto(
-                celestialType.ordinal() + 1,
-                celestialType.name(),
-                celestialType.getDescription()
-        );
+        return new CelestialTypeDto(celestialType.getId(), celestialType.getName(), celestialType.getDescription());
 
     }
 }

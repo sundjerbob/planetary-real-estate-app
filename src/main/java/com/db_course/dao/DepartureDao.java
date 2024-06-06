@@ -1,5 +1,6 @@
 package com.db_course.dao;
 
+import com.db_course.db_config.DB_Client;
 import com.db_course.entity_model.Departure;
 
 import java.sql.*;
@@ -12,8 +13,9 @@ public class DepartureDao {
     private static final String table = "DEPARTURES";
 
 
-    public DepartureDao(Connection connection) {
-        this.connection = connection;
+    public DepartureDao() {
+        this.connection = DB_Client.getInstance().getConnection();
+
     }
 
 

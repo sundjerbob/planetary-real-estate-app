@@ -1,5 +1,6 @@
 package com.db_course.dao;
 
+import com.db_course.db_config.DB_Client;
 import com.db_course.entity_model.SpaceshipRoom;
 
 import java.sql.*;
@@ -10,8 +11,10 @@ public class SpaceshipRoomDao {
     private final Connection connection;
     private static final String TABLE = "SPACESHIP_ROOMS";
 
-    public SpaceshipRoomDao(Connection connection) {
-        this.connection = connection;
+    public SpaceshipRoomDao() {
+
+        this.connection = DB_Client.getInstance().getConnection();
+
     }
 
     public void insert(SpaceshipRoom room) {

@@ -1,7 +1,6 @@
 package com.db_course.service;
 
 import com.db_course.dao.SpaceshipDao;
-import com.db_course.db_config.DB_Client;
 import com.db_course.dto.SpaceshipDto;
 import com.db_course.entity_model.Spaceship;
 
@@ -14,9 +13,7 @@ public class SpaceshipService {
 
 
     private SpaceshipService() {
-        spaceshipDao = new SpaceshipDao(
-                DB_Client.getInstance().getConnection()
-        );
+        spaceshipDao = new SpaceshipDao();
     }
 
 

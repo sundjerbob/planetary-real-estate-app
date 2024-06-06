@@ -1,5 +1,6 @@
 package com.db_course.dao;
 
+import com.db_course.db_config.DB_Client;
 import com.db_course.entity_model.Atmosphere;
 
 import java.math.BigDecimal;
@@ -15,8 +16,8 @@ public class AtmosphereDao {
     private static final String TABLE = "ATMOSPHERES";
 
 
-    public AtmosphereDao(Connection connection) {
-        this.connection = connection;
+    public AtmosphereDao() {
+        this.connection = DB_Client.getInstance().getConnection();
     }
 
 

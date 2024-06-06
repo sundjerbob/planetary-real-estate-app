@@ -20,7 +20,6 @@ public class AtmosphereElementService {
 
     private AtmosphereElementService() {
         atmosphereElementDao = new AtmosphereElementDao(
-                DB_Client.getInstance().getConnection()
         );
     }
 

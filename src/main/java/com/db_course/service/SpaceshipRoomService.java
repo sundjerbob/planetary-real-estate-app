@@ -11,9 +11,7 @@ public class SpaceshipRoomService {
 
 
     private SpaceshipRoomService() {
-        celestialPathDao = new SpaceshipRoomDao(
-                DB_Client.getInstance().getConnection()
-        );
+        celestialPathDao = new SpaceshipRoomDao();
     }
 
 

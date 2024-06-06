@@ -15,14 +15,14 @@ public class CelestialBody {
     private int id;
     private Integer rotatesAroundId;
     private String name;
-    private CelestialType type;
+    private int celestialBodyTypeId;
     private String description;
     private BigDecimal surfacePressure;
     private BigDecimal surfaceTemperatureMin;
     private BigDecimal surfaceTemperatureMax;
     private BigDecimal coreTemperature;
     private boolean explored;
-    private String radiationLevels;
+    private RadiationLevel radiationLevel;
     private boolean hasWater;
     private BigDecimal surfaceArea;
     private boolean isSurfaceHard;

@@ -13,8 +13,12 @@ public class Resident {
 
     private int id;
     private String fullName;
-    private String gender;
+    private Gender gender;
     private LocalDate birthDate;
     private LocalDate deathDate;
 
+    public enum Gender {
+        M,
+        F;
+    }
 }

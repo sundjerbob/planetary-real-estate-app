@@ -1,5 +1,6 @@
 package com.db_course.dao;
 
+import com.db_course.db_config.DB_Client;
 import com.db_course.entity_model.Property;
 
 import java.math.BigDecimal;
@@ -13,8 +14,10 @@ public class PropertyDao {
     private static final String TABLE = "PROPERTIES";
 
 
-    public PropertyDao(Connection connection) {
-        this.connection = connection;
+    public PropertyDao()
+    {
+        this.connection = DB_Client.getInstance().getConnection();
+
     }
 
 

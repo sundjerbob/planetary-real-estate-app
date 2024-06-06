@@ -4,9 +4,7 @@ import com.db_course.dao.CelestialBodyDao;
 import com.db_course.db_config.DB_Client;
 import com.db_course.dto.CelestialBodyDto;
 import com.db_course.entity_model.CelestialBody;
-import com.db_course.entity_model.CelestialType;
 
-import java.util.Locale;
 import java.util.function.Consumer;
 
 import static com.db_course.obj_mapper.CelestialBodyMapper.celestialBodyToDto;
@@ -20,9 +18,7 @@ public class CelestialBodyService {
 
 
     private CelestialBodyService() {
-        celestialBodyDao = new CelestialBodyDao(
-                DB_Client.getInstance().getConnection()
-        );
+        celestialBodyDao = new CelestialBodyDao();
 
     }
 
@@ -43,50 +39,60 @@ public class CelestialBodyService {
 
         CelestialBody celestialBody = celestialBodyDao.getCelestialBodyById(id);
 
-        if (celestialBody.getRotatesAroundId() == null)
-            return celestialBodyToDto(celestialBody, null);
+        return celestialBody == null ?
+                null
+                :
+                setForeignReferenceAttributes(
+                        celestialBodyToDto(celestialBody),
+                        celestialBody.getCelestialBodyTypeId(),
+                        celestialBody.getRotatesAroundId()
+                );
 
-        CelestialBody rotatesAround = celestialBodyDao.getCelestialBodyById(celestialBody.getRotatesAroundId());
-
-        return celestialBodyToDto(celestialBodyDao.getCelestialBodyById(id), rotatesAround.getName());
     }
 
 
     public void processAllCelestialBodies(Consumer<CelestialBodyDto> consumer) {
 
-        Consumer<CelestialBody> dbObjConsumer = celestialBody -> {
-
-            String rotatesAroundObj = null;
-            Integer rotatesAroundId = celestialBody.getRotatesAroundId();
-
-            if (rotatesAroundId != null)
-                rotatesAroundObj = celestialBodyDao.getCelestialBodyById(celestialBody.getRotatesAroundId()).getName();
-
-            CelestialBodyDto dto = celestialBodyToDto(celestialBody, rotatesAroundObj);
-            consumer.accept(dto);
+        Consumer<CelestialBody> dbObjConsumer = celestialBody ->
+        {
+            consumer.accept(
+                    setForeignReferenceAttributes(
+                            celestialBodyToDto(celestialBody),
+                            celestialBody.getCelestialBodyTypeId(),
+                            celestialBody.getRotatesAroundId()
+                    )
+            );
         };
 
         celestialBodyDao.processAllCelestialBodies(dbObjConsumer);
     }
 
 
-    public void processCelestialBodiesByType(String celestialType, Consumer<CelestialBodyDto> consumer) {
-        CelestialType type = CelestialType.valueOf(celestialType.toUpperCase(Locale.ENGLISH));
+    public void processCelestialBodiesByTypeId(int typeId, Consumer<CelestialBodyDto> consumer) {
 
-        Consumer<CelestialBody> dbObjConsumer = celestialBody -> {
+        Consumer<CelestialBody> dbObjConsumer = celestialBody ->
+        {
 
-            String rotatesAround = null;
-            Integer rotatesAroundId = celestialBody.getRotatesAroundId();
-
-            if (rotatesAroundId != null && rotatesAroundId > 0)
-                rotatesAround = celestialBodyDao.getCelestialBodyById(rotatesAroundId).getName();
-
-
-            CelestialBodyDto dto = celestialBodyToDto(celestialBody, rotatesAround);
-            consumer.accept(dto);
+            consumer.accept(
+                    setForeignReferenceAttributes(
+                            celestialBodyToDto(celestialBody),
+                            celestialBody.getCelestialBodyTypeId(),
+                            celestialBody.getRotatesAroundId())
+            );
         };
 
-        celestialBodyDao.processCelestialBodiesByType(type, dbObjConsumer);
+        celestialBodyDao.processCelestialBodiesByTypeId(typeId, dbObjConsumer);
+    }
+
+
+    private CelestialBodyDto setForeignReferenceAttributes(CelestialBodyDto dto, int celestialTypeId, Integer rotatesAroundId) {
+        String typeName = CelestialTypeService.getInstance().getCelestialTypeById(celestialTypeId).getName();
+        String rotatesAroundName =
+                rotatesAroundId == null ?
+                        null : celestialBodyDao.getCelestialBodyById(rotatesAroundId).getName();
+        dto.setCelestialBodyType(typeName);
+        dto.setRotatesAroundBody(rotatesAroundName);
+        return dto;
     }
 
 

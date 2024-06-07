@@ -4,10 +4,8 @@ import com.db_course.db_config.DB_Client;
 import com.db_course.entity_model.Atmosphere;
 
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.function.Consumer;
 
 public class AtmosphereDao {
 
@@ -95,6 +93,21 @@ public class AtmosphereDao {
         }
     }
 
+
+    /******************************************************************************************************************/
+    public void processAllAtmospheres(Consumer<Atmosphere> consumer) {
+        String sql = "SELECT * FROM " + TABLE;
+        try (
+                Statement statement = connection.createStatement();
+                ResultSet resultSet = statement.executeQuery(sql)
+        ) {
+            while(resultSet.next()) {
+                consumer.accept(mapToAtmosphere(resultSet));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("AtmosphereDao.processAllAtmospheres() says: " + e.getMessage());
+        }
+    }
 
     /******************************************************************************************************************/
     private Atmosphere mapToAtmosphere(ResultSet resultSet) throws SQLException {

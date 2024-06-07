@@ -83,7 +83,7 @@ public class UserDao {
 
             try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
-                    user.setUserId(generatedKeys.getInt(1));
+                    user.setId(generatedKeys.getInt(1));
                 } else {
                     throw new SQLException("Creating user failed, no ID obtained.");
                 }
@@ -92,5 +92,5 @@ public class UserDao {
 
         return user;
     }
-
+    // TODO : mapToUser(ResultSet resultSet) { }
 }

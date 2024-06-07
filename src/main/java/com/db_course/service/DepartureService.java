@@ -1,7 +1,6 @@
 package com.db_course.service;
 
 import com.db_course.dao.DepartureDao;
-import com.db_course.db_config.DB_Client;
 import com.db_course.dto.CelestialPathDto;
 import com.db_course.dto.DepartureDto;
 import com.db_course.dto.SpaceshipDto;
@@ -12,23 +11,23 @@ import java.util.function.Consumer;
 
 import static com.db_course.obj_mapper.DepartureMapper.departureToDto;
 
-public class DepartureServices {
+public class DepartureService {
 
-    private static volatile DepartureServices instance;
+    private static volatile DepartureService instance;
     private static final Object mutex = new Object();
     private final DepartureDao departureDao;
 
 
-    private DepartureServices() {
+    private DepartureService() {
         departureDao = new DepartureDao();
     }
 
     /******************************************************************************************************************/
-    public static DepartureServices getInstance() {
+    public static DepartureService getInstance() {
         if (instance == null) {
             synchronized (mutex) {
                 if (instance == null) {
-                    instance = new DepartureServices();
+                    instance = new DepartureService();
                 }
             }
         }
@@ -47,8 +46,16 @@ public class DepartureServices {
                             departure.getCelestialBodyFromId(),
                             departure.getCelestialBodyToId()
                     );
+
                     long travelDurationDays = calculateTravelDurationInDays(celestialPath.getDistance_km(), spaceship.getTravelingSpeed());
-                    DepartureDto departureDto = departureToDto(departure, spaceship, celestialPath, travelDurationDays);
+
+                    DepartureDto departureDto = departureToDto(
+                            departure,
+                            spaceship.getName(),
+                            celestialPath.getBodyA(),
+                            celestialPath.getBodyB(),
+                            travelDurationDays);
+
                     consumer.accept(departureDto);
                 }
         );

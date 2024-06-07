@@ -70,10 +70,13 @@ public class ElementDao {
         try {
             int elementId = resultSet.getInt("element_id");
             String name = resultSet.getString("name");
+            String description = resultSet.getString("description");
             double minPercentage = resultSet.getDouble("min_percentage");
             double maxPercentage = resultSet.getDouble("max_percentage");
             boolean radioactive = resultSet.getBoolean("radioactive");
-            return new Element(elementId, name, minPercentage, maxPercentage, radioactive);
+            boolean inert = resultSet.getBoolean("inert");
+
+            return new Element(elementId, name, description, minPercentage, maxPercentage, radioactive, inert);
         } catch (SQLException e) {
             throw new RuntimeException("ElementDao.mapToElement() says: " + e.getMessage());
         }

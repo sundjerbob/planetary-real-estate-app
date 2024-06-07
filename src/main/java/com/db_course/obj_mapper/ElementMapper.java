@@ -10,9 +10,11 @@ public class ElementMapper {
         return new ElementDto(
                 element.getId(),
                 element.getName(),
+                element.getDescription(),
                 element.getMinPercentage(),
                 element.getMaxPercentage(),
-                element.isRadioactive()
+                element.isRadioactive(),
+                element.isInert()
         );
     }
 }

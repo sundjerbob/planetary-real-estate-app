@@ -25,7 +25,8 @@ CREATE TABLE USERS
 CREATE TABLE CELESTIAL_TYPES
 (
     celestial_type_id INT AUTO_INCREMENT PRIMARY KEY,
-    name              VARCHAR(50) NOT NULL UNIQUE
+    name              VARCHAR(50) NOT NULL UNIQUE,
+    description       TEXT
 );
 
 
@@ -33,25 +34,25 @@ CREATE TABLE CELESTIAL_TYPES
 CREATE TABLE CELESTIAL_BODIES
 (
     -- cols
-    celestial_body_id          INT AUTO_INCREMENT PRIMARY KEY,
-    name                       VARCHAR(50) NOT NULL UNIQUE,
-    description                TEXT,
-    surface_pressure           DECIMAL(10, 2),
-    surface_temperature_min    DECIMAL(10, 2),
-    surface_temperature_max    DECIMAL(10, 2),
-    core_temperature           DECIMAL(10, 2),
-    explored          BOOLEAN,
-    radiation_level            ENUM ('LOW (0-10 mSv/year)', 'MEDIUM (10-100 mSv/year)', 'HIGH (>100 mSv/year)'),
-    has_water                  BOOLEAN,
-    surface_area               DECIMAL(20, 2),
-    mass                       DECIMAL(20, 2),
+    celestial_body_id        INT AUTO_INCREMENT PRIMARY KEY,
+    name                     VARCHAR(50) NOT NULL UNIQUE,
+    description              TEXT,
+    surface_pressure         DECIMAL(10, 2),
+    surface_temperature_min  DECIMAL(10, 2),
+    surface_temperature_max  DECIMAL(10, 2),
+    core_temperature         DECIMAL(10, 2),
+    explored                 BOOLEAN,
+    radiation_level          ENUM ('LOW (0-10 mSv/year)', 'MEDIUM (10-100 mSv/year)', 'HIGH (>100 mSv/year)'),
+    has_water                BOOLEAN,
+    surface_area             DECIMAL(20, 2),
+    mass                     DECIMAL(20, 2),
     gravitation_field_height DECIMAL(20, 2),
-    moving_speed               DECIMAL(20, 2),
-    rotation_speed             DECIMAL(20, 2),
+    moving_speed             DECIMAL(20, 2),
+    rotation_speed           DECIMAL(20, 2),
 
     -- fks
-    type_id                    INT         NOT NULL,
-    rotates_around_id          INT,
+    type_id                  INT         NOT NULL,
+    rotates_around_id        INT,
 
     FOREIGN KEY (type_id) REFERENCES CELESTIAL_TYPES (celestial_type_id),
     FOREIGN KEY (rotates_around_id) REFERENCES CELESTIAL_BODIES (celestial_body_id)
@@ -79,9 +80,11 @@ CREATE TABLE ELEMENTS
 (
     element_id     INT AUTO_INCREMENT PRIMARY KEY,
     name           VARCHAR(50) NOT NULL UNIQUE,
+    description    TEXT,
     min_percentage DECIMAL(5, 2), -- Minimum percentage for human habitability
     max_percentage DECIMAL(5, 2), -- Maximum percentage for human habitability
-    radioactive    BOOLEAN        -- Is element radioactive
+    radioactive    BOOLEAN,       -- Is element radioactive
+    inert          BOOLEAN
 );
 
 
@@ -141,7 +144,7 @@ CREATE TABLE CELESTIAL_BODY_RESIDENTS
 CREATE TABLE SPACESHIPS
 (
     spaceship_id       INT AUTO_INCREMENT PRIMARY KEY,
-    name               VARCHAR(50) NOT NULL,
+    name               VARCHAR(50) NOT NULL UNIQUE,
     model              VARCHAR(50),
     passenger_capacity INT,
     fuel_capacity      DECIMAL(10, 2), -- Capacity of the fuel tank
@@ -154,11 +157,12 @@ CREATE TABLE SPACESHIPS
 
 CREATE TABLE SPACESHIP_ROOMS
 (
-    room_id                  INT AUTO_INCREMENT PRIMARY KEY,
-    spaceship_id             INT NOT NULL,
-    perks                    VARCHAR(255),
-    num_hibernation_capsules INT,
-    max_capacity             INT,
+    room_id                 INT AUTO_INCREMENT PRIMARY KEY,
+    room_number             VARCHAR(200) NOT NULL,
+    hibernation_capsules_nb INT,
+    max_capacity            INT,
+    perks                   TEXT,
+    spaceship_id            INT          NOT NULL,
     FOREIGN KEY (spaceship_id) REFERENCES SPACESHIPS (spaceship_id)
 );
 
@@ -243,13 +247,12 @@ CREATE TABLE PROPERTIES
 );
 
 
--- Populate CelestialType table with data (optional)
-INSERT INTO CELESTIAL_TYPES (name)
-VALUES ('Planet'),
-       ('Satellite'),
-       ('Star'),
-       ('Dwarf Planet'),
-       ('Asteroid');
+INSERT INTO CELESTIAL_TYPES (name, description)
+VALUES ('Planet', 'FRISKY'),
+       ('Satellite', 'FRISKY'),
+       ('Star', 'FRISKY'),
+       ('Dwarf Planet', 'FRISKY'),
+       ('Asteroid', 'FRISKY');
 
 
 -- User table

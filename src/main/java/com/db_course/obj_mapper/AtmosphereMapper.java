@@ -7,13 +7,12 @@ public class AtmosphereMapper {
 
     public static AtmosphereDto atmosphereToDto(Atmosphere atmosphere) {
 
-        return new AtmosphereDto(
-                atmosphere.getId(),
-                atmosphere.getMaxTemperature(),
-                atmosphere.getMinTemperature(),
-                atmosphere.getAtmosphereHeight(),
-                atmosphere.getAmperePressure()
-        );
+        AtmosphereDto dto = new AtmosphereDto();
+        dto.setId(atmosphere.getId());
+        dto.setAtmosphereHeight(atmosphere.getAtmosphereHeight());
+        dto.setMinTemperature(atmosphere.getMinTemperature());
+        dto.setMaxTemperature(atmosphere.getMaxTemperature());
+        return dto;
     }
 
 }

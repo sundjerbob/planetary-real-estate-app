@@ -12,9 +12,10 @@ import java.math.BigDecimal;
 
 public class AtmosphereDto {
 
-    private int atmosphereId;
+    private int id;
     private BigDecimal maxTemperature;
     private BigDecimal minTemperature;
     private BigDecimal atmosphereHeight;
     private BigDecimal amperePressure;
+    private String celestialBody;
 }

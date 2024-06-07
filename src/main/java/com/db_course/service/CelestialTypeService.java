@@ -1,7 +1,6 @@
 package com.db_course.service;
 
 import com.db_course.dao.CelestialTypeDao;
-import com.db_course.db_config.DB_Client;
 import com.db_course.dto.CelestialTypeDto;
 import com.db_course.entity_model.CelestialType;
 
@@ -14,7 +13,7 @@ public class CelestialTypeService {
 
     private static volatile CelestialTypeService instance;
     private static final Object mutex = new Object();
-    private CelestialTypeDao celestialTypeDao;
+    private final CelestialTypeDao celestialTypeDao;
 
 
     private CelestialTypeService() {

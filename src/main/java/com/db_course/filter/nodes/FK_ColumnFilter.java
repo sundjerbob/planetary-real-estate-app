@@ -49,21 +49,25 @@ public class FK_ColumnFilter implements MetaDataNode {
 
     @Override
     public String mapToQuery() {
+
         StringBuilder query = new StringBuilder();
+
         query.append(tableName).append(".").append(fkColName)
                 .append(" IN (SELECT ").append(refPkColName)
                 .append(" FROM ").append(referenceTable)
                 .append(" WHERE ").append(referenceTable).append(".").append(filterByCol);
 
-        if (operation == FilterOperation.BETWEEN && filterValues != null && filterValues.length == 2) {
-            query.append(" ").append(FilterDefs.stringifyOperations[operation.ordinal()].buildOprExp(null));
-        } else if (filterValues != null && filterValues.length > 0) {
-            query.append(" ").append(FilterDefs.stringifyOperations[operation.ordinal()].buildOprExp(null));
-        } else {
-            query.append(" ").append(FilterDefs.stringifyOperations[operation.ordinal()].buildOprExp(null));
-        }
+        if (operation == FilterOperation.BETWEEN && filterValues != null && filterValues.length == 2)
+            query.append(" ").append(FilterDefs.stringifyOperations[operation.ordinal()].buildOprExp());
+
+        else if (filterValues != null && filterValues.length > 0)
+            query.append(" ").append(FilterDefs.stringifyOperations[operation.ordinal()].buildOprExp());
+
+        else
+            query.append(" ").append(FilterDefs.stringifyOperations[operation.ordinal()].buildOprExp());
 
         query.append(")");
+
         return query.toString();
     }
 

@@ -15,10 +15,12 @@ import java.time.LocalDateTime;
 public class DepartureDto {
 
     private int id;
-    private SpaceshipDto spaceship;
-    private CelestialPathDto celestialPath;
     private LocalDateTime departureDate;
     private long travelDurationDays;
+    private String spaceship;
+    private String celestialOrigin;
+    private String celestialDestination;
+
 }
 
 

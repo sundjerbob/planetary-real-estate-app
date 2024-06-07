@@ -19,7 +19,7 @@ public class AtmosphereElementDao {
 
     }
 
-    public void getAllAtmosphereElements(Consumer<AtmosphereElement> consumer) {
+    public void processAllAtmosphereElements(Consumer<AtmosphereElement> consumer) {
 
         String sql = "SELECT atmosphere_id, element_id, percentage FROM ATMOSPHERES_ELEMENTS";
 
@@ -31,7 +31,7 @@ public class AtmosphereElementDao {
                 consumer.accept(mapToAtmosphereElement(resultSet));
             }
         } catch (Exception e) {
-            throw new RuntimeException("AtmosphereElementDao.getAllAtmosphereElements() says " + e.getMessage());
+            throw new RuntimeException("AtmosphereElementDao.processAllAtmosphereElements() says " + e.getMessage());
         }
 
     }

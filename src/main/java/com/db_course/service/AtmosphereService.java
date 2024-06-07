@@ -4,6 +4,8 @@ import com.db_course.dao.AtmosphereDao;
 import com.db_course.dto.AtmosphereDto;
 import com.db_course.entity_model.Atmosphere;
 
+import java.util.function.Consumer;
+
 import static com.db_course.obj_mapper.AtmosphereMapper.atmosphereToDto;
 
 public class AtmosphereService {
@@ -33,7 +35,25 @@ public class AtmosphereService {
     /******************************************************************************************************************/
     public AtmosphereDto getAtmosphereByCelestialBodyId(int celestialBodyId) {
         Atmosphere atmosphere = atmosphereDao.getAtmosphereByCelestialBodyId(celestialBodyId);
-        return atmosphereToDto(atmosphere);
+        return setForeignAttributes(atmosphereToDto(atmosphere), atmosphere.getCelestialBodyId());
+    }
+
+    public void processAllAtmospheres(Consumer<AtmosphereDto> consumer) {
+        Consumer<Atmosphere> dbObjConsumer = atmosphere -> {
+            consumer.accept(
+                    setForeignAttributes(
+                            atmosphereToDto(atmosphere),
+                            atmosphere.getCelestialBodyId()
+                    )
+            );
+        };
+        atmosphereDao.processAllAtmospheres(dbObjConsumer);
+    }
+
+    private AtmosphereDto setForeignAttributes(AtmosphereDto dto, int celestialBodyId) {
+        String cbName = CelestialBodyService.getInstance().getCelestialBodyById(celestialBodyId).getName();
+        dto.setCelestialBody(cbName);
+        return dto;
     }
 
 

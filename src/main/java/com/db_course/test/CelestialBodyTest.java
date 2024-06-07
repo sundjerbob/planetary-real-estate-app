@@ -1,6 +1,6 @@
 package com.db_course.test;
 
-import com.db_course.service.CelestialBodyService;
+import com.db_course.be.service.CelestialBodyService;
 import com.db_course.dto.CelestialBodyDto;
 
 import java.util.function.Consumer;

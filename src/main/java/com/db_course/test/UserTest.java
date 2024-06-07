@@ -1,6 +1,6 @@
 package com.db_course.test;
 
-import com.db_course.service.UserService;
+import com.db_course.be.service.UserService;
 
 public class UserTest {
 

@@ -1,7 +1,7 @@
 package com.db_course.test;
 
 import com.db_course.dto.CelestialPathDto;
-import com.db_course.service.CelestialPathService;
+import com.db_course.be.service.CelestialPathService;
 
 import java.util.function.Consumer;
 

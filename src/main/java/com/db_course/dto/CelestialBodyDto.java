@@ -44,7 +44,6 @@ public class CelestialBodyDto {
             String radiationLevel,
             boolean hasWater,
             BigDecimal surfaceArea,
-            boolean isSurfaceHard,
             BigDecimal mass,
             BigDecimal gravitationalFieldHeight,
             BigDecimal movingSpeed,

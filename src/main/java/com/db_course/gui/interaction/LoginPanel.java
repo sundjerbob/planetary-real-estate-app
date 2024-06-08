@@ -6,79 +6,61 @@ import com.db_course.gui.MainFrame;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class LoginPanel extends JPanel {
-    private final JTextField usernameField;
-    private final JPasswordField passwordField;
-    private UserDto loggedInUser;
+
+    private JTextField usernameField;
+    private JPasswordField passwordField;
 
     public LoginPanel(MainFrame mainFrame) {
         setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.insets = new Insets(5, 5, 5, 5);
+        constraints.fill = GridBagConstraints.HORIZONTAL;
 
         JLabel usernameLabel = new JLabel("Username:");
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        add(usernameLabel, gbc);
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        add(usernameLabel, constraints);
 
-        usernameField = new JTextField(15);
-        gbc.gridx = 1;
-        gbc.gridy = 0;
-        add(usernameField, gbc);
+        usernameField = new JTextField(20);
+        constraints.gridx = 1;
+        add(usernameField, constraints);
 
         JLabel passwordLabel = new JLabel("Password:");
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        add(passwordLabel, gbc);
+        constraints.gridx = 0;
+        constraints.gridy = 1;
+        add(passwordLabel, constraints);
 
-        passwordField = new JPasswordField(15);
-        gbc.gridx = 1;
-        gbc.gridy = 1;
-        add(passwordField, gbc);
+        passwordField = new JPasswordField(20);
+        constraints.gridx = 1;
+        add(passwordField, constraints);
 
         JButton loginButton = new JButton("Login");
-        gbc.gridx = 0;
-        gbc.gridy = 2;
-        gbc.gridwidth = 2;
-        gbc.anchor = GridBagConstraints.CENTER;
-        add(loginButton, gbc);
+        constraints.gridx = 0;
+        constraints.gridy = 2;
+        constraints.gridwidth = 2;
+        loginButton.addActionListener(e -> performLogin(mainFrame));
+        add(loginButton, constraints);
 
         JButton createAccountButton = new JButton("Create Account");
-        gbc.gridy = 3;
-        add(createAccountButton, gbc);
+        createAccountButton.addActionListener(e -> showCreateAccountForm(mainFrame));
+        constraints.gridy = 3;
+        add(createAccountButton, constraints);
+    }
 
-        loginButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String username = usernameField.getText();
-                String password = new String(passwordField.getPassword());
+    private void performLogin(MainFrame mainFrame) {
+        String username = usernameField.getText();
+        String password = new String(passwordField.getPassword());
+        UserDto user = UserService.getInstance().login(username, password);
+        if (user != null) {
+            mainFrame.onLoginSuccess(user);
+        } else {
+            JOptionPane.showMessageDialog(this, "Invalid username or password", "Login Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
 
-                UserDto user = null;
-                try {
-                    user = UserService.getInstance().login(username, password);
-                    if (user != null) {
-                        loggedInUser = user;
-                        mainFrame.setLoggedInUser(loggedInUser);
-                        mainFrame.showMainPanel();
-                    } else {
-                        JOptionPane.showMessageDialog(LoginPanel.this, "Invalid username or password", "Login Failed", JOptionPane.ERROR_MESSAGE);
-                    }
-                } catch (Exception exception) {
-                    JOptionPane.showMessageDialog(LoginPanel.this, exception.getMessage(), "Login Failed", JOptionPane.ERROR_MESSAGE);
-
-                }
-
-            }
-        });
-
-        createAccountButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                mainFrame.showCreateUserPanel();
-            }
-        });
+    private void showCreateAccountForm(MainFrame mainFrame) {
+        // Implement the create account form and show it
     }
 }

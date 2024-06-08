@@ -50,6 +50,25 @@ public class TicketService {
 
     }
 
+    public void processTicketsBoughtByUser(int userId, Consumer<TicketDto> consumer) {
+        celestialPathDao.processTicketsBoughtByUser(
+                userId,
+                ticket -> {
+
+                    String bookedBy = ticket.getPassengerId() == null ?
+                            "None"
+                            :
+                            UserService.getInstance().getUserById(ticket.getPassengerId()).getUsername();
+                    SpaceshipRoomDto room = SpaceshipRoomService.getInstance().getRoomById(ticket.getRoomId());
+
+                    TicketDto dto = ticketToDto(ticket, room.getSpaceship(), room.getRoomNumber(), bookedBy);
+                    consumer.accept(dto);
+                }
+        );
+
+
+    }
+
     public void processFilteredTickets(Consumer<TicketDto> consumer, TicketFilter filter) {
         celestialPathDao.processFilteredTickets(
 
@@ -68,6 +87,11 @@ public class TicketService {
                 filter
         );
 
+    }
 
+
+    public void buyTicket(int id, int userId) {
+
+        celestialPathDao.buyTicket(id, userId);
     }
 }

@@ -89,6 +89,10 @@ public class CelestialBodyDao {
     }
 
 
+    public void processAllHabitableCelestialBodies(Consumer<CelestialBody> consumer) {
+
+        processAllCelestialBodies(consumer);
+    }
     /******************************************************************************************************************/
 //    public void processDynamicFilters(CelestialBodyFilter filter) {
 //        String query = filter.generateQuery();

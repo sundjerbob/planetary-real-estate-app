@@ -109,11 +109,41 @@ public class PropertyDao {
 
     }
 
+
+    public void buyProperty(int userId, int propertyId) {
+        String sql = "UPDATE " + TABLE + " SET sold_to_user_id = ? WHERE property_id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, userId);
+            statement.setInt(2, propertyId);
+            statement.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("PropertyDao.buyProperty() says: " + e.getMessage());
+        }
+    }
+
+
+
     /******************************************************************************************************************/
-    public void processPropertiesByCelestialBodyId(int celestialBodyId, Consumer<Property> consumer) {
-        String sql = "SELECT * FROM " + TABLE + " WHERE celestial_body_id = ?";
+    public void processAvailablePropertiesByCelestialBodyId(int celestialBodyId, Consumer<Property> consumer) {
+        String sql = "SELECT * FROM " + TABLE + " WHERE celestial_body_id = ? AND sold_to_user_id IS NULL AND";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, celestialBodyId);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    consumer.accept(mapToProperty(resultSet));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("PropertyDao.processPropertiesByCelestialBodyId() says: " + e.getMessage());
+        }
+    }
+
+
+    /******************************************************************************************************************/
+    public void processPropertiesOwnedByUserId(int userId, Consumer<Property> consumer) {
+        String sql = "SELECT * FROM " + TABLE + " WHERE sold_to_user_id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, userId);
             try (ResultSet resultSet = statement.executeQuery()) {
                 while (resultSet.next()) {
                     consumer.accept(mapToProperty(resultSet));

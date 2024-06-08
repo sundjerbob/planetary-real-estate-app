@@ -67,6 +67,23 @@ public class CelestialBodyService {
         celestialBodyDao.processAllCelestialBodies(dbObjConsumer);
     }
 
+    public void processAllHabitableCelestialBodies(Consumer<CelestialBodyDto> consumer) {
+
+        Consumer<CelestialBody> dbObjConsumer = celestialBody ->
+        {
+            consumer.accept(
+                    setForeignReferenceAttributes(
+                            celestialBodyToDto(celestialBody),
+                            celestialBody.getCelestialBodyTypeId(),
+                            celestialBody.getRotatesAroundId()
+                    )
+            );
+        };
+
+        celestialBodyDao.processAllHabitableCelestialBodies(dbObjConsumer);
+    }
+
+
     public void processFilteredCelestialBodies(Consumer<CelestialBodyDto> consumer, CelestialBodyFilter celestialBodyFilter) {
 
         Consumer<CelestialBody> dbObjConsumer = celestialBody ->

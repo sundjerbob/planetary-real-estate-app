@@ -9,33 +9,12 @@ import java.util.function.Consumer;
 
 public class TicketDao {
 
-
     private final Connection connection;
     private static final String TABLE = "TICKETS";
 
     public TicketDao() {
-
         this.connection = DB_Client.getInstance().getConnection();
-
     }
-
-
-    /******************************************************************************************************************/
-    public void addTicket(Ticket ticket) throws SQLException {
-        String sql = "INSERT INTO " + TABLE + " (departure_id, passenger_id, price, room_id, spaceship_id) VALUES (?, ?, ?, ?, ?)";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, ticket.getDepartureId());
-            statement.setInt(2, ticket.getPassengerId());
-            statement.setBigDecimal(3, ticket.getPrice());
-            statement.setInt(4, ticket.getRoomId());
-            statement.setInt(5, ticket.getSpaceshipId());
-            statement.executeUpdate();
-        } catch (Exception e) {
-            throw new RuntimeException("TicketDao.addTicket() says: " + e.getMessage());
-
-        }
-    }
-
 
     /******************************************************************************************************************/
     public Ticket getTicket(int ticketId) throws SQLException {
@@ -46,13 +25,40 @@ public class TicketDao {
                 if (resultSet.next())
                     return mapToTicket(resultSet);
                 return null;
-
             }
         } catch (Exception e) {
             throw new RuntimeException("TicketDao.getTicket() says: " + e.getMessage());
         }
     }
 
+    public void buyTicket(int ticketId, int userId) {
+        String sql = "UPDATE " + TABLE + " SET passenger_id = ?, sold = ? WHERE ticket_id = ?";
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, userId);
+            statement.setBoolean(2, true);
+            statement.setInt(3, ticketId);
+            statement.executeUpdate();
+        } catch (Exception e) {
+            throw new RuntimeException("TicketDao.buyTicket() says: " + e.getMessage());
+        }
+    }
+
+    public void processTicketsBoughtByUser(int userId, Consumer<Ticket> consumer) {
+        String sql = "SELECT * FROM " + TABLE + " WHERE passenger_id = ?";
+        try (
+                PreparedStatement preparedStatement = connection.prepareStatement(sql);
+        ) {
+            preparedStatement.setInt(1, userId);
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                while (resultSet.next()) {
+                    consumer.accept(mapToTicket(resultSet));
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException("TicketDao.processTicketsBoughtByUser() says " + e.getMessage());
+        }
+
+    }
 
     /******************************************************************************************************************/
     public void processAllTickets(Consumer<Ticket> consumer) {
@@ -66,9 +72,7 @@ public class TicketDao {
         }
     }
 
-
     public void processFilteredTickets(Consumer<Ticket> consumer, TicketFilter filter) {
-
         try (
                 PreparedStatement statement = filter.generatePreparedStatement();
                 ResultSet resultSet = statement.executeQuery();
@@ -76,13 +80,10 @@ public class TicketDao {
             while (resultSet.next()) {
                 consumer.accept(mapToTicket(resultSet));
             }
-
         } catch (SQLException e) {
             throw new RuntimeException("TicketDao.processFilteredTickets() says: " + e.getMessage());
         }
-
     }
-
 
     /******************************************************************************************************************/
     public void updateTicket(Ticket ticket) throws SQLException {
@@ -98,7 +99,6 @@ public class TicketDao {
         }
     }
 
-
     /******************************************************************************************************************/
     public void deleteTicket(int ticketId) throws SQLException {
         String sql = "DELETE FROM TICKETS WHERE ticket_id = ?";
@@ -110,10 +110,8 @@ public class TicketDao {
         }
     }
 
-
     /******************************************************************************************************************/
     private Ticket mapToTicket(ResultSet resultSet) throws SQLException {
-
         return new Ticket(
                 resultSet.getInt("ticket_id"),
                 resultSet.getInt("departure_id"),
@@ -124,6 +122,4 @@ public class TicketDao {
                 resultSet.getObject("passenger_id", Integer.class)
         );
     }
-
-
 }

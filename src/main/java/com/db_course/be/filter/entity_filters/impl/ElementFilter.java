@@ -19,7 +19,7 @@ public class ElementFilter extends EntityFilter {
     public static final int INERT = 6;
 
 
-    protected ElementFilter(String table, int colNb) {
+    public ElementFilter() {
         super(TABLE, COL_NB);
         constructors[ID] = () -> new ColumnFilter(TABLE, "element_id", int.class);
         constructors[NAME] = () -> new ColumnFilter(TABLE, "name", String.class);
@@ -29,7 +29,6 @@ public class ElementFilter extends EntityFilter {
         constructors[RADIOACTIVE] = () -> new ColumnFilter(TABLE, "radioactive", boolean.class);
         constructors[INERT] = () -> new ColumnFilter(TABLE, "inert", boolean.class);
     }
-
 
 
 }

@@ -1,8 +1,9 @@
 package com.db_course.be.service;
 
 import com.db_course.be.dao.ElementDao;
-import com.db_course.dto.ElementDto;
 import com.db_course.be.entity_model.Element;
+import com.db_course.be.filter.entity_filters.impl.ElementFilter;
+import com.db_course.dto.ElementDto;
 
 import java.util.function.Consumer;
 
@@ -45,6 +46,15 @@ public class ElementService {
                 element -> {
                     consumer.accept(elementToDto(element));
                 }
+        );
+    }
+
+    public void processFilteredElements(Consumer<ElementDto> consumer, ElementFilter filter) {
+        elementDao.processFilteredElements(
+                element -> {
+                    consumer.accept(elementToDto(element));
+                },
+                filter
         );
 
     }

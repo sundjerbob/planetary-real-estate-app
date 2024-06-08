@@ -1,10 +1,9 @@
 package com.db_course.gui.filter_panels;
 
 import com.db_course.be.filter.defs.FilterOperation;
-import com.db_course.be.filter.entity_filters.impl.CelestialBodyFilter;
-import com.db_course.be.filter.entity_filters.impl.DepartureFilter;
-import com.db_course.be.service.CelestialBodyService;
-import com.db_course.gui.tables.model.CelestialBodyTableModel;
+import com.db_course.be.filter.entity_filters.impl.AtmosphereElementFilter;
+import com.db_course.be.service.AtmosphereElementService;
+import com.db_course.gui.tables.model.AtmosphereElementTableModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,16 +12,13 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CelestialBodyFilterPanel extends JPanel {
-
-
-    private final CelestialBodyTableModel tableModel;
+public class AtmosphereElementFilterPanel extends JPanel {
+    private final AtmosphereElementTableModel tableModel;
     private final FilterContainer filterContainer;
     private final JButton addFilterButton;
     private final JButton applyFilterButton;
 
-
-    public CelestialBodyFilterPanel(CelestialBodyTableModel tableModel) {
+    public AtmosphereElementFilterPanel(AtmosphereElementTableModel tableModel) {
         this.tableModel = tableModel;
         setLayout(new BorderLayout());
 
@@ -57,18 +53,17 @@ public class CelestialBodyFilterPanel extends JPanel {
         add(scrollPane, BorderLayout.CENTER);
     }
 
-
     private void applyFilters() {
-        CelestialBodyFilter filter = new CelestialBodyFilter();
-
+        AtmosphereElementFilter filter = new AtmosphereElementFilter();
         for (FilterComponent component : filterContainer.getFilterComponents()) {
             component.applyFilter(filter);
         }
-
+        // clear data
         tableModel.clear();
-        CelestialBodyService.getInstance().processFilteredCelestialBodies(tableModel::addCelestialBody, filter);
+//      filter.addSortColumn(AtmosphereElementFilter.ATMOSPHERE_ID, true);
+//      filter.addSortColumn(AtmosphereElementFilter.PERCENTAGE, false);
+        AtmosphereElementService.getInstance().processFilteredAtmosphereElements(tableModel::addAtmosphereElement, filter);
     }
-
 
     private class FilterContainer extends JPanel {
         private final List<FilterComponent> filterComponents = new ArrayList<>();
@@ -118,10 +113,7 @@ public class CelestialBodyFilterPanel extends JPanel {
             setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
             columnComboBox = new JComboBox<>(new String[]{
-                    "ID", "Name", "Description", "Surface Pressure", "Surface Temperature Min",
-                    "Surface Temperature Max", "Core Temperature", "Explored", "Radiation Level", "Has Water",
-                    "Surface Area", "Mass", "Gravitational Field Height", "Moving Speed", "Rotation Speed",
-                    "Celestial Body Type", "Rotates Around Body"
+                    "Percentage", "Element", "Atmosphere ID"
             });
             columnComboBox.setBounds(0, 10, 120, 30);
 
@@ -191,59 +183,39 @@ public class CelestialBodyFilterPanel extends JPanel {
             valuePanel.repaint();
         }
 
-
-        public void applyFilter(CelestialBodyFilter filter) {
+        public void applyFilter(AtmosphereElementFilter filter) {
 
             String selectedColumn = (String) columnComboBox.getSelectedItem();
+
             FilterOperation selectedOperation = (FilterOperation) operationComboBox.getSelectedItem();
 
             if (selectedColumn != null && selectedOperation != null) {
                 int columnIndex = getColumnIndex(selectedColumn);
+
                 Object value = getValueFromPanel(selectedOperation);
 
-                if (selectedOperation == FilterOperation.BETWEEN && value instanceof String[] && ((String[]) value).length == 2)
+
+                if (selectedOperation == FilterOperation.BETWEEN && value instanceof String[] && ((String[]) value).length == 2) {
                     filter.addFilter(columnIndex, selectedOperation, ((String[]) value)[0], ((String[]) value)[1]);
-
-                else
+                } else {
                     filter.addFilter(columnIndex, selectedOperation, value);
-
+                }
             }
         }
 
-
         private int getColumnIndex(String columnName) {
             return switch (columnName) {
-                case "ID" -> CelestialBodyFilter.ID;
-                case "Name" -> CelestialBodyFilter.NAME;
-                case "Description" -> CelestialBodyFilter.DESCRIPTION;
-                case "Surface Pressure" -> CelestialBodyFilter.SURFACE_PRESSURE;
-                case "Surface Temperature Min" -> CelestialBodyFilter.SURFACE_TEMPERATURE_MIN;
-                case "Surface Temperature Max" -> CelestialBodyFilter.SURFACE_TEMPERATURE_MAX;
-                case "Core Temperature" -> CelestialBodyFilter.CORE_TEMPERATURE;
-                case "Explored" -> CelestialBodyFilter.EXPLORED;
-                case "Radiation Level" -> CelestialBodyFilter.RADIATION_LEVEL;
-                case "Has Water" -> CelestialBodyFilter.HAS_WATER;
-                case "Surface Area" -> CelestialBodyFilter.SURFACE_AREA;
-                case "Mass" -> CelestialBodyFilter.MASS;
-                case "Gravitational Field Height" -> CelestialBodyFilter.GRAVITATIONAL_FIELD_HEIGHT;
-                case "Moving Speed" -> CelestialBodyFilter.MOVING_SPEED;
-                case "Rotation Speed" -> CelestialBodyFilter.ROTATION_SPEED;
-                case "Celestial Body Type" -> CelestialBodyFilter.CELESTIAL_BODY_TYPE;
-                case "Rotates Around Body" -> CelestialBodyFilter.ROTATES_AROUND_BODY;
+                case "Percentage" -> AtmosphereElementFilter.PERCENTAGE;
+                case "Element" -> AtmosphereElementFilter.ELEMENT;
+                case "Atmosphere ID" -> AtmosphereElementFilter.ATMOSPHERE_ID;
                 default -> throw new IllegalArgumentException("Unknown column name: " + columnName);
             };
         }
 
-
         private Object getValueFromPanel(FilterOperation operation) {
-
             Component[] components = valuePanel.getComponents();
-
             if (operation == FilterOperation.BETWEEN && components.length == 4 &&
-
                     components[1] instanceof JTextField && components[3] instanceof JTextField) {
-
-
                 return new String[]{
                         ((JTextField) components[1]).getText().trim(),
                         ((JTextField) components[3]).getText().trim()
@@ -253,7 +225,5 @@ public class CelestialBodyFilterPanel extends JPanel {
             }
             return null;
         }
-
-
     }
 }

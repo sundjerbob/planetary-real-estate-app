@@ -1,9 +1,9 @@
 package com.db_course.be.service;
 
 import com.db_course.be.dao.AtmosphereDao;
+import com.db_course.be.entity_model.Atmosphere;
 import com.db_course.be.filter.entity_filters.impl.AtmosphereFilter;
 import com.db_course.dto.AtmosphereDto;
-import com.db_course.be.entity_model.Atmosphere;
 
 import java.util.function.Consumer;
 
@@ -33,6 +33,14 @@ public class AtmosphereService {
         return instance;
     }
 
+
+    /******************************************************************************************************************/
+    public AtmosphereDto getAtmosphereById(int id) {
+        Atmosphere atmosphere = atmosphereDao.getAtmosphereById(id);
+        return setForeignAttributes(atmosphereToDto(atmosphere), atmosphere.getCelestialBodyId());
+    }
+
+
     /******************************************************************************************************************/
     public AtmosphereDto getAtmosphereByCelestialBodyId(int celestialBodyId) {
         Atmosphere atmosphere = atmosphereDao.getAtmosphereByCelestialBodyId(celestialBodyId);
@@ -50,6 +58,7 @@ public class AtmosphereService {
         };
         atmosphereDao.processAllAtmospheres(dbObjConsumer);
     }
+
 
     public void processFilteredAtmospheres(Consumer<AtmosphereDto> consumer, AtmosphereFilter filter) {
         Consumer<Atmosphere> dbObjConsumer = atmosphere -> {

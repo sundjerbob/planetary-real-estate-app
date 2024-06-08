@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 public class AtmosphereElementDto {
 
     private int atmosphereId;
-    private ElementDto elementDto;
+    private String celestialBody;
+    private String element;
     private BigDecimal percentage;
 }

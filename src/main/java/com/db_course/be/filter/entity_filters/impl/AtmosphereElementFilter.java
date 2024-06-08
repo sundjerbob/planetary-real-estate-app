@@ -16,7 +16,7 @@ public class AtmosphereElementFilter extends EntityFilter {
     public static final int ATMOSPHERE_ID = 2;
 
 
-    protected AtmosphereElementFilter() {
+    public AtmosphereElementFilter() {
 
         super(TABLE, COL_NB);
 

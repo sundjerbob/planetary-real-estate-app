@@ -57,11 +57,10 @@ public class AtmosphereDao {
     /******************************************************************************************************************/
     public Atmosphere getAtmosphereById(int id) {
 
-        String sql = "SELECT * FROM " + TABLE + " WHERE id = ?";
+        String sql = "SELECT * FROM " + TABLE + " WHERE atmosphere_id = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, id);
-
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next())
                     return mapToAtmosphere(resultSet);

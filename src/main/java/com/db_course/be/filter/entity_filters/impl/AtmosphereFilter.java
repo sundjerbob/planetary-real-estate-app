@@ -6,6 +6,7 @@ import com.db_course.be.filter.nodes.FK_ColumnFilter;
 
 import java.math.BigDecimal;
 
+
 public class AtmosphereFilter extends EntityFilter {
 
     private static final String TABLE = "ATMOSPHERES";

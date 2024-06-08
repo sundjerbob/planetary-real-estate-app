@@ -5,18 +5,16 @@ import com.db_course.dto.AtmosphereDto;
 import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.TreeSet;
 
 public class AtmosphereTableModel extends AbstractTableModel {
     private final String[] columnNames = {
             "ID", "Max Temperature", "Min Temperature", "Atmosphere Height", "Ampere Pressure", "Celestial Body"
     };
     private final List<AtmosphereDto> atmospheres;
-    private final TreeSet<Integer> selectedRows;
+    private AtmosphereDto selectedAtmosphere;
 
     public AtmosphereTableModel() {
         this.atmospheres = new ArrayList<>();
-        this.selectedRows = new TreeSet<>();
     }
 
     public void addAtmosphere(AtmosphereDto atmosphere) {
@@ -63,5 +61,15 @@ public class AtmosphereTableModel extends AbstractTableModel {
             case 5 -> atmosphere.getCelestialBody();
             default -> null;
         };
+    }
+
+    public void setSelectedAtmosphere(int rowIndex) {
+        if (rowIndex >= 0 && rowIndex < atmospheres.size()) {
+            selectedAtmosphere = atmospheres.get(rowIndex);
+        }
+    }
+
+    public AtmosphereDto getSelectedAtmosphere() {
+        return selectedAtmosphere;
     }
 }

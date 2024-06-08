@@ -1,17 +1,16 @@
 package com.db_course.be.obj_mapper;
 
-import com.db_course.dto.CelestialBodyDto;
-import com.db_course.dto.PropertyDto;
 import com.db_course.be.entity_model.Property;
+import com.db_course.dto.PropertyDto;
 
 public class PropertyMapper {
 
-    public static PropertyDto propertyToDto(Property property, CelestialBodyDto celestialBody) {
+    public static PropertyDto propertyToDto(Property property, String celestialBody, String soldToUser) {
 
         return new PropertyDto(
                 property.getId(),
                 celestialBody,
-                property.getSoldToUserId(),
+                soldToUser,
                 property.getPropertyRegNb(),
                 property.getAddress(),
                 property.getSquareMeters(),

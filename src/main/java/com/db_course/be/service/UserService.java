@@ -1,8 +1,9 @@
 package com.db_course.be.service;
 
 import com.db_course.be.dao.UserDao;
-import com.db_course.dto.UserDto;
 import com.db_course.be.entity_model.User;
+import com.db_course.be.filter.entity_filters.impl.UserFilter;
+import com.db_course.dto.UserDto;
 
 import java.util.function.Consumer;
 
@@ -61,8 +62,23 @@ public class UserService {
                     UserDto userDto = userToDto(user);
                     consumer.accept(userDto);
                 });
-
     }
 
+    public void processFilteredUsers(Consumer<UserDto> consumer, UserFilter filter) {
+
+        userDao.processFilteredUsers(
+                user -> {
+                    UserDto userDto = userToDto(user);
+                    consumer.accept(userDto);
+                },
+                filter
+        );
+    }
+
+    public UserDto getUserById(int userId) {
+
+        User u = userDao.getUserById(userId);
+        return u == null ? null : userToDto(u);
+    }
 
 }

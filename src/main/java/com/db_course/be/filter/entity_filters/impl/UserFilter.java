@@ -9,10 +9,10 @@ public class UserFilter extends EntityFilter {
 
     private static final int COL_NB = 4;
 
-    private static final int ID = 0;
-    private static final int NAME = 1;
-    private static final int LAST_NAME = 2;
-    private static final int USERNAME = 3;
+    public static final int ID = 0;
+    public static final int NAME = 1;
+    public static final int LAST_NAME = 2;
+    public static final int USERNAME = 3;
 
     public UserFilter() {
 

@@ -215,7 +215,7 @@ CREATE TABLE TICKETS
     room_id      INT            NOT NULL,
     spaceship_id INT            NOT NULL,
 
-    PRIMARY KEY (ticket_id, departure_id, passenger_id),
+    PRIMARY KEY (ticket_id),
 
     FOREIGN KEY (departure_id) REFERENCES DEPARTURES (departure_id),
     FOREIGN KEY (passenger_id) REFERENCES USERS (user_id),
@@ -238,12 +238,12 @@ CREATE TABLE PROPERTIES
     description       TEXT,
     price             DECIMAL(10, 2) NOT NULL,
     celestial_body_id INT            NOT NULL, -- The celestial body that property is located on
-    soled_to_user_id  INT,                     -- User who bought the property, if property has not been bought this field is NULL
+    sold_to_user_id   INT,                     -- User who bought the property, if property has not been bought this field is NULL
 
     FOREIGN KEY (celestial_body_id) REFERENCES CELESTIAL_BODIES (celestial_body_id),
-    FOREIGN KEY (soled_to_user_id) REFERENCES USERS (user_id),
+    FOREIGN KEY (sold_to_user_id) REFERENCES USERS (user_id),
 
-    INDEX idx_soled_to_user_id (soled_to_user_id)
+    INDEX idx_soled_to_user_id (sold_to_user_id)
 
 );
 
@@ -382,7 +382,7 @@ VALUES
  17.65,
  0.002),
 -- 22
-('Hygeia', (SELECT celestial_type_id FROM CELESTIAL_TYPES WHERE name = 'Asteroid'),
+('Hygiea', (SELECT celestial_type_id FROM CELESTIAL_TYPES WHERE name = 'Asteroid'),
  'The fourth largest asteroid in the asteroid belt', 0, -20, -20, 1000, true, 'LOW (0-10 mSv/year)', false, 350000,
  0.0003, 100,
  17.91, 0.002),
@@ -430,6 +430,8 @@ UPDATE CELESTIAL_BODIES
 SET rotates_around_id = 14
 WHERE name = 'Dysnomia';
 
+
+
 INSERT INTO CELESTIAL_PATHS (body_a_id, body_b_id, distance_km, description)
 VALUES (1, 2, 57900000, 'Sun to Mercury: ~57.9 million km'),
        (1, 3, 108200000, 'Sun to Venus: ~108.2 million km'),
@@ -446,6 +448,7 @@ VALUES (1, 2, 57900000, 'Sun to Mercury: ~57.9 million km'),
        (7, 8, 1439000000, 'Saturn to Uranus: ~1,439.0 million km'),
        (8, 9, 1623600000, 'Uranus to Neptune: ~1,623.6 million km'),
        (9, 10, 2411300000, 'Neptune to Pluto: ~2,411.3 million km');
+
 
 
 INSERT INTO SPACESHIPS (name, model, passenger_capacity, fuel_capacity, max_travel_range, traveling_speed, manufacturer)
@@ -470,6 +473,7 @@ VALUES ('Explorer I', 'Model X1', 100, 5000.00, 10000.00, 500.00, 'SpaceX'),
        ('Titan Voyager', 'Model T1', 130, 6500.00, 13000.00, 570.00, 'Boeing');
 
 
+
 INSERT INTO DEPARTURES (departure_datetime, celestial_origin_id, celestial_destination_id, spaceship_id)
 VALUES ('2024-01-01 10:00:00', 1, 2, 1),
        ('2024-01-02 10:00:00', 1, 3, 2),
@@ -486,6 +490,88 @@ VALUES ('2024-01-01 10:00:00', 1, 2, 1),
        ('2024-01-13 10:00:00', 7, 8, 13),
        ('2024-01-14 10:00:00', 8, 9, 14),
        ('2024-01-15 10:00:00', 9, 10, 15);
+
+
+INSERT INTO SPACESHIP_ROOMS (room_number, hibernation_capsules_nb, max_capacity, perks, spaceship_id)
+VALUES ('A101', 5, 10, 'Ocean View, Breakfast Included',
+        (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+       ('A102', 4, 8, 'Mountain View, King Size Bed',
+        (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+       ('A103', 6, 12, 'City View, Mini Bar',
+        (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+       ('B201', 3, 6, 'Garden View, Free Wi-Fi',
+        (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+       ('B202', 5, 10, 'Pool View, Complimentary Drinks',
+        (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+       ('B203', 4, 8, 'Sea View, Breakfast Included',
+        (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+       ('C301', 6, 12, 'River View, Jacuzzi',
+        (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+       ('C302', 3, 6, 'Forest View, King Size Bed',
+        (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+       ('C303', 5, 10, 'Desert View, Mini Bar',
+        (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+       ('D401', 4, 8, 'Mountain View, Free Wi-Fi',
+        (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1));
+
+
+INSERT INTO TICKETS (departure_id, passenger_id, sold, price, room_id, spaceship_id)
+VALUES ((SELECT departure_id FROM DEPARTURES ORDER BY RAND() LIMIT 1),
+        (SELECT user_id FROM USERS ORDER BY RAND() LIMIT 1), TRUE, 500.00,
+        (SELECT room_id FROM SPACESHIP_ROOMS ORDER BY RAND() LIMIT 1),
+        (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+       ((SELECT departure_id FROM DEPARTURES ORDER BY RAND() LIMIT 1),
+        (SELECT user_id FROM USERS ORDER BY RAND() LIMIT 1), FALSE, 750.00,
+        (SELECT room_id FROM SPACESHIP_ROOMS ORDER BY RAND() LIMIT 1),
+        (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+       ((SELECT departure_id FROM DEPARTURES ORDER BY RAND() LIMIT 1),
+        (SELECT user_id FROM USERS ORDER BY RAND() LIMIT 1), TRUE, 600.00,
+        (SELECT room_id FROM SPACESHIP_ROOMS ORDER BY RAND() LIMIT 1),
+        (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+       ((SELECT departure_id FROM DEPARTURES ORDER BY RAND() LIMIT 1),
+        (SELECT user_id FROM USERS ORDER BY RAND() LIMIT 1), TRUE, 800.00,
+        (SELECT room_id FROM SPACESHIP_ROOMS ORDER BY RAND() LIMIT 1),
+        (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+       ((SELECT departure_id FROM DEPARTURES ORDER BY RAND() LIMIT 1),
+        (SELECT user_id FROM USERS ORDER BY RAND() LIMIT 1), FALSE, 550.00,
+        (SELECT room_id FROM SPACESHIP_ROOMS ORDER BY RAND() LIMIT 1),
+        (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+       ((SELECT departure_id FROM DEPARTURES ORDER BY RAND() LIMIT 1),
+        (SELECT user_id FROM USERS ORDER BY RAND() LIMIT 1), TRUE, 700.00,
+        (SELECT room_id FROM SPACESHIP_ROOMS ORDER BY RAND() LIMIT 1),
+        (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+       ((SELECT departure_id FROM DEPARTURES ORDER BY RAND() LIMIT 1),
+        (SELECT user_id FROM USERS ORDER BY RAND() LIMIT 1), TRUE, 900.00,
+        (SELECT room_id FROM SPACESHIP_ROOMS ORDER BY RAND() LIMIT 1),
+        (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+       ((SELECT departure_id FROM DEPARTURES ORDER BY RAND() LIMIT 1),
+        (SELECT user_id FROM USERS ORDER BY RAND() LIMIT 1), FALSE, 650.00,
+        (SELECT room_id FROM SPACESHIP_ROOMS ORDER BY RAND() LIMIT 1),
+        (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+       ((SELECT departure_id FROM DEPARTURES ORDER BY RAND() LIMIT 1),
+        (SELECT user_id FROM USERS ORDER BY RAND() LIMIT 1), TRUE, 800.00,
+        (SELECT room_id FROM SPACESHIP_ROOMS ORDER BY RAND() LIMIT 1),
+        (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+       ((SELECT departure_id FROM DEPARTURES ORDER BY RAND() LIMIT 1),
+        (SELECT user_id FROM USERS ORDER BY RAND() LIMIT 1), FALSE, 750.00,
+        (SELECT room_id FROM SPACESHIP_ROOMS ORDER BY RAND() LIMIT 1),
+        (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+       (1, NULL, FALSE, 1000.00,
+        (SELECT room_id FROM SPACESHIP_ROOMS ORDER BY RAND() LIMIT 1),
+        (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+       (2, NULL, FALSE, 1500.00,
+        (SELECT room_id FROM SPACESHIP_ROOMS ORDER BY RAND() LIMIT 1),
+        (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+       (3, NULL, FALSE, 2000.00,
+        (SELECT room_id FROM SPACESHIP_ROOMS ORDER BY RAND() LIMIT 1),
+        (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+       (4, NULL, FALSE, 2500.00,
+        (SELECT room_id FROM SPACESHIP_ROOMS ORDER BY RAND() LIMIT 1),
+        (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+       (5, NULL, FALSE, 3000.00,
+        (SELECT room_id FROM SPACESHIP_ROOMS ORDER BY RAND() LIMIT 1),
+        (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1));
+
 
 -- Insert data into ATMOSPHERES table
 INSERT INTO ATMOSPHERES (celestial_body_id, atmosphere_height)
@@ -567,87 +653,138 @@ VALUES ((SELECT atmosphere_id
 
 
 
+INSERT INTO PROPERTIES (property_reg_nb, address, square_meters, name, description, price, celestial_body_id,
+                        sold_to_user_id)
+VALUES (1001, '123 Solar Ave', 150.00, 'Solar Mansion', 'A luxurious mansion with a breathtaking view of the Sun',
+        1000000.00,
+        (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Earth'), NULL),
+       (1002, '456 Martian Rd', 100.00, 'Martian Villa', 'A cozy villa on the red planet, perfect for a getaway',
+        750000.00,
+        (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Mars'), NULL),
+       (1003, '789 Venus Blvd', 120.00, 'Venusian Retreat',
+        'A beautiful retreat with stunning views of the Venusian clouds', 850000.00,
+        (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Venus'), NULL),
+       (1004, '101 Jupiter St', 200.00, 'Jovian Estate', 'A grand estate with expansive grounds and views of Jupiter',
+        1200000.00,
+        (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Jupiter'), NULL),
+       (1005, '202 Saturn Cir', 180.00, 'Saturnian Palace', 'A palace with a magnificent view of Saturns rings',
+        1100000.00,
+        (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Saturn'), NULL),
+       (1006, '303 Uranus Pl', 130.00, 'Uranian House', 'A modern house with a unique view of Uranus', 900000.00,
+        (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Uranus'), NULL),
+       (1007, '404 Neptune Dr', 160.00, 'Neptunian Cottage', 'A charming cottage by the blue waters of Neptune',
+        950000.00,
+        (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Neptune'), 3),
+       (1008, '505 Pluto Ln', 110.00, 'Plutonian Cabin', 'A cozy cabin on the edge of the Kuiper Belt', 800000.00,
+        (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Pluto'), 5);
+#       (1009, '606 Callisto Ct', 140.00, 'Callisto Condo', 'A spacious condo on the largest moon of Jupiter', 870000.00,
+#         (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Callisto'), NULL),
+#        (1010, '707 Io Ave', 90.00, 'Io Apartment', 'A modern apartment in a volcanic region of Io', 650000.00,
+#         (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Io'), NULL),
+#        (1011, '808 Europa St', 95.00, 'Europa Loft', 'A sleek loft with an icy landscape view of Europa', 700000.00,
+#         (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Europa'), NULL),
+#        (1012, '909 Titan Ter', 200.00, 'Titan Tower', 'A towering property with views of Saturns largest moon',
+#         1150000.00,
+#         (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Titan'), NULL),
+#        (1013, '1010 Ganymede Way', 125.00, 'Ganymede Heights', 'A high-rise with stunning views of Ganymede', 950000.00,
+#         (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Ganymede'), NULL),
+#        (1014, '1111 Enceladus Blvd', 140.00, 'Enceladus Estate', 'An estate with icy geysers in the backyard',
+#         980000.00,
+#         (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Enceladus'), NULL),
+#        (1015, '1212 Triton Rd', 150.00, 'Triton Residence', 'A residence with retrograde views of Neptune', 1020000.00,
+#         (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Triton'), NULL),
+#        (1016, '1313 Charon Ct', 130.00, 'Charon Chalet', 'A cozy chalet on Pluto\'s largest moon', 850000.00,
+#         (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Charon'), NULL),
+#        (1017, '1414 Vesta St', 85.00, 'Vesta Villa', 'A quaint villa on the largest asteroid', 600000.00,
+#         (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Vesta'), NULL),
+#        (1018, '1515 Ceres Ave', 90.00, 'Ceres Cottage', 'A charming cottage on the dwarf planet Ceres', 620000.00,
+#         (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Ceres'), NULL),
+#        (1019, '1616 Pallas Pl', 95.00, 'Pallas Penthouse', 'A luxury penthouse with panoramic views', 670000.00,
+#         (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Pallas'), NULL),
+#        (1020, '1717 Hygiea Dr', 100.00, 'Hygiea House', 'A house with a healthy atmosphere on Hygiea', 690000.00,
+#         (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Hygiea'), NULL);
+
+
 INSERT INTO MISSIONS (name, description, start_date, end_date, completed, explored_body_id, spaceship_id)
-VALUES
-    ('Mission Apollo', 'First mission to explore Mars', '2024-01-01', '2024-01-10', TRUE,
-     (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Mars'),
-     (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+VALUES ('Mission Apollo', 'First mission to explore Mars', '2024-01-01', '2024-01-10', TRUE,
+        (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Mars'),
+        (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
 
-    ('Mission Orion', 'Mission to study the atmosphere of Venus', '2024-02-01', '2024-02-15', FALSE,
-     (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Venus'),
-     (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+       ('Mission Orion', 'Mission to study the atmosphere of Venus', '2024-02-01', '2024-02-15', FALSE,
+        (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Venus'),
+        (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
 
-    ('Mission Galaxy', 'Exploration mission to the gas giant Jupiter', '2024-03-01', '2024-03-20', TRUE,
-     (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Jupiter'),
-     (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+       ('Mission Galaxy', 'Exploration mission to the gas giant Jupiter', '2024-03-01', '2024-03-20', TRUE,
+        (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Jupiter'),
+        (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
 
-    ('Mission Star', 'Study of the ring system of Saturn', '2024-04-01', '2024-04-25', FALSE,
-     (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Saturn'),
-     (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+       ('Mission Star', 'Study of the ring system of Saturn', '2024-04-01', '2024-04-25', FALSE,
+        (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Saturn'),
+        (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
 
-    ('Mission Voyager', 'Exploring the outer regions of Uranus', '2024-05-01', '2024-05-30', TRUE,
-     (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Uranus'),
-     (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+       ('Mission Voyager', 'Exploring the outer regions of Uranus', '2024-05-01', '2024-05-30', TRUE,
+        (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Uranus'),
+        (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
 
-    ('Mission Enterprise', 'Mission to observe Neptune’s moons', '2024-06-01', '2024-06-10', FALSE,
-     (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Neptune'),
-     (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+       ('Mission Enterprise', 'Mission to observe Neptune’s moons', '2024-06-01', '2024-06-10', FALSE,
+        (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Neptune'),
+        (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
 
-    ('Mission Explorer', 'First human mission to Pluto', '2024-07-01', '2024-07-20', TRUE,
-     (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Pluto'),
-     (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+       ('Mission Explorer', 'First human mission to Pluto', '2024-07-01', '2024-07-20', TRUE,
+        (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Pluto'),
+        (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
 
-    ('Mission Discovery', 'Detailed mapping of Earth’s oceans', '2024-08-01', '2024-08-15', FALSE,
-     (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Earth'),
-     (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+       ('Mission Discovery', 'Detailed mapping of Earth’s oceans', '2024-08-01', '2024-08-15', FALSE,
+        (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Earth'),
+        (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
 
-    ('Mission Odyssey', 'Second mission to Mars for sample return', '2024-09-01', '2024-09-25', TRUE,
-     (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Mars'),
-     (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+       ('Mission Odyssey', 'Second mission to Mars for sample return', '2024-09-01', '2024-09-25', TRUE,
+        (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Mars'),
+        (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
 
-    ('Mission Endeavor', 'Long-duration mission to study Venus’s surface', '2024-10-01', '2024-10-20', FALSE,
-     (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Venus'),
-     (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+       ('Mission Endeavor', 'Long-duration mission to study Venus’s surface', '2024-10-01', '2024-10-20', FALSE,
+        (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Venus'),
+        (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
 
-    ('Mission Challenger', 'Investigating the Great Red Spot of Jupiter', '2024-11-01', '2024-11-15', TRUE,
-     (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Jupiter'),
-     (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+       ('Mission Challenger', 'Investigating the Great Red Spot of Jupiter', '2024-11-01', '2024-11-15', TRUE,
+        (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Jupiter'),
+        (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
 
-    ('Mission Pathfinder', 'Exploration of Saturn’s moon Titan', '2024-12-01', '2024-12-25', FALSE,
-     (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Saturn'),
-     (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+       ('Mission Pathfinder', 'Exploration of Saturn’s moon Titan', '2024-12-01', '2024-12-25', FALSE,
+        (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Saturn'),
+        (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
 
-    ('Mission Horizon', 'Mission to observe the poles of Uranus', '2025-01-01', '2025-01-20', TRUE,
-     (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Uranus'),
-     (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+       ('Mission Horizon', 'Mission to observe the poles of Uranus', '2025-01-01', '2025-01-20', TRUE,
+        (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Uranus'),
+        (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
 
-    ('Mission Frontier', 'Neptune’s rings and moon Triton exploration', '2025-02-01', '2025-02-15', FALSE,
-     (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Neptune'),
-     (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+       ('Mission Frontier', 'Neptune’s rings and moon Triton exploration', '2025-02-01', '2025-02-15', FALSE,
+        (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Neptune'),
+        (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
 
-    ('Mission Pioneer', 'Study of the dwarf planet Pluto’s surface', '2025-03-01', '2025-03-25', TRUE,
-     (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Pluto'),
-     (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+       ('Mission Pioneer', 'Study of the dwarf planet Pluto’s surface', '2025-03-01', '2025-03-25', TRUE,
+        (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Pluto'),
+        (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
 
-    ('Mission Titan', 'Comprehensive survey of Earth’s atmosphere', '2025-04-01', '2025-04-20', FALSE,
-     (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Earth'),
-     (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+       ('Mission Titan', 'Comprehensive survey of Earth’s atmosphere', '2025-04-01', '2025-04-20', FALSE,
+        (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Earth'),
+        (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
 
-    ('Mission Atlantis', 'Investigating the polar ice caps of Mars', '2025-05-01', '2025-05-30', TRUE,
-     (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Mars'),
-     (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+       ('Mission Atlantis', 'Investigating the polar ice caps of Mars', '2025-05-01', '2025-05-30', TRUE,
+        (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Mars'),
+        (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
 
-    ('Mission Luna', 'Venusian surface composition analysis', '2025-06-01', '2025-06-10', FALSE,
-     (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Venus'),
-     (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+       ('Mission Luna', 'Venusian surface composition analysis', '2025-06-01', '2025-06-10', FALSE,
+        (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Venus'),
+        (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
 
-    ('Mission Solar', 'Magnetic field study of Jupiter', '2025-07-01', '2025-07-20', TRUE,
-     (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Jupiter'),
-     (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+       ('Mission Solar', 'Magnetic field study of Jupiter', '2025-07-01', '2025-07-20', TRUE,
+        (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Jupiter'),
+        (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
 
-    ('Mission Mercury', 'Saturn’s core temperature measurement', '2025-08-01', '2025-08-15', FALSE,
-     (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Saturn'),
-     (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1));
+       ('Mission Mercury', 'Saturn’s core temperature measurement', '2025-08-01', '2025-08-15', FALSE,
+        (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Saturn'),
+        (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1));
 
 
 -- Insert data into RESIDENTS table

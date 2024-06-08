@@ -56,10 +56,26 @@ public class UserDao {
 
     /******************************************************************************************************************/
     public User getUserByUsername(String username) {
-        String sql = "SELECT user_id, name, last_name, username, password FROM " + TABLE + " WHERE username = ?";
+        String sql = "SELECT * FROM " + TABLE + " WHERE username = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, username);
+
+            try (ResultSet resultSet = statement.executeQuery()) {
+                return resultSet.next() ? mapToUser(resultSet) : null;
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("UserDao.getUserByUsername() says: " + e.getMessage());
+        }
+    }
+
+    /******************************************************************************************************************/
+    public User getUserById(int id) {
+        String sql = "SELECT * FROM " + TABLE + " WHERE user_id = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(sql)) {
+            statement.setInt(1, id);
 
             try (ResultSet resultSet = statement.executeQuery()) {
                 return resultSet.next() ? mapToUser(resultSet) : null;

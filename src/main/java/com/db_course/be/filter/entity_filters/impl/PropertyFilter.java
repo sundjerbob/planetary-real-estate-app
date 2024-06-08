@@ -22,8 +22,8 @@ public class PropertyFilter extends EntityFilter {
     public static final int SOLED_TO_USER = 8;
 
 
-    protected PropertyFilter(String table, int colNb) {
-        super(table, colNb);
+    public PropertyFilter() {
+        super(TABLE, COL_NB);
 
         constructors[ID] = () -> new ColumnFilter(TABLE, "property_id", int.class);
         constructors[PROPERTY_REG_NB] = () -> new ColumnFilter(TABLE, "property_reg_nb", int.class);
@@ -43,7 +43,7 @@ public class PropertyFilter extends EntityFilter {
         constructors[SOLED_TO_USER] = () -> new FK_ColumnFilter(
                 TABLE,
                 "USERS",
-                "soled_to_user_id",
+                "sold_to_user_id",
                 "user_id",
                 "username",
                 String.class

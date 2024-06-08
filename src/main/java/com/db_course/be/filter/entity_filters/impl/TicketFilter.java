@@ -13,8 +13,8 @@ public class TicketFilter extends EntityFilter {
 
     public static final int ID = 0;
     public static final int PRICE = 1;
-    public static final int ROOM_NUMBER = 2;
-    public static final int SOLD = 3;
+    public static final int SOLD = 2;
+    public static final int ROOM_NUMBER = 3;
     public static final int PASSENGER_ID = 4;
     public static final int DEPARTURE_ID = 5;
     public static final int SPACESHIP = 6;
@@ -27,18 +27,37 @@ public class TicketFilter extends EntityFilter {
 
         constructors[PRICE] = () -> new ColumnFilter(TABLE, "price", BigDecimal.class);
 
-        constructors[ROOM_NUMBER] = () -> new ColumnFilter(TABLE, "room_number", int.class);
 
         constructors[SOLD] = () -> new ColumnFilter(TABLE, "sold", Boolean.class);
+
+
+        constructors[ROOM_NUMBER] = () -> new FK_ColumnFilter(
+                TABLE,
+                "SPACESHIP_ROOMS",
+                "room_id",
+                "room_id",
+                "room_number",
+                String.class
+        );
 
         constructors[PASSENGER_ID] = () -> new FK_ColumnFilter(
                 TABLE,
                 "USERS",
                 "passenger_id",
                 "user_id",
-                "user_id",
-                int.class
+                "username",
+                String.class
         );
+
+        constructors[SPACESHIP] = () -> new FK_ColumnFilter(
+                TABLE,
+                "SPACESHIPS",
+                "spaceship_id",
+                "spaceship_id",
+                "name",
+                String.class
+        );
+
 
         constructors[DEPARTURE_ID] = () -> new FK_ColumnFilter(
                 TABLE,

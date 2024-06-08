@@ -13,8 +13,8 @@ import java.math.BigDecimal;
 public class PropertyDto {
 
     private int id;
-    private CelestialBodyDto celestialBody;
-    private Integer soldToUserId;
+    private String celestialBody;
+    private String soldToUser;
     private int propertyRegNb;
     private String address;
     private BigDecimal squareMeters;

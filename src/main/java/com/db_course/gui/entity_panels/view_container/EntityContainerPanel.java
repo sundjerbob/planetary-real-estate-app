@@ -25,6 +25,10 @@ public class EntityContainerPanel extends JPanel {
         JButton missionButton = new JButton("Missions");
         JButton residentButton = new JButton("Residents");
         JButton atmosphereElementButton = new JButton("Atmosphere Elements");
+        JButton propertyButton = new JButton("Properties");
+        JButton spaceshipRoomButton = new JButton("Spaceship Rooms");
+        JButton ticketButton = new JButton("Tickets");
+        JButton usersButton = new JButton("Users");
 
         buttonPanel.add(celestialBodyButton);
         buttonPanel.add(departureButton);
@@ -36,6 +40,10 @@ public class EntityContainerPanel extends JPanel {
         buttonPanel.add(missionButton);
         buttonPanel.add(residentButton);
         buttonPanel.add(atmosphereElementButton);
+        buttonPanel.add(propertyButton);
+        buttonPanel.add(spaceshipRoomButton);
+        buttonPanel.add(ticketButton);
+        buttonPanel.add(usersButton);
 
         // Create card layout panel
         cardLayout = new CardLayout();
@@ -52,6 +60,10 @@ public class EntityContainerPanel extends JPanel {
         cardPanel.add(new MissionPanel(), "Missions");
         cardPanel.add(new ResidentPanel(), "Residents");
         cardPanel.add(new AtmosphereElementPanel(), "AtmosphereElements");
+        cardPanel.add(new PropertyPanel(), "Properties");
+        cardPanel.add(new SpaceshipRoomPanel(), "SpaceshipRooms");
+        cardPanel.add(new TicketPanel(), "Tickets");
+        cardPanel.add(new UserPanel(), "Users");
 
         add(buttonPanel, BorderLayout.NORTH);
         add(cardPanel, BorderLayout.CENTER);
@@ -67,6 +79,10 @@ public class EntityContainerPanel extends JPanel {
         missionButton.addActionListener(e -> cardLayout.show(cardPanel, "Missions"));
         residentButton.addActionListener(e -> cardLayout.show(cardPanel, "Residents"));
         atmosphereElementButton.addActionListener(e -> cardLayout.show(cardPanel, "AtmosphereElements"));
+        propertyButton.addActionListener(e -> cardLayout.show(cardPanel, "Properties"));
+        spaceshipRoomButton.addActionListener(e -> cardLayout.show(cardPanel, "SpaceshipRooms"));
+        ticketButton.addActionListener(e -> cardLayout.show(cardPanel, "Tickets"));
+        usersButton.addActionListener(e -> cardLayout.show(cardPanel, "Users"));
 
         // Show the default panel
         cardLayout.show(cardPanel, "CelestialBodies");

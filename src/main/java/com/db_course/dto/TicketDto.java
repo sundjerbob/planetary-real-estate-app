@@ -16,11 +16,11 @@ public class TicketDto {
 
     private int id;
     private int departureId;
-    private int spaceshipId;
-    private SpaceshipRoomDto room;
+    private String spaceship;
+    private String roomNb;
     private BigDecimal price;
-    private boolean soled;
-    private Integer passengerId;
+
+    private String passenger;
 
 
 }

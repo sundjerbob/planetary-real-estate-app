@@ -16,7 +16,7 @@ public class SpaceShipRoomFilter extends EntityFilter {
     public static final int SPACESHIP = 4;
 
 
-    protected SpaceShipRoomFilter() {
+    public SpaceShipRoomFilter() {
         super(TABLE, COL_NB);
 
         constructors[ID] = () -> new ColumnFilter(TABLE, "room_id", int.class);

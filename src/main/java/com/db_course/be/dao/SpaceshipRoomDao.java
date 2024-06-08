@@ -2,6 +2,7 @@ package com.db_course.be.dao;
 
 import com.db_course.be.db_config.DB_Client;
 import com.db_course.be.entity_model.SpaceshipRoom;
+import com.db_course.be.filter.entity_filters.impl.SpaceShipRoomFilter;
 
 import java.sql.*;
 import java.util.function.Consumer;
@@ -26,6 +27,21 @@ public class SpaceshipRoomDao {
                 consumer.accept(mapToSpaceshipRoom(resultSet));
             }
         } catch (SQLException exception) {
+            throw new RuntimeException("SpaceshipRoomDao.processAllSpaceshipRooms() says: " + exception.getMessage());
+        }
+
+    }
+
+
+    public void processFilteredSpaceshipRooms(Consumer<SpaceshipRoom> consumer, SpaceShipRoomFilter filter) {
+        try (
+                PreparedStatement statement = filter.generatePreparedStatement();
+                ResultSet resultSet = statement.executeQuery()
+        ) {
+            while (resultSet.next()) {
+                consumer.accept(mapToSpaceshipRoom(resultSet));
+            }
+        } catch (SQLException exception) {
             throw new RuntimeException("SpaceshipRoomDao.processAllSpaceshipRooms() says: " + TABLE);
         }
 
@@ -36,7 +52,7 @@ public class SpaceshipRoomDao {
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, room.getRoomId());
             statement.setInt(2, room.getSpaceshipId());
-            statement.setInt(3, room.getRoomNumber());
+            statement.setString(3, room.getRoomNumber());
             statement.setString(4, room.getPerks());
             statement.setInt(5, room.getNumHibernationCapsules());
             statement.executeUpdate();
@@ -49,7 +65,7 @@ public class SpaceshipRoomDao {
         String sql = "UPDATE " + TABLE + " SET spaceship_id = ?, room_number = ?, perks = ?, num_hibernation_capsules = ? WHERE room_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, room.getSpaceshipId());
-            statement.setInt(2, room.getRoomNumber());
+            statement.setString(2, room.getRoomNumber());
             statement.setString(3, room.getPerks());
             statement.setInt(4, room.getNumHibernationCapsules());
             statement.setInt(5, room.getRoomId());
@@ -59,7 +75,7 @@ public class SpaceshipRoomDao {
         }
     }
 
-    public SpaceshipRoom searchById(int roomId) {
+    public SpaceshipRoom getRoomById(int roomId) {
         String sql = "SELECT * FROM " + TABLE + " WHERE room_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, roomId);
@@ -91,9 +107,9 @@ public class SpaceshipRoomDao {
     private SpaceshipRoom mapToSpaceshipRoom(ResultSet resultSet) throws SQLException {
         int roomId = resultSet.getInt("room_id");
         int spaceshipId = resultSet.getInt("spaceship_id");
-        int roomNumber = resultSet.getInt("room_number");
+        String roomNumber = resultSet.getString("room_number");
         String perks = resultSet.getString("perks");
-        int numHibernationCapsules = resultSet.getInt("num_hibernation_capsules");
+        int numHibernationCapsules = resultSet.getInt("hibernation_capsules_nb");
         return new SpaceshipRoom(roomId, spaceshipId, roomNumber, perks, numHibernationCapsules);
     }
 }

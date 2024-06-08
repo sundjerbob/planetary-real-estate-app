@@ -129,14 +129,15 @@ public class PropertyDao {
     private Property mapToProperty(ResultSet resultSet) throws SQLException {
         int propertyId = resultSet.getInt("property_id");
         int celestialBodyId = resultSet.getInt("celestial_body_id");
-        Integer soldToUserId = (Integer) resultSet.getObject("sold_to_user_id");
-        int globalRegistryNb = resultSet.getInt("global_registry_nb");
+        Object soldToUserId = resultSet.getObject("sold_to_user_id");
+
+        int globalRegistryNb = resultSet.getInt("property_reg_nb");
         String address = resultSet.getString("address");
         BigDecimal squareMeters = resultSet.getBigDecimal("square_meters");
         String name = resultSet.getString("name");
         String description = resultSet.getString("description");
         BigDecimal price = resultSet.getBigDecimal("price");
-        return new Property(propertyId, celestialBodyId, soldToUserId, globalRegistryNb, address, squareMeters, name, description, price);
+        return new Property(propertyId, celestialBodyId, soldToUserId == null ? null : (Integer) soldToUserId, globalRegistryNb, address, squareMeters, name, description, price);
     }
 
 

@@ -1,10 +1,16 @@
 package com.db_course.be.service;
 
 import com.db_course.be.dao.PropertyDao;
+import com.db_course.be.filter.entity_filters.impl.PropertyFilter;
+import com.db_course.dto.PropertyDto;
+
+import java.util.function.Consumer;
+
+import static com.db_course.be.obj_mapper.PropertyMapper.propertyToDto;
 
 public class PropertyService {
 
-    private static PropertyService instance;
+    private static volatile PropertyService instance;
     private static final Object mutex = new Object();
     private final PropertyDao propertyDao;
 
@@ -24,5 +30,37 @@ public class PropertyService {
         }
         return instance;
     }
+
+    public void processAllProperties(Consumer<PropertyDto> consumer) {
+
+        propertyDao.processAllProperties(
+                property -> {
+                    String cbName = CelestialBodyService.getInstance().getCelestialBodyById(property.getCelestialBodyId()).getName();
+                    String soldTo = property.getSoldToUserId() == null ?
+                            "None" : UserService.getInstance().getUserById(property.getSoldToUserId()).getUsername();
+
+                    consumer.accept(propertyToDto(property, cbName, soldTo));
+
+                }
+        );
+
+    }
+
+
+    public void processFilteredProperties(Consumer<PropertyDto> consumer, PropertyFilter filter) {
+
+        propertyDao.processFilteredProperties(
+                property -> {
+                    String cbName = CelestialBodyService.getInstance().getCelestialBodyById(property.getCelestialBodyId()).getName();
+                    String soldTo = property.getSoldToUserId() == null ?
+                            "None" : UserService.getInstance().getUserById(property.getSoldToUserId()).getUsername();
+
+                    consumer.accept(propertyToDto(property, cbName, soldTo));
+                },
+                filter
+        );
+
+    }
+
 
 }

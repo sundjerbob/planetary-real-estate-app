@@ -12,8 +12,8 @@ public class SpaceshipRoomDto {
 
 
     private int roomId;
-    private int spaceshipId;
-    private int roomNumber;
+    private String spaceship;
+    private String roomNumber;
     private String perks;
     private int numHibernationCapsules;
 

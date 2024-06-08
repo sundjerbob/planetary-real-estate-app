@@ -37,24 +37,16 @@ public class ElementTableModel extends AbstractTableModel {
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         ElementDto element = (ElementDto) elements.toArray()[rowIndex];
-        switch (columnIndex) {
-            case 0:
-                return element.getId();
-            case 1:
-                return element.getName();
-            case 2:
-                return element.getDescription();
-            case 3:
-                return element.getMinPercentage();
-            case 4:
-                return element.getMaxPercentage();
-            case 5:
-                return element.isRadioactive();
-            case 6:
-                return element.isInert();
-            default:
-                return null;
-        }
+        return switch (columnIndex) {
+            case 0 -> element.getId();
+            case 1 -> element.getName();
+            case 2 -> element.getDescription();
+            case 3 -> element.getMinPercentage();
+            case 4 -> element.getMaxPercentage();
+            case 5 -> element.isRadioactive();
+            case 6 -> element.isInert();
+            default -> null;
+        };
     }
 
     @Override

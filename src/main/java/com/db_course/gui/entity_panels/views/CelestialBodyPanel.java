@@ -28,7 +28,7 @@ public class CelestialBodyPanel extends JPanel {
             @Override
             public void componentResized(java.awt.event.ComponentEvent evt) {
                 int width = getWidth();
-                splitPane.setDividerLocation((int) (width * 0.4)); // Set to 30% of the parent width
+                splitPane.setDividerLocation((int) (width * 0.33)); // Set to 30% of the parent width
                 splitPane.removeComponentListener(this); // Remove listener after setting the initial position
             }
         });

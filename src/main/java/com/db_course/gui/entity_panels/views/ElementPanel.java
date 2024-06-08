@@ -25,7 +25,7 @@ public class ElementPanel extends JPanel {
         splitPane.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY, evt -> {
             if (!splitPane.getClientProperty("initialized").equals(Boolean.TRUE)) {
                 int totalWidth = splitPane.getWidth();
-                int initialDividerLocation = (int) (totalWidth * 0.4);
+                int initialDividerLocation = (int) (totalWidth * 0.33);
                 splitPane.setDividerLocation(initialDividerLocation);
                 splitPane.putClientProperty("initialized", Boolean.TRUE);
             }

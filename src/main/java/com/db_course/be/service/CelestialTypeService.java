@@ -1,8 +1,9 @@
 package com.db_course.be.service;
 
 import com.db_course.be.dao.CelestialTypeDao;
-import com.db_course.dto.CelestialTypeDto;
 import com.db_course.be.entity_model.CelestialType;
+import com.db_course.be.filter.entity_filters.impl.CelestialTypeFilter;
+import com.db_course.dto.CelestialTypeDto;
 
 import java.util.function.Consumer;
 
@@ -40,6 +41,17 @@ public class CelestialTypeService {
         };
 
         celestialTypeDao.processAllCelestialTypes(dbObjConsumer);
+    }
+
+
+    public void processFilteredCelestialTypes(Consumer<CelestialTypeDto> consumer, CelestialTypeFilter filter) {
+
+        Consumer<CelestialType> dbObjConsumer = celestialType -> {
+            CelestialTypeDto celestialTypeDto = celestialTypeToDto(celestialType);
+            consumer.accept(celestialTypeDto);
+        };
+
+        celestialTypeDao.processFilteredCelestialTypes(dbObjConsumer, filter);
     }
 
     public CelestialTypeDto getCelestialTypeById(int id) {

@@ -1,10 +1,9 @@
 package com.db_course.gui;
 
 import com.db_course.be.db_config.DB_Client;
-import com.db_course.gui.entity_panels.main_container.EntityContainerPanel;
+import com.db_course.gui.entity_panels.view_container.EntityContainerPanel;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 

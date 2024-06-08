@@ -2,6 +2,7 @@ package com.db_course.be.dao;
 
 import com.db_course.be.db_config.DB_Client;
 import com.db_course.be.entity_model.CelestialType;
+import com.db_course.be.filter.entity_filters.impl.CelestialTypeFilter;
 
 import java.sql.*;
 import java.util.function.Consumer;
@@ -52,6 +53,22 @@ public class CelestialTypeDao {
 
     }
 
+
+    public void processFilteredCelestialTypes(Consumer<CelestialType> consumer, CelestialTypeFilter filter) {
+
+        try (
+                PreparedStatement statement = filter.generatePreparedStatement();
+                ResultSet resultSet = statement.executeQuery()
+        ) {
+            while (resultSet.next()) {
+                consumer.accept(mapToCelestialType(resultSet));
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("CelestialTypeDao.processFilteredCelestialTypes() says: " + e.getMessage());
+        }
+
+    }
 
     private CelestialType mapToCelestialType(ResultSet resultSet) throws SQLException {
         return new CelestialType(

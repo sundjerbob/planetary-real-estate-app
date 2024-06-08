@@ -10,17 +10,17 @@ public class SpaceshipFilter extends EntityFilter {
     private static final String TABLE = "SPACESHIPS";
     private static final int COL_NB = 8;
 
-    private static final int ID = 0;
-    private static final int NAME = 1;
-    private static final int MODEL = 2;
-    private static final int PASSENGER_CAPACITY = 3;
-    private static final int FUEL_CAPACITY = 4;
-    private static final int MAX_TRAVEL_RANGE = 5;
-    private static final int TRAVELING_SPEED = 6;
-    private static final int MANUFACTURER = 7;
+    public static final int ID = 0;
+    public static final int NAME = 1;
+    public static final int MODEL = 2;
+    public static final int PASSENGER_CAPACITY = 3;
+    public static final int FUEL_CAPACITY = 4;
+    public static final int MAX_TRAVEL_RANGE = 5;
+    public static final int TRAVELING_SPEED = 6;
+    public static final int MANUFACTURER = 7;
 
 
-    protected SpaceshipFilter() {
+    public SpaceshipFilter() {
         super(TABLE, COL_NB);
 
         constructors[ID] = () -> new ColumnFilter(TABLE, "spaceship_id", int.class);

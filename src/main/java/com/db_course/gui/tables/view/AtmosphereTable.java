@@ -19,7 +19,8 @@ public class AtmosphereTable extends JTable {
                 if (e.getClickCount() == 1) {
                     int row = getSelectedRow();
                     if (row != -1) {
-                        AtmosphereDto selectedAtmosphere = tableModel.getAtmosphereAt(row);
+                        tableModel.setSelectedAtmosphere(row);
+                        AtmosphereDto selectedAtmosphere = tableModel.getSelectedAtmosphere();
                         System.out.println("Selected Atmosphere: " + selectedAtmosphere);
                     }
                 }

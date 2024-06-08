@@ -1,6 +1,7 @@
 package com.db_course.be.service;
 
 import com.db_course.be.dao.DepartureDao;
+import com.db_course.be.filter.entity_filters.impl.DepartureFilter;
 import com.db_course.dto.CelestialPathDto;
 import com.db_course.dto.DepartureDto;
 import com.db_course.dto.SpaceshipDto;
@@ -38,16 +39,42 @@ public class DepartureService {
     /******************************************************************************************************************/
     public void processAllDepartures(Consumer<DepartureDto> consumer) {
         departureDao.processAllDepartures(
+                departure -> {
 
+                    SpaceshipDto spaceship = SpaceshipService.getInstance().getSpaceshipById(departure.getSpaceshipId());
+
+                    System.out.println(departure.getCelestialBodyOriginId() + " " + departure.getCelestialBodyDestinationId());
+                    CelestialPathDto celestialPath = CelestialPathService.getInstance().getCelestialPathByBodyIds(
+                            departure.getCelestialBodyOriginId(),
+                            departure.getCelestialBodyDestinationId()
+                    );
+
+                    long travelDurationDays = calculateTravelDurationInDays(celestialPath.getDistanceKm(), spaceship.getTravelingSpeed());
+
+                    DepartureDto departureDto = departureToDto(
+                            departure,
+                            spaceship.getName(),
+                            celestialPath.getBodyA(),
+                            celestialPath.getBodyB(),
+                            travelDurationDays);
+
+                    consumer.accept(departureDto);
+                }
+        );
+    }
+
+    /******************************************************************************************************************/
+    public void processFilteredDepartures(Consumer<DepartureDto> consumer, DepartureFilter filter) {
+        departureDao.processAllDepartures(
                 departure -> {
 
                     SpaceshipDto spaceship = SpaceshipService.getInstance().getSpaceshipById(departure.getSpaceshipId());
                     CelestialPathDto celestialPath = CelestialPathService.getInstance().getCelestialPathByBodyIds(
-                            departure.getCelestialBodyFromId(),
-                            departure.getCelestialBodyToId()
+                            departure.getCelestialBodyOriginId(),
+                            departure.getCelestialBodyDestinationId()
                     );
 
-                    long travelDurationDays = calculateTravelDurationInDays(celestialPath.getDistance_km(), spaceship.getTravelingSpeed());
+                    long travelDurationDays = calculateTravelDurationInDays(celestialPath.getDistanceKm(), spaceship.getTravelingSpeed());
 
                     DepartureDto departureDto = departureToDto(
                             departure,

@@ -87,24 +87,11 @@ public class CelestialPathDao {
     }
 
 
-    /******************************************************************************************************************/
-    public boolean updateCelestialPath(CelestialPath celestialPath) {
-        String sql = "UPDATE " + TABLE + " SET body_a_id = ?, body_b_id = ?, distance_km = ? WHERE pathway_id = ?";
-        try (PreparedStatement statement = connection.prepareStatement(sql)) {
-            statement.setInt(1, celestialPath.getBodyA_Id());
-            statement.setInt(2, celestialPath.getBodyB_Id());
-            statement.setBigDecimal(3, celestialPath.getDistanceKm());
-            statement.setInt(4, celestialPath.getId());
-            return statement.executeUpdate() > 0;
-        } catch (Exception e) {
-            throw new RuntimeException("CelestialPathDao.updateCelestialPath() says: " + e.getMessage());
-        }
-    }
 
 
     /******************************************************************************************************************/
     public boolean deleteCelestialPath(int pathId) {
-        String sql = "DELETE FROM " + TABLE + " WHERE pathway_id = ?";
+        String sql = "DELETE FROM " + TABLE + " WHERE path_id = ?";
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setInt(1, pathId);
             return statement.executeUpdate() > 0;
@@ -116,17 +103,12 @@ public class CelestialPathDao {
 
     /******************************************************************************************************************/
     private CelestialPath mapToCelestialPath(ResultSet resultSet) throws SQLException {
-        try {
-            int pathwayId = resultSet.getInt("pathway_id");
-            int bodyAId = resultSet.getInt("body_a_id");
-            int bodyBId = resultSet.getInt("body_b_id");
-            BigDecimal distanceKm = resultSet.getBigDecimal("distance_km");
-            String description = resultSet.getString("description");
-            return new CelestialPath(pathwayId, bodyAId, bodyBId, distanceKm, description);
-        } catch (SQLException e) {
-
-            throw new RuntimeException("CelestialPathDao.mapToCelestialPath() says: " + e.getMessage());
-        }
+        int pathwayId = resultSet.getInt("path_id");
+        int bodyAId = resultSet.getInt("body_a_id");
+        int bodyBId = resultSet.getInt("body_b_id");
+        BigDecimal distanceKm = resultSet.getBigDecimal("distance_km");
+        String description = resultSet.getString("description");
+        return new CelestialPath(pathwayId, bodyAId, bodyBId, distanceKm, description);
     }
 
 

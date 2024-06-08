@@ -190,7 +190,7 @@ CREATE TABLE MISSIONS
 CREATE TABLE DEPARTURES
 (
     departure_id             INT AUTO_INCREMENT PRIMARY KEY,
-    departure_date           DATETIME NOT NULL,
+    departure_datetime       DATETIME NOT NULL,
     celestial_origin_id      INT      NOT NULL,
     celestial_destination_id INT      NOT NULL,
     spaceship_id             INT      NOT NULL,
@@ -200,7 +200,7 @@ CREATE TABLE DEPARTURES
     FOREIGN KEY (celestial_destination_id) REFERENCES CELESTIAL_PATHS (body_b_id),
     FOREIGN KEY (spaceship_id) REFERENCES SPACESHIPS (spaceship_id),
 
-    INDEX idx_departure_date (departure_date)
+    INDEX idx_departure_date (departure_datetime)
 );
 
 
@@ -427,26 +427,62 @@ UPDATE CELESTIAL_BODIES
 SET rotates_around_id = 14
 WHERE name = 'Dysnomia';
 
+INSERT INTO CELESTIAL_PATHS (body_a_id, body_b_id, distance_km, description)
+VALUES (1, 2, 57900000, 'Sun to Mercury: ~57.9 million km'),
+       (1, 3, 108200000, 'Sun to Venus: ~108.2 million km'),
+       (1, 4, 149600000, 'Sun to Earth: ~149.6 million km'),
+       (1, 5, 227900000, 'Sun to Mars: ~227.9 million km'),
+       (1, 6, 778500000, 'Sun to Jupiter: ~778.5 million km'),
+       (1, 7, 1433500000, 'Sun to Saturn: ~1,433.5 million km'),
+       (1, 8, 2872500000, 'Sun to Uranus: ~2,872.5 million km'),
+       (1, 9, 4495100000, 'Sun to Neptune: ~4,495.1 million km'),
+       (1, 10, 5906400000, 'Sun to Pluto: ~5,906.4 million km'),
+       (4, 5, 78300000, 'Earth to Mars: ~78.3 million km'),
+       (5, 6, 550600000, 'Mars to Jupiter: ~550.6 million km'),
+       (6, 7, 655000000, 'Jupiter to Saturn: ~655.0 million km'),
+       (7, 8, 1439000000, 'Saturn to Uranus: ~1,439.0 million km'),
+       (8, 9, 1623600000, 'Uranus to Neptune: ~1,623.6 million km'),
+       (9, 10, 2411300000, 'Neptune to Pluto: ~2,411.3 million km');
 
 
-INSERT INTO CELESTIAL_PATHS (body_a_id, body_b_id, distance_km)
-VALUES (1, 2, 57900000),   -- Sun to Mercury: ~57.9 million km
-       (1, 3, 108200000),  -- Sun to Venus: ~108.2 million km
-       (1, 4, 149600000),  -- Sun to Earth: ~149.6 million km
-       (1, 5, 227900000),  -- Sun to Mars: ~227.9 million km
-       (1, 6, 778500000),  -- Sun to Jupiter: ~778.5 million km
-       (1, 7, 1433500000), -- Sun to Saturn: ~1,433.5 million km
-       (1, 8, 2872500000), -- Sun to Uranus: ~2,872.5 million km
-       (1, 9, 4495100000), -- Sun to Neptune: ~4,495.1 million km
-       (1, 10, 5906400000),-- Sun to Pluto: ~5,906.4 million km
-       (4, 5, 78300000),   -- Earth to Mars: ~78.3 million km
-       (5, 6, 550600000),  -- Mars to Jupiter: ~550.6 million km
-       (6, 7, 655000000),  -- Jupiter to Saturn: ~655.0 million km
-       (7, 8, 1439000000), -- Saturn to Uranus: ~1,439.0 million km
-       (8, 9, 1623600000), -- Uranus to Neptune: ~1,623.6 million km
-       (9, 10, 2411300000) -- Neptune to Pluto: ~2,411.3 million km
-;
+INSERT INTO SPACESHIPS (name, model, passenger_capacity, fuel_capacity, max_travel_range, traveling_speed, manufacturer)
+VALUES ('Explorer I', 'Model X1', 100, 5000.00, 10000.00, 500.00, 'SpaceX'),
+       ('Voyager II', 'Model V2', 120, 6000.00, 12000.00, 550.00, 'NASA'),
+       ('Pioneer III', 'Model P3', 80, 4000.00, 8000.00, 400.00, 'Blue Origin'),
+       ('Enterprise', 'Model E1', 150, 7000.00, 15000.00, 600.00, 'Virgin Galactic'),
+       ('Galactic Cruiser', 'Model G1', 200, 8000.00, 16000.00, 650.00, 'Boeing'),
+       ('Starship Alpha', 'Model S1', 90, 4500.00, 9000.00, 450.00, 'Space Adventures'),
+       ('Lunar Lander', 'Model L1', 50, 3000.00, 6000.00, 350.00, 'Lockheed Martin'),
+       ('Mars Rover', 'Model M1', 110, 5500.00, 11000.00, 520.00, 'SpaceX'),
+       ('Jupiter Explorer', 'Model J1', 130, 6500.00, 13000.00, 570.00, 'NASA'),
+       ('Saturn Voyager', 'Model S2', 140, 7500.00, 14000.00, 590.00, 'Blue Origin'),
+       ('Neptune Navigator', 'Model N1', 60, 3500.00, 7000.00, 370.00, 'Virgin Galactic'),
+       ('Astro Traveler', 'Model A1', 170, 8500.00, 17000.00, 620.00, 'Boeing'),
+       ('Celestial Chariot', 'Model C1', 190, 9500.00, 18000.00, 640.00, 'Space Adventures'),
+       ('Cosmic Cruiser', 'Model C2', 100, 5000.00, 10000.00, 500.00, 'Lockheed Martin'),
+       ('Interstellar Explorer', 'Model I1', 200, 10000.00, 20000.00, 700.00, 'SpaceX'),
+       ('Solar Voyager', 'Model S3', 150, 7500.00, 15000.00, 600.00, 'NASA'),
+       ('Lunar Explorer', 'Model L2', 80, 4000.00, 8000.00, 400.00, 'Blue Origin'),
+       ('Martian Rover', 'Model M2', 120, 6000.00, 12000.00, 550.00, 'Virgin Galactic'),
+       ('Titan Voyager', 'Model T1', 130, 6500.00, 13000.00, 570.00, 'Boeing');
 
+
+INSERT INTO DEPARTURES (departure_datetime, celestial_origin_id, celestial_destination_id, spaceship_id)
+VALUES ('2024-01-01 10:00:00', 1, 2, 1),
+       ('2024-01-02 10:00:00', 1, 3, 2),
+       ('2024-01-03 10:00:00', 1, 4, 3),
+       ('2024-01-04 10:00:00', 1, 5, 4),
+       ('2024-01-05 10:00:00', 1, 6, 5),
+       ('2024-01-06 10:00:00', 1, 7, 6),
+       ('2024-01-07 10:00:00', 1, 8, 7),
+       ('2024-01-08 10:00:00', 1, 9, 8),
+       ('2024-01-09 10:00:00', 1, 10, 9),
+       ('2024-01-10 10:00:00', 4, 5, 10),
+       ('2024-01-11 10:00:00', 5, 6, 11),
+       ('2024-01-12 10:00:00', 6, 7, 12),
+       ('2024-01-13 10:00:00', 7, 8, 13),
+       ('2024-01-14 10:00:00', 8, 9, 14),
+       ('2024-01-15 10:00:00', 9, 10, 15);
 
 -- Insert data into ATMOSPHERES table
 INSERT INTO ATMOSPHERES (celestial_body_id, atmosphere_height)
@@ -456,11 +492,34 @@ VALUES ((SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Earth'), 4
 
 
 -- Insert data into ELEMENTS table
-INSERT INTO ELEMENTS (name, min_percentage, max_percentage)
-VALUES ('Nitrogen', 78, 78),
-       ('Oxygen', 19.5, 23.5),
-       ('Carbon Dioxide', 0, 0.04),
-       ('Argon', 0, 1);
+INSERT INTO ELEMENTS (name, description, min_percentage, max_percentage, radioactive, inert)
+VALUES ('Nitrogen', 'The most abundant gas in Earth’s atmosphere, crucial for life.', 78.0, 78.0, false, false),
+       ('Oxygen', 'Essential for respiration of most terrestrial life forms.', 19.5, 23.5, false, false),
+       ('Carbon Dioxide', 'A greenhouse gas, significant for its role in the carbon cycle.', 0.0, 0.04, false, false),
+       ('Argon', 'An colorless, odorless and inert gas present in small amounts in the Earth’s atmosphere.', 0.0, 1.0, false, true),
+       ('Hydrogen', 'The most abundant chemical substance in the universe', 0.0, 100.0, false, false),
+       ('Helium', 'A colorless, odorless, tasteless, non-toxic, inert, monatomic gas', 0.0, 100.0, false, true),
+       ('Methane', 'A colorless, odorless, flammable gas', 0.0, 5.0, false, false),
+       ('Neon', 'A colorless, odorless, inert monatomic gas under standard conditions', 0.0, 0.002, false, true),
+       ('Sulfur Dioxide', 'A toxic gas with a pungent, irritating smell', 0.0, 0.0001, false, false),
+       ('Nitrogen Dioxide', 'A reddish-brown gas with a characteristic sharp, biting odor', 0.0, 0.002, false, false),
+       ('Krypton', 'A colorless, odorless, tasteless noble gas', 0.0, 0.0001, false, true),
+       ('Xenon', 'A colorless, dense, odorless noble gas', 0.0, 0.0001, false, true),
+       ('Ozone', 'A form of oxygen with three atoms in each molecule', 0.0, 0.001, false, false),
+       ('Carbon Monoxide', 'A colorless, odorless, and tasteless gas that is slightly less dense than air', 0.0, 0.001,
+        false, false),
+       ('Chlorine', 'A yellow-green gas at room temperature', 0.0, 0.0001, false, false),
+       ('Fluorine', 'The lightest halogen and exists as a highly toxic pale yellow diatomic gas', 0.0, 0.0001, false,
+        false),
+       ('Bromine',
+        'A fuming red-brown liquid at room temperature that evaporates readily to form a similarly colored gas', 0.0,
+        0.0001, false, false),
+       ('Iodine', 'A chemical element with symbol I and atomic number 53', 0.0, 0.0001, false, false),
+       ('Radon', 'A radioactive, colorless, odorless, tasteless noble gas', 0.0, 0.0001, true, true),
+       ('Radium', 'An alkaline earth metal, highly radioactive', 0.0, 0.0001, true, false),
+       ('Thorium', 'A weakly radioactive metallic chemical element', 0.0, 0.0001, true, false),
+       ('Uranium', 'A silvery-grey metal in the actinide series of the periodic table', 0.0, 0.0001, true, false),
+       ('Plutonium', 'A radioactive chemical element with symbol Pu and atomic number 94', 0.0, 0.0001, true, false);
 
 
 -- Insert data into ATMOSPHERES_ELEMENTS table

@@ -1,24 +1,25 @@
 package com.db_course.gui.filter_panels;
 
 import com.db_course.be.filter.defs.FilterOperation;
-import com.db_course.be.filter.entity_filters.impl.CelestialBodyFilter;
-import com.db_course.be.service.CelestialBodyService;
-import com.db_course.gui.tables.model.CelestialBodyTableModel;
+import com.db_course.be.filter.entity_filters.impl.DepartureFilter;
+import com.db_course.be.service.DepartureService;
+import com.db_course.gui.tables.model.DepartureTableModel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CelestialBodyFilterPanel extends JPanel {
-    private final CelestialBodyTableModel tableModel;
+public class DepartureFilterPanel extends JPanel {
+    private final DepartureTableModel tableModel;
     private final FilterContainer filterContainer;
     private final JButton addFilterButton;
     private final JButton applyFilterButton;
 
-    public CelestialBodyFilterPanel(CelestialBodyTableModel tableModel) {
+    public DepartureFilterPanel(DepartureTableModel tableModel) {
         this.tableModel = tableModel;
         setLayout(new BorderLayout());
 
@@ -54,12 +55,12 @@ public class CelestialBodyFilterPanel extends JPanel {
     }
 
     private void applyFilters() {
-        CelestialBodyFilter filter = new CelestialBodyFilter();
+        DepartureFilter filter = new DepartureFilter();
         for (FilterComponent component : filterContainer.getFilterComponents()) {
             component.applyFilter(filter);
         }
         tableModel.clear();
-        CelestialBodyService.getInstance().processFilteredCelestialBodies(tableModel::addCelestialBody, filter);
+        DepartureService.getInstance().processFilteredDepartures(tableModel::addDeparture, filter);
     }
 
     private class FilterContainer extends JPanel {
@@ -110,10 +111,7 @@ public class CelestialBodyFilterPanel extends JPanel {
             setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
             columnComboBox = new JComboBox<>(new String[]{
-                    "ID", "Name", "Description", "Surface Pressure", "Surface Temperature Min",
-                    "Surface Temperature Max", "Core Temperature", "Explored", "Radiation Level", "Has Water",
-                    "Surface Area", "Mass", "Gravitational Field Height", "Moving Speed", "Rotation Speed",
-                    "Celestial Body Type", "Rotates Around Body"
+                    "ID", "Departure Date", "Spaceship", "Celestial Origin", "Celestial Destination"
             });
             columnComboBox.setBounds(10, 10, 120, 30);
 
@@ -183,7 +181,7 @@ public class CelestialBodyFilterPanel extends JPanel {
             valuePanel.repaint();
         }
 
-        public void applyFilter(CelestialBodyFilter filter) {
+        public void applyFilter(DepartureFilter filter) {
             String selectedColumn = (String) columnComboBox.getSelectedItem();
             FilterOperation selectedOperation = (FilterOperation) operationComboBox.getSelectedItem();
             if (selectedColumn != null && selectedOperation != null) {
@@ -194,26 +192,14 @@ public class CelestialBodyFilterPanel extends JPanel {
         }
 
         private int getColumnIndex(String columnName) {
-            switch (columnName) {
-                case "ID": return CelestialBodyFilter.ID;
-                case "Name": return CelestialBodyFilter.NAME;
-                case "Description": return CelestialBodyFilter.DESCRIPTION;
-                case "Surface Pressure": return CelestialBodyFilter.SURFACE_PRESSURE;
-                case "Surface Temperature Min": return CelestialBodyFilter.SURFACE_TEMPERATURE_MIN;
-                case "Surface Temperature Max": return CelestialBodyFilter.SURFACE_TEMPERATURE_MAX;
-                case "Core Temperature": return CelestialBodyFilter.CORE_TEMPERATURE;
-                case "Explored": return CelestialBodyFilter.EXPLORED;
-                case "Radiation Level": return CelestialBodyFilter.RADIATION_LEVEL;
-                case "Has Water": return CelestialBodyFilter.HAS_WATER;
-                case "Surface Area": return CelestialBodyFilter.SURFACE_AREA;
-                case "Mass": return CelestialBodyFilter.MASS;
-                case "Gravitational Field Height": return CelestialBodyFilter.GRAVITATIONAL_FIELD_HEIGHT;
-                case "Moving Speed": return CelestialBodyFilter.MOVING_SPEED;
-                case "Rotation Speed": return CelestialBodyFilter.ROTATION_SPEED;
-                case "Celestial Body Type": return CelestialBodyFilter.CELESTIAL_BODY_TYPE;
-                case "Rotates Around Body": return CelestialBodyFilter.ROTATES_AROUND_BODY;
-                default: throw new IllegalArgumentException("Unknown column name: " + columnName);
-            }
+            return switch (columnName) {
+                case "ID" -> DepartureFilter.ID;
+                case "Departure Date" -> DepartureFilter.DEPARTURE_DATETIME;
+                case "Spaceship" -> DepartureFilter.SPACESHIP;
+                case "Celestial Origin" -> DepartureFilter.CELESTIAL_ORIGIN;
+                case "Celestial Destination" -> DepartureFilter.CELESTIAL_DESTINATION;
+                default -> throw new IllegalArgumentException("Unknown column name: " + columnName);
+            };
         }
 
         private Object getValueFromPanel() {

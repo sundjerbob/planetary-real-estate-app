@@ -16,36 +16,42 @@ import java.util.List;
 public abstract class EntityFilter {
 
     protected MetaNodeConstructor[] constructors;
-    protected MetaDataNode[] filters;
+    protected List<MetaDataNode>[] filters;
     protected MetaDataNode[] sortColumns;
     protected boolean[] sortOrder; // true for ASC, false for DESC
     protected final Connection connection;
     private final String table;
 
     protected EntityFilter(final String table, final int colNb) {
+
+        constructors = new MetaNodeConstructor[colNb]; // initialize values to null;
+        filters = new List[colNb];
+
+        /** get repo **/
         this.connection = DB_Client.getInstance().getConnection();
         this.table = table;
-        constructors = new MetaNodeConstructor[colNb]; // initialize values to null;
-        filters = new MetaDataNode[colNb];
+
         sortColumns = new MetaDataNode[colNb];
         sortOrder = new boolean[colNb];
     }
 
-    public void setFilter(int columnKey, FilterOperation operation, Object... vals) {
-        MetaDataNode filter = initFilter(columnKey);
-        filters[columnKey] = filter;
-        filter.setOperation(operation);
-        filter.setFilterValues(vals);
+    public void addFilter(int columnKey, FilterOperation operation, Object... vals) {
+        MetaDataNode newFilter = constructors[columnKey].construct();
+        newFilter.setOperation(operation);
+        newFilter.setFilterValues(vals);
+        initFilter(columnKey).add(newFilter);
     }
 
     public void addSortColumn(int columnKey, boolean ascendingOrder) {
-        MetaDataNode sortColumn = initFilter(columnKey);
+        MetaDataNode sortColumn = constructors[columnKey].construct();
         sortColumns[columnKey] = sortColumn;
         sortOrder[columnKey] = ascendingOrder;
     }
 
-    public void removeFilter(int columnKey) {
-        filters[columnKey] = null;
+    public void removeFilter(int columnKey, int filterIndex) {
+        if (filters[columnKey] != null && filterIndex >= 0 && filterIndex < filters[columnKey].size()) {
+            filters[columnKey].remove(filterIndex);
+        }
     }
 
     public void removeSortColumn(int columnKey) {
@@ -63,17 +69,23 @@ public abstract class EntityFilter {
         }
     }
 
+    private List<MetaDataNode> initFilter(int columnKey) {
+        return filters[columnKey] == null ? filters[columnKey] = new ArrayList<>() : filters[columnKey];
+    }
+
     private String generateQuery() {
         StringBuilder query = new StringBuilder("SELECT * FROM ").append(table).append(" WHERE ");
         boolean first = true;
 
-        for (MetaDataNode filter : filters) {
-            if (filter != null) {
-                if (!first) {
-                    query.append(" AND ");
+        for (List<MetaDataNode> filterList : filters) {
+            if (filterList != null && !filterList.isEmpty()) {
+                for (MetaDataNode filter : filterList) {
+                    if (!first) {
+                        query.append(" AND ");
+                    }
+                    query.append(filter.mapToQuery());
+                    first = false;
                 }
-                query.append(filter.mapToQuery());
-                first = false;
             }
         }
 
@@ -104,9 +116,11 @@ public abstract class EntityFilter {
         String query = generateQuery();
         List<Object> values = new ArrayList<>();
 
-        for (MetaDataNode filter : filters) {
-            if (filter != null) {
-                Collections.addAll(values, filter.getFilterValues());
+        for (List<MetaDataNode> filterList : filters) {
+            if (filterList != null) {
+                for (MetaDataNode filter : filterList) {
+                    Collections.addAll(values, filter.getFilterValues());
+                }
             }
         }
 
@@ -122,9 +136,4 @@ public abstract class EntityFilter {
 
         return preparedStatement;
     }
-
-    private MetaDataNode initFilter(int columnKey) {
-        return filters[columnKey] == null ? constructors[columnKey].construct() : filters[columnKey];
-    }
 }
-

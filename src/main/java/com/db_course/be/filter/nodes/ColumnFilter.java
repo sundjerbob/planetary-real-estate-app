@@ -5,7 +5,7 @@ import com.db_course.be.filter.defs.FilterOperation;
 import lombok.Data;
 
 @Data
-public class ColumnFilter implements MetaDataNode {
+public class    ColumnFilter implements MetaDataNode {
 
     private final String tableName;
     private final String filterByCol;

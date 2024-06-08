@@ -30,6 +30,15 @@ public class DB_Client {
         connect();
     }
 
+    public void disconnect() {
+        try {
+            connection.close();
+            instance = null;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
     public static DB_Client getInstance() {
         if (instance == null) {

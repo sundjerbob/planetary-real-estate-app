@@ -17,9 +17,10 @@ public class DepartureDto {
     private int id;
     private LocalDateTime departureDate;
     private long travelDurationDays;
-    private String spaceship;
     private String celestialOrigin;
     private String celestialDestination;
+    private String spaceship;
+
 
 }
 

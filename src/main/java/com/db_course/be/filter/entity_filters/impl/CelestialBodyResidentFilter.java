@@ -1,8 +1,6 @@
 package com.db_course.be.filter.entity_filters.impl;
 
 import com.db_course.be.filter.entity_filters.api.EntityFilter;
-import com.db_course.be.filter.nodes.MetaDataNode;
-import com.db_course.be.filter.nodes.MetaNodeConstructor;
 import com.db_course.be.filter.nodes.ColumnFilter;
 import com.db_course.be.filter.nodes.FK_ColumnFilter;
 
@@ -26,9 +24,6 @@ public class CelestialBodyResidentFilter extends EntityFilter {
 
         super(TABLE, COL_NB);
 
-        filters = new MetaDataNode[COL_NB];
-
-        constructors = new MetaNodeConstructor[COL_NB];
 
         constructors[ID] = () -> new ColumnFilter(TABLE, "id", int.class);
 

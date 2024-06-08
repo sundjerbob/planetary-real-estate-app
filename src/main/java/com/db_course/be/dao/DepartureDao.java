@@ -2,6 +2,7 @@ package com.db_course.be.dao;
 
 import com.db_course.be.db_config.DB_Client;
 import com.db_course.be.entity_model.Departure;
+import com.db_course.be.filter.entity_filters.impl.DepartureFilter;
 
 import java.sql.*;
 import java.util.function.Consumer;
@@ -10,21 +11,21 @@ public class DepartureDao {
 
 
     private final Connection connection;
-    private static final String table = "DEPARTURES";
+    private static final String TABLE = "DEPARTURES";
 
 
     public DepartureDao() {
         this.connection = DB_Client.getInstance().getConnection();
-
     }
 
 
     /******************************************************************************************************************/
     public void processAllDepartures(Consumer<Departure> departureConsumer) {
 
+        String sql = "SELECT * FROM " + TABLE;
         try (
-                PreparedStatement statement = connection.prepareStatement("SELECT departure_id, departure_date, passenger_id FROM " + table);
-                ResultSet resultSet = statement.executeQuery()
+                Statement statement = connection.createStatement();
+                ResultSet resultSet = statement.executeQuery(sql)
         ) {
 
             while (resultSet.next()) {
@@ -40,59 +41,45 @@ public class DepartureDao {
 
 
     /******************************************************************************************************************/
-    public Departure insertDeparture(Departure departure) {
+    public void processFilteredDepartures(Consumer<Departure> departureConsumer, DepartureFilter filter) {
 
-        String sql = "INSERT INTO " + table + " (departure_date, passenger_id) VALUES (?, ?)";
+        try (
+                PreparedStatement statement = filter.generatePreparedStatement();
+                ResultSet resultSet = statement.executeQuery()
+        ) {
 
+            while (resultSet.next()) {
 
-        try (PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-
-            statement.setTimestamp(1, Timestamp.valueOf(departure.getDepartureDate()));
-            statement.setInt(2, departure.getId());
-
-            int affectedRows = statement.executeUpdate();
-
-            if (affectedRows == 0) {
-                throw new RuntimeException("Creating departure failed, no rows affected.");
+                Departure departure = mapToDeparture(resultSet);
+                departureConsumer.accept(departure);
             }
-
-            try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    departure.setId(generatedKeys.getInt(1));
-                } else {
-                    throw new RuntimeException("Creating departure failed, no ID obtained.");
-                }
-            }
-
 
         } catch (SQLException e) {
-            throw new RuntimeException("DepartureDao.insertDeparture() says: " + e.getMessage());
-        }
 
-        return departure;
+            throw new RuntimeException("DepartureDao.processAllDepartures() says: " + e.getMessage());
+        }
     }
 
-    private Departure mapToDeparture(ResultSet resultSet) {
-        try {
 
-            int departureId = resultSet.getInt("departure_id");
-            Timestamp departureDate = resultSet.getTimestamp("departure_date");
-            int originBodyId = resultSet.getInt("celestial_origin_id");
-            int destinationBodyId = resultSet.getInt("celestial_destination_id");
-            int spaceshipId = resultSet.getInt("spaceship_id");
+    private Departure mapToDeparture(ResultSet resultSet) throws SQLException {
 
-            return new Departure(
-                    departureId,
-                    originBodyId,
-                    destinationBodyId,
-                    spaceshipId,
-                    departureDate.toLocalDateTime()
-            );
+        int departureId = resultSet.getInt("departure_id");
+        Timestamp departureDate = resultSet.getTimestamp("departure_datetime");
+        int originBodyId = resultSet.getInt("celestial_origin_id");
+        int destinationBodyId = resultSet.getInt("celestial_destination_id");
+        int spaceshipId = resultSet.getInt("spaceship_id");
 
-        } catch (Exception e) {
-            throw new RuntimeException("DepartureDao.mapToDeparture() says: " + e.getMessage());
+        Departure d = new Departure(
+                departureId,
+                departureDate.toLocalDateTime(),
+                originBodyId,
+                destinationBodyId,
+                spaceshipId
+        );
+//        System.out.println(d);
 
-        }
+        return d;
+
 
     }
 

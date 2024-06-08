@@ -1,7 +1,7 @@
 package com.db_course.be.obj_mapper;
 
-import com.db_course.dto.DepartureDto;
 import com.db_course.be.entity_model.Departure;
+import com.db_course.dto.DepartureDto;
 
 public class DepartureMapper {
 
@@ -17,10 +17,9 @@ public class DepartureMapper {
                 departure.getId(),
                 departure.getDepartureDate(),
                 travelDurationDays,
-                spaceship,
                 celestialOrigin,
-                celestialDestination
-
+                celestialDestination,
+                spaceship
         );
     }
 }

@@ -1,11 +1,20 @@
 package com.db_course;
 
-import java.math.BigDecimal;
+import com.db_course.gui.MainFrame;
+
+import javax.swing.*;
 
 public class AppBootstrap {
+
     public static void main(String[] args) {
-        BigDecimal num = new BigDecimal("0.01");
-        boolean what =  num instanceof Number;
-        System.out.println(what);
+
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                MainFrame mainFrame = new MainFrame();
+                mainFrame.setVisible(true);
+            }
+        });
+
     }
 }

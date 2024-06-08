@@ -246,14 +246,12 @@ CREATE TABLE PROPERTIES
 
 );
 
-
 INSERT INTO CELESTIAL_TYPES (name, description)
-VALUES ('Planet', 'FRISKY'),
-       ('Satellite', 'FRISKY'),
-       ('Star', 'FRISKY'),
-       ('Dwarf Planet', 'FRISKY'),
-       ('Asteroid', 'FRISKY');
-
+VALUES ('Planet', 'A large, round celestial body that orbits a star and has enough gravity to clear its orbit of most other objects.'),
+       ('Satellite', 'A natural object that orbits a planet, dwarf planet, asteroid, or other celestial body.'),
+       ('Star', 'A massive, self-luminous celestial body made up primarily of hydrogen and helium in a state of nuclear fusion.'),
+       ('Dwarf Planet', 'A celestial body that is round and orbits the Sun, but is not massive enough to clear its neighborhood of other objects.'),
+       ('Asteroid', 'A relatively small, rocky celestial body orbiting the Sun, typically in the asteroid belt between Mars and Jupiter.');
 
 -- User table
 INSERT INTO USERS (name, last_name, username, password)

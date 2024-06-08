@@ -1,6 +1,7 @@
 package com.db_course.be.service;
 
 import com.db_course.be.dao.AtmosphereDao;
+import com.db_course.be.filter.entity_filters.impl.AtmosphereFilter;
 import com.db_course.dto.AtmosphereDto;
 import com.db_course.be.entity_model.Atmosphere;
 
@@ -48,6 +49,18 @@ public class AtmosphereService {
             );
         };
         atmosphereDao.processAllAtmospheres(dbObjConsumer);
+    }
+
+    public void processFilteredAtmospheres(Consumer<AtmosphereDto> consumer, AtmosphereFilter filter) {
+        Consumer<Atmosphere> dbObjConsumer = atmosphere -> {
+            consumer.accept(
+                    setForeignAttributes(
+                            atmosphereToDto(atmosphere),
+                            atmosphere.getCelestialBodyId()
+                    )
+            );
+        };
+        atmosphereDao.processFilteredAtmospheres(dbObjConsumer, filter);
     }
 
     private AtmosphereDto setForeignAttributes(AtmosphereDto dto, int celestialBodyId) {

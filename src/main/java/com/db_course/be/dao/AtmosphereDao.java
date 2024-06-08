@@ -2,6 +2,7 @@ package com.db_course.be.dao;
 
 import com.db_course.be.db_config.DB_Client;
 import com.db_course.be.entity_model.Atmosphere;
+import com.db_course.be.filter.entity_filters.impl.AtmosphereFilter;
 
 import java.math.BigDecimal;
 import java.sql.*;
@@ -101,7 +102,7 @@ public class AtmosphereDao {
                 Statement statement = connection.createStatement();
                 ResultSet resultSet = statement.executeQuery(sql)
         ) {
-            while(resultSet.next()) {
+            while (resultSet.next()) {
                 consumer.accept(mapToAtmosphere(resultSet));
             }
         } catch (Exception e) {
@@ -109,10 +110,26 @@ public class AtmosphereDao {
         }
     }
 
+
+    /******************************************************************************************************************/
+    public void processFilteredAtmospheres(Consumer<Atmosphere> consumer, AtmosphereFilter filter) {
+        try (
+                PreparedStatement statement = filter.generatePreparedStatement();
+                ResultSet resultSet = statement.executeQuery()
+        ) {
+            while (resultSet.next()) {
+                consumer.accept(mapToAtmosphere(resultSet));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("AtmosphereDao.processFilteredAtmospheres() says: " + e.getMessage());
+        }
+    }
+
+
     /******************************************************************************************************************/
     private Atmosphere mapToAtmosphere(ResultSet resultSet) throws SQLException {
         try {
-            int id = resultSet.getInt("id");
+            int id = resultSet.getInt("atmosphere_id");
             int celestialBodyId = resultSet.getInt("celestial_body_id");
             BigDecimal maxTemperature = resultSet.getBigDecimal("max_temperature");
             BigDecimal minTemperature = resultSet.getBigDecimal("min_temperature");

@@ -9,7 +9,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -113,19 +112,19 @@ public class ElementFilterPanel extends JPanel {
             columnComboBox = new JComboBox<>(new String[]{
                     "ID", "Name", "Description", "Min Percentage", "Max Percentage", "Radioactive", "Inert"
             });
-            columnComboBox.setBounds(10, 10, 120, 30);
+            columnComboBox.setBounds(0, 10, 120, 30);
 
             operationComboBox = new JComboBox<>(FilterOperation.values());
             operationComboBox.setBounds(140, 10, 120, 30);
 
             valuePanel = new JPanel();
-            valuePanel.setBounds(270, 10, 200, 30);
+            valuePanel.setBounds(270, 10, 300, 30);
             valuePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
             updateValuePanel();
 
             removeButton = new JButton("Remove");
-            removeButton.setBounds(480, 10, 80, 30);
+            removeButton.setBounds(580, 10, 80, 30);
             removeButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -192,25 +191,27 @@ public class ElementFilterPanel extends JPanel {
         }
 
         private int getColumnIndex(String columnName) {
-            return switch (columnName) {
-                case "ID" -> ElementFilter.ID;
-                case "Name" -> ElementFilter.NAME;
-                case "Description" -> ElementFilter.DESCRIPTION;
-                case "Min Percentage" -> ElementFilter.MIN_PERCENTAGE;
-                case "Max Percentage" -> ElementFilter.MAX_PERCENTAGE;
-                case "Radioactive" -> ElementFilter.RADIOACTIVE;
-                case "Inert" -> ElementFilter.INERT;
-                default -> throw new IllegalArgumentException("Unknown column name: " + columnName);
-            };
+            switch (columnName) {
+                case "ID": return ElementFilter.ID;
+                case "Name": return ElementFilter.NAME;
+                case "Description": return ElementFilter.DESCRIPTION;
+                case "Min Percentage": return ElementFilter.MIN_PERCENTAGE;
+                case "Max Percentage": return ElementFilter.MAX_PERCENTAGE;
+                case "Radioactive": return ElementFilter.RADIOACTIVE;
+                case "Inert": return ElementFilter.INERT;
+                default: throw new IllegalArgumentException("Unknown column name: " + columnName);
+            }
         }
 
         private Object getValueFromPanel() {
-            // For simplicity, assuming single text field for all types
             Component[] components = valuePanel.getComponents();
             if (components.length == 1 && components[0] instanceof JTextField) {
                 return ((JTextField) components[0]).getText();
             } else if (components.length == 4 && components[1] instanceof JTextField && components[3] instanceof JTextField) {
-                return new Object[]{((JTextField) components[1]).getText(), ((JTextField) components[3]).getText()};
+                return new Object[]{
+                        ((JTextField) components[1]).getText(),
+                        ((JTextField) components[3]).getText()
+                };
             }
             return null;
         }

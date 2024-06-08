@@ -5,6 +5,7 @@ import com.db_course.gui.entity_panels.views.DeparturePanel;
 import com.db_course.gui.entity_panels.views.ElementPanel;
 import com.db_course.gui.entity_panels.views.SpaceshipPanel;
 import com.db_course.gui.entity_panels.views.CelestialTypePanel;
+import com.db_course.gui.entity_panels.views.AtmospherePanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,12 +24,14 @@ public class EntityContainerPanel extends JPanel {
         JButton elementButton = new JButton("Elements");
         JButton spaceshipButton = new JButton("Spaceships");
         JButton celestialTypeButton = new JButton("Celestial Types");
+        JButton atmosphereButton = new JButton("Atmospheres");
 
         buttonPanel.add(celestialBodyButton);
         buttonPanel.add(departureButton);
         buttonPanel.add(elementButton);
         buttonPanel.add(spaceshipButton);
         buttonPanel.add(celestialTypeButton);
+        buttonPanel.add(atmosphereButton);
 
         // Create card layout panel
         cardLayout = new CardLayout();
@@ -40,6 +43,7 @@ public class EntityContainerPanel extends JPanel {
         cardPanel.add(new ElementPanel(), "Elements");
         cardPanel.add(new SpaceshipPanel(), "Spaceships");
         cardPanel.add(new CelestialTypePanel(), "CelestialTypes");
+        cardPanel.add(new AtmospherePanel(), "Atmospheres");
 
         add(buttonPanel, BorderLayout.NORTH);
         add(cardPanel, BorderLayout.CENTER);
@@ -50,6 +54,7 @@ public class EntityContainerPanel extends JPanel {
         elementButton.addActionListener(e -> cardLayout.show(cardPanel, "Elements"));
         spaceshipButton.addActionListener(e -> cardLayout.show(cardPanel, "Spaceships"));
         celestialTypeButton.addActionListener(e -> cardLayout.show(cardPanel, "CelestialTypes"));
+        atmosphereButton.addActionListener(e -> cardLayout.show(cardPanel, "Atmospheres"));
 
         // Show the default panel
         cardLayout.show(cardPanel, "CelestialBodies");

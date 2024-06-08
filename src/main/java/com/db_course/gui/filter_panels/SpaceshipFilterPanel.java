@@ -9,7 +9,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -111,7 +110,8 @@ public class SpaceshipFilterPanel extends JPanel {
             setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
             columnComboBox = new JComboBox<>(new String[]{
-                    "ID", "Name", "Model", "Passenger Capacity", "Fuel Capacity", "Max Travel Range", "Traveling Speed", "Manufacturer"
+                    "ID", "Name", "Model", "Passenger Capacity", "Fuel Capacity",
+                    "Max Travel Range", "Traveling Speed", "Manufacturer"
             });
             columnComboBox.setBounds(10, 10, 120, 30);
 
@@ -119,13 +119,13 @@ public class SpaceshipFilterPanel extends JPanel {
             operationComboBox.setBounds(140, 10, 120, 30);
 
             valuePanel = new JPanel();
-            valuePanel.setBounds(270, 10, 200, 30);
+            valuePanel.setBounds(270, 10, 300, 30);
             valuePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
             updateValuePanel();
 
             removeButton = new JButton("Remove");
-            removeButton.setBounds(480, 10, 80, 30);
+            removeButton.setBounds(580, 10, 80, 30);
             removeButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -192,26 +192,28 @@ public class SpaceshipFilterPanel extends JPanel {
         }
 
         private int getColumnIndex(String columnName) {
-            return switch (columnName) {
-                case "ID" -> SpaceshipFilter.ID;
-                case "Name" -> SpaceshipFilter.NAME;
-                case "Model" -> SpaceshipFilter.MODEL;
-                case "Passenger Capacity" -> SpaceshipFilter.PASSENGER_CAPACITY;
-                case "Fuel Capacity" -> SpaceshipFilter.FUEL_CAPACITY;
-                case "Max Travel Range" -> SpaceshipFilter.MAX_TRAVEL_RANGE;
-                case "Traveling Speed" -> SpaceshipFilter.TRAVELING_SPEED;
-                case "Manufacturer" -> SpaceshipFilter.MANUFACTURER;
-                default -> throw new IllegalArgumentException("Unknown column name: " + columnName);
-            };
+            switch (columnName) {
+                case "ID": return SpaceshipFilter.ID;
+                case "Name": return SpaceshipFilter.NAME;
+                case "Model": return SpaceshipFilter.MODEL;
+                case "Passenger Capacity": return SpaceshipFilter.PASSENGER_CAPACITY;
+                case "Fuel Capacity": return SpaceshipFilter.FUEL_CAPACITY;
+                case "Max Travel Range": return SpaceshipFilter.MAX_TRAVEL_RANGE;
+                case "Traveling Speed": return SpaceshipFilter.TRAVELING_SPEED;
+                case "Manufacturer": return SpaceshipFilter.MANUFACTURER;
+                default: throw new IllegalArgumentException("Unknown column name: " + columnName);
+            }
         }
 
         private Object getValueFromPanel() {
-            // For simplicity, assuming single text field for all types
             Component[] components = valuePanel.getComponents();
             if (components.length == 1 && components[0] instanceof JTextField) {
                 return ((JTextField) components[0]).getText();
             } else if (components.length == 4 && components[1] instanceof JTextField && components[3] instanceof JTextField) {
-                return new Object[]{((JTextField) components[1]).getText(), ((JTextField) components[3]).getText()};
+                return new Object[]{
+                        ((JTextField) components[1]).getText(),
+                        ((JTextField) components[3]).getText()
+                };
             }
             return null;
         }

@@ -1,9 +1,9 @@
 package com.db_course.gui.filter_panels;
 
 import com.db_course.be.filter.defs.FilterOperation;
-import com.db_course.be.filter.entity_filters.impl.CelestialBodyFilter;
-import com.db_course.be.service.CelestialBodyService;
-import com.db_course.gui.tables.model.CelestialBodyTableModel;
+import com.db_course.be.filter.entity_filters.impl.AtmosphereFilter;
+import com.db_course.be.service.AtmosphereService;
+import com.db_course.gui.tables.model.AtmosphereTableModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,13 +12,16 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CelestialBodyFilterPanel extends JPanel {
-    private final CelestialBodyTableModel tableModel;
+public class AtmosphereFilterPanel extends JPanel {
+
+
+    private final AtmosphereTableModel tableModel;
     private final FilterContainer filterContainer;
     private final JButton addFilterButton;
     private final JButton applyFilterButton;
 
-    public CelestialBodyFilterPanel(CelestialBodyTableModel tableModel) {
+
+    public AtmosphereFilterPanel(AtmosphereTableModel tableModel) {
         this.tableModel = tableModel;
         setLayout(new BorderLayout());
 
@@ -54,12 +57,12 @@ public class CelestialBodyFilterPanel extends JPanel {
     }
 
     private void applyFilters() {
-        CelestialBodyFilter filter = new CelestialBodyFilter();
+        AtmosphereFilter filter = new AtmosphereFilter();
         for (FilterComponent component : filterContainer.getFilterComponents()) {
             component.applyFilter(filter);
         }
         tableModel.clear();
-        CelestialBodyService.getInstance().processFilteredCelestialBodies(tableModel::addCelestialBody, filter);
+        AtmosphereService.getInstance().processFilteredAtmospheres(tableModel::addAtmosphere, filter);
     }
 
     private class FilterContainer extends JPanel {
@@ -110,24 +113,21 @@ public class CelestialBodyFilterPanel extends JPanel {
             setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
             columnComboBox = new JComboBox<>(new String[]{
-                    "ID", "Name", "Description", "Surface Pressure", "Surface Temperature Min",
-                    "Surface Temperature Max", "Core Temperature", "Explored", "Radiation Level", "Has Water",
-                    "Surface Area", "Mass", "Gravitational Field Height", "Moving Speed", "Rotation Speed",
-                    "Celestial Body Type", "Rotates Around Body"
+                    "ID", "Max Temperature", "Min Temperature", "Atmosphere Height", "Ampere Pressure", "Celestial Body"
             });
-            columnComboBox.setBounds(0, 10, 120, 30);
+            columnComboBox.setBounds(10, 10, 150, 30);
 
             operationComboBox = new JComboBox<>(FilterOperation.values());
-            operationComboBox.setBounds(140, 10, 120, 30);
+            operationComboBox.setBounds(170, 10, 150, 30);
 
             valuePanel = new JPanel();
-            valuePanel.setBounds(270, 10, 300, 30);
+            valuePanel.setBounds(330, 10, 250, 30);
             valuePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
             updateValuePanel();
 
             removeButton = new JButton("Remove");
-            removeButton.setBounds(580, 10, 80, 30);
+            removeButton.setBounds(590, 10, 80, 30);
             removeButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -183,7 +183,7 @@ public class CelestialBodyFilterPanel extends JPanel {
             valuePanel.repaint();
         }
 
-        public void applyFilter(CelestialBodyFilter filter) {
+        public void applyFilter(AtmosphereFilter filter) {
             String selectedColumn = (String) columnComboBox.getSelectedItem();
             FilterOperation selectedOperation = (FilterOperation) operationComboBox.getSelectedItem();
             if (selectedColumn != null && selectedOperation != null) {
@@ -194,37 +194,24 @@ public class CelestialBodyFilterPanel extends JPanel {
         }
 
         private int getColumnIndex(String columnName) {
-            switch (columnName) {
-                case "ID": return CelestialBodyFilter.ID;
-                case "Name": return CelestialBodyFilter.NAME;
-                case "Description": return CelestialBodyFilter.DESCRIPTION;
-                case "Surface Pressure": return CelestialBodyFilter.SURFACE_PRESSURE;
-                case "Surface Temperature Min": return CelestialBodyFilter.SURFACE_TEMPERATURE_MIN;
-                case "Surface Temperature Max": return CelestialBodyFilter.SURFACE_TEMPERATURE_MAX;
-                case "Core Temperature": return CelestialBodyFilter.CORE_TEMPERATURE;
-                case "Explored": return CelestialBodyFilter.EXPLORED;
-                case "Radiation Level": return CelestialBodyFilter.RADIATION_LEVEL;
-                case "Has Water": return CelestialBodyFilter.HAS_WATER;
-                case "Surface Area": return CelestialBodyFilter.SURFACE_AREA;
-                case "Mass": return CelestialBodyFilter.MASS;
-                case "Gravitational Field Height": return CelestialBodyFilter.GRAVITATIONAL_FIELD_HEIGHT;
-                case "Moving Speed": return CelestialBodyFilter.MOVING_SPEED;
-                case "Rotation Speed": return CelestialBodyFilter.ROTATION_SPEED;
-                case "Celestial Body Type": return CelestialBodyFilter.CELESTIAL_BODY_TYPE;
-                case "Rotates Around Body": return CelestialBodyFilter.ROTATES_AROUND_BODY;
-                default: throw new IllegalArgumentException("Unknown column name: " + columnName);
-            }
+            return switch (columnName) {
+                case "ID" -> AtmosphereFilter.ID;
+                case "Max Temperature" -> AtmosphereFilter.MAX_TEMPERATURE;
+                case "Min Temperature" -> AtmosphereFilter.MIN_TEMPERATURE;
+                case "Atmosphere Height" -> AtmosphereFilter.ATMOSPHERE_HEIGHT;
+                case "Ampere Pressure" -> AtmosphereFilter.ATMOSPHERE_PRESSURE;
+                case "Celestial Body" -> AtmosphereFilter.CELESTIAL_BODY;
+                default -> throw new IllegalArgumentException("Unknown column name: " + columnName);
+            };
         }
 
         private Object getValueFromPanel() {
+            // For simplicity, assuming single text field for all types
             Component[] components = valuePanel.getComponents();
             if (components.length == 1 && components[0] instanceof JTextField) {
                 return ((JTextField) components[0]).getText();
             } else if (components.length == 4 && components[1] instanceof JTextField && components[3] instanceof JTextField) {
-                return new Object[]{
-                        ((JTextField) components[1]).getText(),
-                        ((JTextField) components[3]).getText()
-                };
+                return new Object[]{((JTextField) components[1]).getText(), ((JTextField) components[3]).getText()};
             }
             return null;
         }

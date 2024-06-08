@@ -118,13 +118,13 @@ public class CelestialTypeFilterPanel extends JPanel {
             operationComboBox.setBounds(140, 10, 120, 30);
 
             valuePanel = new JPanel();
-            valuePanel.setBounds(270, 10, 200, 30);
+            valuePanel.setBounds(270, 10, 300, 30);
             valuePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
             updateValuePanel();
 
             removeButton = new JButton("Remove");
-            removeButton.setBounds(480, 10, 80, 30);
+            removeButton.setBounds(580, 10, 80, 30);
             removeButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -191,21 +191,23 @@ public class CelestialTypeFilterPanel extends JPanel {
         }
 
         private int getColumnIndex(String columnName) {
-            return switch (columnName) {
-                case "ID" -> CelestialTypeFilter.ID;
-                case "Name" -> CelestialTypeFilter.NAME;
-                case "Description" -> CelestialTypeFilter.DESCRIPTION;
-                default -> throw new IllegalArgumentException("Unknown column name: " + columnName);
-            };
+            switch (columnName) {
+                case "ID": return CelestialTypeFilter.ID;
+                case "Name": return CelestialTypeFilter.NAME;
+                case "Description": return CelestialTypeFilter.DESCRIPTION;
+                default: throw new IllegalArgumentException("Unknown column name: " + columnName);
+            }
         }
 
         private Object getValueFromPanel() {
-            // For simplicity, assuming single text field for all types
             Component[] components = valuePanel.getComponents();
             if (components.length == 1 && components[0] instanceof JTextField) {
                 return ((JTextField) components[0]).getText();
             } else if (components.length == 4 && components[1] instanceof JTextField && components[3] instanceof JTextField) {
-                return new Object[]{((JTextField) components[1]).getText(), ((JTextField) components[3]).getText()};
+                return new Object[]{
+                        ((JTextField) components[1]).getText(),
+                        ((JTextField) components[3]).getText()
+                };
             }
             return null;
         }

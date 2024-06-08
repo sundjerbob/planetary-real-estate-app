@@ -192,23 +192,31 @@ public class DepartureFilterPanel extends JPanel {
         }
 
         private int getColumnIndex(String columnName) {
-            return switch (columnName) {
-                case "ID" -> DepartureFilter.ID;
-                case "Departure Date" -> DepartureFilter.DEPARTURE_DATETIME;
-                case "Spaceship" -> DepartureFilter.SPACESHIP;
-                case "Celestial Origin" -> DepartureFilter.CELESTIAL_ORIGIN;
-                case "Celestial Destination" -> DepartureFilter.CELESTIAL_DESTINATION;
-                default -> throw new IllegalArgumentException("Unknown column name: " + columnName);
-            };
+            switch (columnName) {
+                case "ID":
+                    return DepartureFilter.ID;
+                case "Departure Date":
+                    return DepartureFilter.DEPARTURE_DATETIME;
+                case "Spaceship":
+                    return DepartureFilter.SPACESHIP;
+                case "Celestial Origin":
+                    return DepartureFilter.CELESTIAL_ORIGIN;
+                case "Celestial Destination":
+                    return DepartureFilter.CELESTIAL_DESTINATION;
+                default:
+                    throw new IllegalArgumentException("Unknown column name: " + columnName);
+            }
         }
 
         private Object getValueFromPanel() {
-            // For simplicity, assuming single text field for all types
             Component[] components = valuePanel.getComponents();
             if (components.length == 1 && components[0] instanceof JTextField) {
                 return ((JTextField) components[0]).getText();
             } else if (components.length == 4 && components[1] instanceof JTextField && components[3] instanceof JTextField) {
-                return new Object[]{((JTextField) components[1]).getText(), ((JTextField) components[3]).getText()};
+                return new Object[]{
+                        ((JTextField) components[1]).getText(),
+                        ((JTextField) components[3]).getText()
+                };
             }
             return null;
         }

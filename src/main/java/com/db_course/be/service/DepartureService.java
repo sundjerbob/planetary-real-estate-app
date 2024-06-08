@@ -65,7 +65,7 @@ public class DepartureService {
 
     /******************************************************************************************************************/
     public void processFilteredDepartures(Consumer<DepartureDto> consumer, DepartureFilter filter) {
-        departureDao.processAllDepartures(
+        departureDao.processFilteredDepartures(
                 departure -> {
 
                     SpaceshipDto spaceship = SpaceshipService.getInstance().getSpaceshipById(departure.getSpaceshipId());
@@ -84,7 +84,8 @@ public class DepartureService {
                             travelDurationDays);
 
                     consumer.accept(departureDto);
-                }
+                },
+                filter
         );
 
     }

@@ -40,6 +40,7 @@ public class DepartureDao {
     }
 
 
+
     /******************************************************************************************************************/
     public void processFilteredDepartures(Consumer<Departure> departureConsumer, DepartureFilter filter) {
 

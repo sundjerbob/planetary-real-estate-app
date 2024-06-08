@@ -1,9 +1,10 @@
 package com.db_course.be.service;
 
 import com.db_course.be.dao.CelestialPathDao;
+import com.db_course.be.entity_model.CelestialPath;
+import com.db_course.be.filter.entity_filters.impl.CelestialPathFilter;
 import com.db_course.dto.CelestialBodyDto;
 import com.db_course.dto.CelestialPathDto;
-import com.db_course.be.entity_model.CelestialPath;
 
 import java.util.function.Consumer;
 
@@ -35,14 +36,26 @@ public class CelestialPathService {
     }
 
 
-    public void processAllPaths(Consumer<CelestialPathDto> consumer) {
-        celestialPathDao.processAllPaths(
+    public void processAllCelestialPaths(Consumer<CelestialPathDto> consumer) {
+        celestialPathDao.processAllCelestialPaths(
                 path -> {
                     CelestialBodyDto bodyA = CelestialBodyService.getInstance().getCelestialBodyById(path.getBodyA_Id());
                     CelestialBodyDto bodyB = CelestialBodyService.getInstance().getCelestialBodyById(path.getBodyB_Id());
                     CelestialPathDto pathDto = celestialPathToDto(path, bodyA.getName(), bodyB.getName());
                     consumer.accept(pathDto);
                 }
+        );
+    }
+
+    public void processFilteredCelestialPaths(Consumer<CelestialPathDto> consumer, CelestialPathFilter filter) {
+        celestialPathDao.processFilteredCelestialPaths(
+                path -> {
+                    CelestialBodyDto bodyA = CelestialBodyService.getInstance().getCelestialBodyById(path.getBodyA_Id());
+                    CelestialBodyDto bodyB = CelestialBodyService.getInstance().getCelestialBodyById(path.getBodyB_Id());
+                    CelestialPathDto pathDto = celestialPathToDto(path, bodyA.getName(), bodyB.getName());
+                    consumer.accept(pathDto);
+                },
+                filter
         );
     }
 

@@ -18,7 +18,7 @@ public class CelestialPathFilter extends EntityFilter {
     public static final int CELESTIAL_BODY_B = 4;
 
 
-    protected CelestialPathFilter() {
+    public CelestialPathFilter() {
 
         super(TABLE, COL_NB);
 

@@ -29,6 +29,8 @@ public class EntityContainerPanel extends JPanel {
         JButton spaceshipRoomButton = new JButton("Spaceship Rooms");
         JButton ticketButton = new JButton("Tickets");
         JButton usersButton = new JButton("Users");
+        JButton celestialPathButton = new JButton("Celestial Paths");
+
 
         buttonPanel.add(celestialBodyButton);
         buttonPanel.add(departureButton);
@@ -44,6 +46,7 @@ public class EntityContainerPanel extends JPanel {
         buttonPanel.add(spaceshipRoomButton);
         buttonPanel.add(ticketButton);
         buttonPanel.add(usersButton);
+        buttonPanel.add(celestialPathButton);
 
         // Create card layout panel
         cardLayout = new CardLayout();
@@ -64,6 +67,7 @@ public class EntityContainerPanel extends JPanel {
         cardPanel.add(new SpaceshipRoomPanel(), "SpaceshipRooms");
         cardPanel.add(new TicketPanel(), "Tickets");
         cardPanel.add(new UserPanel(), "Users");
+        cardPanel.add(new CelestialPathPanel(), "CelestialPaths");
 
         add(buttonPanel, BorderLayout.NORTH);
         add(cardPanel, BorderLayout.CENTER);
@@ -83,7 +87,7 @@ public class EntityContainerPanel extends JPanel {
         spaceshipRoomButton.addActionListener(e -> cardLayout.show(cardPanel, "SpaceshipRooms"));
         ticketButton.addActionListener(e -> cardLayout.show(cardPanel, "Tickets"));
         usersButton.addActionListener(e -> cardLayout.show(cardPanel, "Users"));
-
+        celestialPathButton.addActionListener(e -> cardLayout.show(cardPanel, "CelestialPaths"));
         // Show the default panel
         cardLayout.show(cardPanel, "CelestialBodies");
     }

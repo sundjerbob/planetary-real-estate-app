@@ -2,6 +2,7 @@ package com.db_course.be.dao;
 
 import com.db_course.be.db_config.DB_Client;
 import com.db_course.be.entity_model.CelestialPath;
+import com.db_course.be.filter.entity_filters.impl.CelestialPathFilter;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
@@ -23,10 +24,24 @@ public class CelestialPathDao {
 
 
     /******************************************************************************************************************/
-    public void processAllPaths(Consumer<CelestialPath> pathConsumer) {
+    public void processAllCelestialPaths(Consumer<CelestialPath> pathConsumer) {
         String sql = "SELECT * FROM " + TABLE;
 
         try (PreparedStatement statement = connection.prepareStatement(sql);
+             ResultSet resultSet = statement.executeQuery()) {
+            while (resultSet.next()) {
+                pathConsumer.accept(mapToCelestialPath(resultSet));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("CelestialPathDao.processAllPaths() says: " + e.getMessage());
+
+        }
+    }
+
+    /******************************************************************************************************************/
+    public void processFilteredCelestialPaths(Consumer<CelestialPath> pathConsumer, CelestialPathFilter filter) {
+
+        try (PreparedStatement statement = filter.generatePreparedStatement();
              ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
                 pathConsumer.accept(mapToCelestialPath(resultSet));
@@ -85,8 +100,6 @@ public class CelestialPathDao {
             throw new RuntimeException("CelestialPathDao.addCelestialPath() says: " + e.getMessage());
         }
     }
-
-
 
 
     /******************************************************************************************************************/

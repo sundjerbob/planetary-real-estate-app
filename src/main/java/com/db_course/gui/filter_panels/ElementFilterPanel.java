@@ -125,26 +125,11 @@ public class ElementFilterPanel extends JPanel {
 
             removeButton = new JButton("Remove");
             removeButton.setBounds(580, 10, 80, 30);
-            removeButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    parentContainer.removeFilterComponent(FilterComponent.this);
-                }
-            });
+            removeButton.addActionListener(e -> parentContainer.removeFilterComponent(FilterComponent.this));
 
-            columnComboBox.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    updateValuePanel();
-                }
-            });
+            columnComboBox.addActionListener(e -> updateValuePanel());
 
-            operationComboBox.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    updateValuePanel();
-                }
-            });
+            operationComboBox.addActionListener(e -> updateValuePanel());
 
             add(columnComboBox);
             add(operationComboBox);
@@ -180,38 +165,54 @@ public class ElementFilterPanel extends JPanel {
             valuePanel.repaint();
         }
 
+
         public void applyFilter(ElementFilter filter) {
+
             String selectedColumn = (String) columnComboBox.getSelectedItem();
             FilterOperation selectedOperation = (FilterOperation) operationComboBox.getSelectedItem();
+
             if (selectedColumn != null && selectedOperation != null) {
                 int columnIndex = getColumnIndex(selectedColumn);
-                Object value = getValueFromPanel();
-                filter.addFilter(columnIndex, selectedOperation, value);
+                Object value = getValueFromPanel(selectedOperation);
+
+                if (selectedOperation == FilterOperation.BETWEEN && value instanceof String[] && ((String[]) value).length == 2)
+                    filter.addFilter(columnIndex, selectedOperation, ((String[]) value)[0], ((String[]) value)[1]);
+
+                else
+                    filter.addFilter(columnIndex, selectedOperation, value);
+
             }
         }
+
 
         private int getColumnIndex(String columnName) {
-            switch (columnName) {
-                case "ID": return ElementFilter.ID;
-                case "Name": return ElementFilter.NAME;
-                case "Description": return ElementFilter.DESCRIPTION;
-                case "Min Percentage": return ElementFilter.MIN_PERCENTAGE;
-                case "Max Percentage": return ElementFilter.MAX_PERCENTAGE;
-                case "Radioactive": return ElementFilter.RADIOACTIVE;
-                case "Inert": return ElementFilter.INERT;
-                default: throw new IllegalArgumentException("Unknown column name: " + columnName);
-            }
+            return switch (columnName) {
+                case "ID" -> ElementFilter.ID;
+                case "Name" -> ElementFilter.NAME;
+                case "Description" -> ElementFilter.DESCRIPTION;
+                case "Min Percentage" -> ElementFilter.MIN_PERCENTAGE;
+                case "Max Percentage" -> ElementFilter.MAX_PERCENTAGE;
+                case "Radioactive" -> ElementFilter.RADIOACTIVE;
+                case "Inert" -> ElementFilter.INERT;
+                default -> throw new IllegalArgumentException("Unknown column name: " + columnName);
+            };
         }
 
-        private Object getValueFromPanel() {
+        private Object getValueFromPanel(FilterOperation operation) {
+
             Component[] components = valuePanel.getComponents();
-            if (components.length == 1 && components[0] instanceof JTextField) {
-                return ((JTextField) components[0]).getText();
-            } else if (components.length == 4 && components[1] instanceof JTextField && components[3] instanceof JTextField) {
-                return new Object[]{
-                        ((JTextField) components[1]).getText(),
-                        ((JTextField) components[3]).getText()
+
+            if (operation == FilterOperation.BETWEEN && components.length == 4 &&
+
+                    components[1] instanceof JTextField && components[3] instanceof JTextField) {
+
+
+                return new String[]{
+                        ((JTextField) components[1]).getText().trim(),
+                        ((JTextField) components[3]).getText().trim()
                 };
+            } else if (components.length == 1 && components[0] instanceof JTextField) {
+                return ((JTextField) components[0]).getText();
             }
             return null;
         }

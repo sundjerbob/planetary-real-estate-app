@@ -1,8 +1,9 @@
 package com.db_course.be.service;
 
 import com.db_course.be.dao.ResidentDao;
-import com.db_course.dto.ResidentDto;
 import com.db_course.be.entity_model.Resident;
+import com.db_course.be.filter.entity_filters.impl.ResidentFilter;
+import com.db_course.dto.ResidentDto;
 
 import java.util.function.Consumer;
 
@@ -44,6 +45,17 @@ public class ResidentService {
                     consumer.accept(residentDto);
                 };
         residentDao.processAllResidents(dbObjConsumer);
+    }
+
+
+    public void processFilteredResidents(Consumer<ResidentDto> consumer, ResidentFilter filter) {
+
+        Consumer<Resident> dbObjConsumer =
+                resident -> {
+                    ResidentDto residentDto = residentToDto(resident);
+                    consumer.accept(residentDto);
+                };
+        residentDao.processFilteredResidents(dbObjConsumer, filter);
     }
 
 

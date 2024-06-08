@@ -8,6 +8,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 public class CelestialBodyResidentTable extends JTable {
+
     private final CelestialBodyResidentTableModel tableModel;
 
     public CelestialBodyResidentTable(CelestialBodyResidentTableModel model) {
@@ -19,19 +20,18 @@ public class CelestialBodyResidentTable extends JTable {
                 if (e.getClickCount() == 1) {
                     int row = getSelectedRow();
                     if (row != -1) {
-                        tableModel.setSelectedResident(row);
-                        CelestialBodyResidentDto selectedResident = tableModel.getSelectedResident();
-                        System.out.println("Selected Resident: " + selectedResident);
+                        CelestialBodyResidentDto selectedResident = tableModel.getCelestialBodyResidentAt(row);
+                        System.out.println("Selected Celestial Body Resident: " + selectedResident);
                     }
                 }
             }
         });
     }
 
-    public CelestialBodyResidentDto getSelectedResident() {
+    public CelestialBodyResidentDto getSelectedCelestialBodyResident() {
         int row = getSelectedRow();
         if (row != -1) {
-            return tableModel.getResidentAt(row);
+            return tableModel.getCelestialBodyResidentAt(row);
         }
         return null;
     }

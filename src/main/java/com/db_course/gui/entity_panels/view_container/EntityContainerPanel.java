@@ -1,21 +1,22 @@
 package com.db_course.gui.entity_panels.view_container;
 
-import com.db_course.gui.entity_panels.views.CelestialBodyPanel;
-import com.db_course.gui.entity_panels.views.DeparturePanel;
-import com.db_course.gui.entity_panels.views.ElementPanel;
-import com.db_course.gui.entity_panels.views.SpaceshipPanel;
-import com.db_course.gui.entity_panels.views.CelestialTypePanel;
-import com.db_course.gui.entity_panels.views.AtmospherePanel;
+import com.db_course.gui.entity_panels.views.*;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class EntityContainerPanel extends JPanel {
+
     private final CardLayout cardLayout;
     private final JPanel cardPanel;
+    private final JLabel titleLabel;
 
     public EntityContainerPanel() {
-        setLayout(new BorderLayout());
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS)); // Use BoxLayout for vertical stacking
+        // Create title label
+        titleLabel = new JLabel("Celestial Bodies", SwingConstants.CENTER);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));
+
 
         // Create buttons for switching panels
         JPanel buttonPanel = new JPanel();
@@ -25,6 +26,10 @@ public class EntityContainerPanel extends JPanel {
         JButton spaceshipButton = new JButton("Spaceships");
         JButton celestialTypeButton = new JButton("Celestial Types");
         JButton atmosphereButton = new JButton("Atmospheres");
+        JButton celestialBodyResidentButton = new JButton("Celestial Body Residents");
+        JButton residentButton = new JButton("Residents");
+        JButton missionButton = new JButton("Missions");
+
 
         buttonPanel.add(celestialBodyButton);
         buttonPanel.add(departureButton);
@@ -32,6 +37,9 @@ public class EntityContainerPanel extends JPanel {
         buttonPanel.add(spaceshipButton);
         buttonPanel.add(celestialTypeButton);
         buttonPanel.add(atmosphereButton);
+        buttonPanel.add(celestialBodyResidentButton);
+        buttonPanel.add(residentButton);
+        buttonPanel.add(missionButton);
 
         // Create card layout panel
         cardLayout = new CardLayout();
@@ -44,19 +52,38 @@ public class EntityContainerPanel extends JPanel {
         cardPanel.add(new SpaceshipPanel(), "Spaceships");
         cardPanel.add(new CelestialTypePanel(), "CelestialTypes");
         cardPanel.add(new AtmospherePanel(), "Atmospheres");
+        cardPanel.add(new CelestialBodyResidentPanel(), "CelestialBodyResidents");
+        cardPanel.add(new ResidentPanel(), "Residents");
+        cardPanel.add(new MissionPanel(), "Missions");
 
-        add(buttonPanel, BorderLayout.NORTH);
-        add(cardPanel, BorderLayout.CENTER);
+        // Add title and buttons to the top panel
+        JPanel topPanel = new JPanel();
+        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS)); // Vertical stacking
+        topPanel.add(titleLabel);
+        topPanel.add(buttonPanel);
 
-        // Add action listeners for buttons
-        celestialBodyButton.addActionListener(e -> cardLayout.show(cardPanel, "CelestialBodies"));
-        departureButton.addActionListener(e -> cardLayout.show(cardPanel, "Departures"));
-        elementButton.addActionListener(e -> cardLayout.show(cardPanel, "Elements"));
-        spaceshipButton.addActionListener(e -> cardLayout.show(cardPanel, "Spaceships"));
-        celestialTypeButton.addActionListener(e -> cardLayout.show(cardPanel, "CelestialTypes"));
-        atmosphereButton.addActionListener(e -> cardLayout.show(cardPanel, "Atmospheres"));
+        add(topPanel);
+        add(cardPanel);
 
-        // Show the default panel
-        cardLayout.show(cardPanel, "CelestialBodies");
+        titleLabel.setPreferredSize(new Dimension(0, 50));
+        buttonPanel.setPreferredSize(new Dimension(0, 50));
+
+        celestialBodyButton.addActionListener(e -> showPanel("CelestialBodies", "Celestial Bodies"));
+        departureButton.addActionListener(e -> showPanel("Departures", "Departures"));
+        elementButton.addActionListener(e -> showPanel("Elements", "Elements"));
+        spaceshipButton.addActionListener(e -> showPanel("Spaceships", "Spaceships"));
+        celestialTypeButton.addActionListener(e -> showPanel("CelestialTypes", "Celestial Types"));
+        atmosphereButton.addActionListener(e -> showPanel("Atmospheres", "Atmospheres"));
+        celestialBodyResidentButton.addActionListener(e -> showPanel("CelestialBodyResidents", "Celestial Body Residents"));
+        residentButton.addActionListener(e -> showPanel("Residents", "Residents"));
+        missionButton.addActionListener(e -> showPanel("Missions", "Missions"));
+
+
+        showPanel("CelestialBodies", "Celestial Bodies");
+    }
+
+    private void showPanel(String card, String title) {
+        cardLayout.show(cardPanel, card);
+        titleLabel.setText(title);
     }
 }

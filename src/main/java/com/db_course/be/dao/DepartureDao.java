@@ -57,7 +57,7 @@ public class DepartureDao {
 
         } catch (SQLException e) {
 
-            throw new RuntimeException("DepartureDao.processAllDepartures() says: " + e.getMessage());
+            throw new RuntimeException("DepartureDao.processFilteredDepartures() says: " + e.getMessage());
         }
     }
 

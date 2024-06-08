@@ -9,11 +9,11 @@ public class ResidentFilter extends EntityFilter {
     private static final String TABLE = "RESIDENTS";
     private static final int COL_NB = 5;
 
-    private static final int ID = 0;
-    private static final int FULL_NAME = 1;
-    private static final int GENDER = 2;
-    private static final int BIRTH_DATE = 3;
-    private static final int DEATH_DATE = 4;
+    public static final int ID = 0;
+    public static final int FULL_NAME = 1;
+    public static final int GENDER = 2;
+    public static final int BIRTH_DATE = 3;
+    public static final int DEATH_DATE = 4;
 
 
     public ResidentFilter() {

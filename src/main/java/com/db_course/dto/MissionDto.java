@@ -14,8 +14,8 @@ public class MissionDto {
 
 
     private int id;
-    private CelestialBodyDto celestialBody;
-    private SpaceshipDto spaceship;
+    private String celestialBody;
+    private String spaceship;
     private String name;
     private String description;
     private LocalDate startDate;

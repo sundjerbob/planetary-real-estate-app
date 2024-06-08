@@ -119,15 +119,21 @@ public abstract class EntityFilter {
         for (List<MetaDataNode> filterList : filters) {
             if (filterList != null) {
                 for (MetaDataNode filter : filterList) {
+
                     Collections.addAll(values, filter.getFilterValues());
                 }
             }
         }
 
+        for (Object o : values) {
+            System.out.println(o);
+        }
+
         PreparedStatement preparedStatement = connection.prepareStatement(query);
 
-        for (int i = 0; i < values.size(); i++) {
-            preparedStatement.setObject(i + 1, values.get(i));
+        int paramIdx = 1;
+        for (Object value : values) {
+            preparedStatement.setObject(paramIdx++, value);
         }
 
         /** DEBUG **/
@@ -135,5 +141,6 @@ public abstract class EntityFilter {
         /** DEBUG **/
 
         return preparedStatement;
+
     }
 }

@@ -5,7 +5,7 @@ import com.db_course.be.filter.defs.FilterOperation;
 import lombok.Data;
 
 @Data
-public class    ColumnFilter implements MetaDataNode {
+public class ColumnFilter implements MetaDataNode {
 
     private final String tableName;
     private final String filterByCol;
@@ -42,11 +42,13 @@ public class    ColumnFilter implements MetaDataNode {
         } else if (operation == FilterOperation.CONTAINS) {
             return new Object[]{"%" + filterVals[0] + "%"};
         }
+
         return filterVals;
     }
 
     @Override
     public String mapToQuery() {
+
         return tableName + "." + filterByCol + " " + FilterDefs.stringifyOperations[operation.ordinal()].buildOprExp("?");
     }
 }

@@ -170,19 +170,20 @@ CREATE TABLE SPACESHIP_ROOMS
 -- Create Mission table
 CREATE TABLE MISSIONS
 (
-    mission_id        INT AUTO_INCREMENT PRIMARY KEY,
-    name              VARCHAR(50) NOT NULL,
-    launch_date       DATE,
-    celestial_body_id INT         NOT NULL,
-    spaceship_id      INT         NOT NULL,
-    FOREIGN KEY (celestial_body_id) REFERENCES CELESTIAL_BODIES (celestial_body_id),
+    mission_id       INT AUTO_INCREMENT PRIMARY KEY,
+    name             VARCHAR(50) NOT NULL,
+    description      TEXT,
+    start_date       DATE,
+    end_date         DATE,
+    completed        BOOLEAN,
+    explored_body_id INT         NOT NULL,
+    spaceship_id     INT         NOT NULL,
+    FOREIGN KEY (explored_body_id) REFERENCES CELESTIAL_BODIES (celestial_body_id),
     FOREIGN KEY (spaceship_id) REFERENCES SPACESHIPS (spaceship_id),
 
     -- Adding index for launch_date
-    INDEX idx_launch_date (launch_date),
+    INDEX idx_launch_date (start_date)
 
-    -- Adding index for celestial_body_id
-    INDEX idx_celestial_body_id (celestial_body_id)
 );
 
 
@@ -209,7 +210,7 @@ CREATE TABLE TICKETS
     ticket_id    INT AUTO_INCREMENT,
     departure_id INT            NOT NULL,
     passenger_id INT, --
-    sold         boolean,
+    sold         BOOLEAN,
     price        DECIMAL(10, 2) NOT NULL,
     room_id      INT            NOT NULL,
     spaceship_id INT            NOT NULL,
@@ -247,11 +248,15 @@ CREATE TABLE PROPERTIES
 );
 
 INSERT INTO CELESTIAL_TYPES (name, description)
-VALUES ('Planet', 'A large, round celestial body that orbits a star and has enough gravity to clear its orbit of most other objects.'),
+VALUES ('Planet',
+        'A large, round celestial body that orbits a star and has enough gravity to clear its orbit of most other objects.'),
        ('Satellite', 'A natural object that orbits a planet, dwarf planet, asteroid, or other celestial body.'),
-       ('Star', 'A massive, self-luminous celestial body made up primarily of hydrogen and helium in a state of nuclear fusion.'),
-       ('Dwarf Planet', 'A celestial body that is round and orbits the Sun, but is not massive enough to clear its neighborhood of other objects.'),
-       ('Asteroid', 'A relatively small, rocky celestial body orbiting the Sun, typically in the asteroid belt between Mars and Jupiter.');
+       ('Star',
+        'A massive, self-luminous celestial body made up primarily of hydrogen and helium in a state of nuclear fusion.'),
+       ('Dwarf Planet',
+        'A celestial body that is round and orbits the Sun, but is not massive enough to clear its neighborhood of other objects.'),
+       ('Asteroid',
+        'A relatively small, rocky celestial body orbiting the Sun, typically in the asteroid belt between Mars and Jupiter.');
 
 -- User table
 INSERT INTO USERS (name, last_name, username, password)
@@ -494,7 +499,8 @@ INSERT INTO ELEMENTS (name, description, min_percentage, max_percentage, radioac
 VALUES ('Nitrogen', 'The most abundant gas in Earth’s atmosphere, crucial for life.', 78.0, 78.0, false, false),
        ('Oxygen', 'Essential for respiration of most terrestrial life forms.', 19.5, 23.5, false, false),
        ('Carbon Dioxide', 'A greenhouse gas, significant for its role in the carbon cycle.', 0.0, 0.04, false, false),
-       ('Argon', 'An colorless, odorless and inert gas present in small amounts in the Earth’s atmosphere.', 0.0, 1.0, false, true),
+       ('Argon', 'An colorless, odorless and inert gas present in small amounts in the Earth’s atmosphere.', 0.0, 1.0,
+        false, true),
        ('Hydrogen', 'The most abundant chemical substance in the universe', 0.0, 100.0, false, false),
        ('Helium', 'A colorless, odorless, tasteless, non-toxic, inert, monatomic gas', 0.0, 100.0, false, true),
        ('Methane', 'A colorless, odorless, flammable gas', 0.0, 5.0, false, false),
@@ -561,10 +567,151 @@ VALUES ((SELECT atmosphere_id
 
 
 
-INSERT INTO planetary_real_estate_db.residents (gender, full_name, birth_date, death_date)
-VALUES ('F', 'Cacajlo Arandjelovski', '2000-03-7', NULL),
-       ('M', 'Acetto Balsamico', '2016-05-11', '2022-09-30'),
-       ('F', 'Rozalija Achmedovski', '1979-12-31', '2025-2-28');
+INSERT INTO MISSIONS (name, description, start_date, end_date, completed, explored_body_id, spaceship_id)
+VALUES
+    ('Mission Apollo', 'First mission to explore Mars', '2024-01-01', '2024-01-10', TRUE,
+     (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Mars'),
+     (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+
+    ('Mission Orion', 'Mission to study the atmosphere of Venus', '2024-02-01', '2024-02-15', FALSE,
+     (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Venus'),
+     (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+
+    ('Mission Galaxy', 'Exploration mission to the gas giant Jupiter', '2024-03-01', '2024-03-20', TRUE,
+     (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Jupiter'),
+     (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+
+    ('Mission Star', 'Study of the ring system of Saturn', '2024-04-01', '2024-04-25', FALSE,
+     (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Saturn'),
+     (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+
+    ('Mission Voyager', 'Exploring the outer regions of Uranus', '2024-05-01', '2024-05-30', TRUE,
+     (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Uranus'),
+     (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+
+    ('Mission Enterprise', 'Mission to observe Neptune’s moons', '2024-06-01', '2024-06-10', FALSE,
+     (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Neptune'),
+     (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+
+    ('Mission Explorer', 'First human mission to Pluto', '2024-07-01', '2024-07-20', TRUE,
+     (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Pluto'),
+     (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+
+    ('Mission Discovery', 'Detailed mapping of Earth’s oceans', '2024-08-01', '2024-08-15', FALSE,
+     (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Earth'),
+     (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+
+    ('Mission Odyssey', 'Second mission to Mars for sample return', '2024-09-01', '2024-09-25', TRUE,
+     (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Mars'),
+     (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+
+    ('Mission Endeavor', 'Long-duration mission to study Venus’s surface', '2024-10-01', '2024-10-20', FALSE,
+     (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Venus'),
+     (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+
+    ('Mission Challenger', 'Investigating the Great Red Spot of Jupiter', '2024-11-01', '2024-11-15', TRUE,
+     (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Jupiter'),
+     (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+
+    ('Mission Pathfinder', 'Exploration of Saturn’s moon Titan', '2024-12-01', '2024-12-25', FALSE,
+     (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Saturn'),
+     (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+
+    ('Mission Horizon', 'Mission to observe the poles of Uranus', '2025-01-01', '2025-01-20', TRUE,
+     (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Uranus'),
+     (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+
+    ('Mission Frontier', 'Neptune’s rings and moon Triton exploration', '2025-02-01', '2025-02-15', FALSE,
+     (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Neptune'),
+     (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+
+    ('Mission Pioneer', 'Study of the dwarf planet Pluto’s surface', '2025-03-01', '2025-03-25', TRUE,
+     (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Pluto'),
+     (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+
+    ('Mission Titan', 'Comprehensive survey of Earth’s atmosphere', '2025-04-01', '2025-04-20', FALSE,
+     (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Earth'),
+     (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+
+    ('Mission Atlantis', 'Investigating the polar ice caps of Mars', '2025-05-01', '2025-05-30', TRUE,
+     (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Mars'),
+     (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+
+    ('Mission Luna', 'Venusian surface composition analysis', '2025-06-01', '2025-06-10', FALSE,
+     (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Venus'),
+     (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+
+    ('Mission Solar', 'Magnetic field study of Jupiter', '2025-07-01', '2025-07-20', TRUE,
+     (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Jupiter'),
+     (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1)),
+
+    ('Mission Mercury', 'Saturn’s core temperature measurement', '2025-08-01', '2025-08-15', FALSE,
+     (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Saturn'),
+     (SELECT spaceship_id FROM SPACESHIPS ORDER BY RAND() LIMIT 1));
 
 
+-- Insert data into RESIDENTS table
+INSERT INTO RESIDENTS (gender, full_name, birth_date, death_date)
+VALUES ('M', 'John Doe', '1980-05-15', NULL),
+       ('F', 'Jane Smith', '1990-11-30', NULL),
+       ('M', 'Tom Johnson', '1975-03-10', NULL),
+       ('F', 'Alice Brown', '1985-07-25', NULL),
+       ('M', 'Bob Williams', '1992-02-14', NULL),
+       ('F', 'Mary Jones', '1988-06-05', NULL),
+       ('M', 'Chris Garcia', '1981-12-19', NULL),
+       ('F', 'Linda Martinez', '1995-09-07', NULL),
+       ('M', 'David Rodriguez', '1979-04-22', NULL),
+       ('F', 'Karen Lopez', '1982-08-13', NULL),
+       ('M', 'Michael Gonzales', '1991-01-27', NULL),
+       ('F', 'Patricia Wilson', '1984-05-30', NULL),
+       ('M', 'James Clark', '1977-11-04', NULL),
+       ('F', 'Susan Lewis', '1993-03-20', NULL),
+       ('M', 'Robert Walker', '1986-12-15', NULL),
+       ('F', 'Linda Hall', '1978-04-25', NULL),
+       ('M', 'Charles Allen', '1992-07-19', NULL),
+       ('F', 'Barbara Young', '1981-09-22', NULL),
+       ('M', 'Steven King', '1983-03-17', NULL),
+       ('F', 'Elizabeth Wright', '1987-11-03', NULL);
 
+-- Insert data into CELESTIAL_BODY_RESIDENTS table
+INSERT INTO CELESTIAL_BODY_RESIDENTS (resident_id, celestial_body_id, resident_from, resident_until)
+VALUES ((SELECT resident_id FROM RESIDENTS WHERE full_name = 'John Doe'),
+        (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Earth'), '2020-01-01', NULL),
+       ((SELECT resident_id FROM RESIDENTS WHERE full_name = 'Jane Smith'),
+        (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Mars'), '2018-05-10', NULL),
+       ((SELECT resident_id FROM RESIDENTS WHERE full_name = 'Tom Johnson'),
+        (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Venus'), '2015-07-15', NULL),
+       ((SELECT resident_id FROM RESIDENTS WHERE full_name = 'Alice Brown'),
+        (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Jupiter'), '2017-03-20', NULL),
+       ((SELECT resident_id FROM RESIDENTS WHERE full_name = 'Bob Williams'),
+        (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Saturn'), '2019-11-22', NULL),
+       ((SELECT resident_id FROM RESIDENTS WHERE full_name = 'Mary Jones'),
+        (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Uranus'), '2021-06-01', NULL),
+       ((SELECT resident_id FROM RESIDENTS WHERE full_name = 'Chris Garcia'),
+        (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Neptune'), '2018-12-13', NULL),
+       ((SELECT resident_id FROM RESIDENTS WHERE full_name = 'Linda Martinez'),
+        (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Pluto'), '2022-04-05', NULL),
+       ((SELECT resident_id FROM RESIDENTS WHERE full_name = 'David Rodriguez'),
+        (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Mars'), '2020-08-11', NULL),
+       ((SELECT resident_id FROM RESIDENTS WHERE full_name = 'Karen Lopez'),
+        (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Venus'), '2019-09-17', NULL),
+       ((SELECT resident_id FROM RESIDENTS WHERE full_name = 'Michael Gonzales'),
+        (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Jupiter'), '2021-03-23', NULL),
+       ((SELECT resident_id FROM RESIDENTS WHERE full_name = 'Patricia Wilson'),
+        (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Saturn'), '2020-07-30', NULL),
+       ((SELECT resident_id FROM RESIDENTS WHERE full_name = 'James Clark'),
+        (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Uranus'), '2019-12-01', NULL),
+       ((SELECT resident_id FROM RESIDENTS WHERE full_name = 'Susan Lewis'),
+        (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Neptune'), '2022-02-15', NULL),
+       ((SELECT resident_id FROM RESIDENTS WHERE full_name = 'Robert Walker'),
+        (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Pluto'), '2021-08-10', NULL),
+       ((SELECT resident_id FROM RESIDENTS WHERE full_name = 'Linda Hall'),
+        (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Mars'), '2018-04-20', NULL),
+       ((SELECT resident_id FROM RESIDENTS WHERE full_name = 'Charles Allen'),
+        (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Venus'), '2017-10-25', NULL),
+       ((SELECT resident_id FROM RESIDENTS WHERE full_name = 'Barbara Young'),
+        (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Jupiter'), '2019-05-30', NULL),
+       ((SELECT resident_id FROM RESIDENTS WHERE full_name = 'Steven King'),
+        (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Saturn'), '2020-09-14', NULL),
+       ((SELECT resident_id FROM RESIDENTS WHERE full_name = 'Elizabeth Wright'),
+        (SELECT celestial_body_id FROM CELESTIAL_BODIES WHERE name = 'Uranus'), '2021-01-19', NULL);

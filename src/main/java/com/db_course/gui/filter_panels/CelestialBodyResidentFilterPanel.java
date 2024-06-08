@@ -1,9 +1,9 @@
 package com.db_course.gui.filter_panels;
 
 import com.db_course.be.filter.defs.FilterOperation;
-import com.db_course.be.filter.entity_filters.impl.CelestialTypeFilter;
-import com.db_course.be.service.CelestialTypeService;
-import com.db_course.gui.tables.model.CelestialTypeTableModel;
+import com.db_course.be.filter.entity_filters.impl.CelestialBodyResidentFilter;
+import com.db_course.be.service.CelestialBodyResidentService;
+import com.db_course.gui.tables.model.CelestialBodyResidentTableModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,13 +12,13 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CelestialTypeFilterPanel extends JPanel {
-    private final CelestialTypeTableModel tableModel;
+public class CelestialBodyResidentFilterPanel extends JPanel {
+    private final CelestialBodyResidentTableModel tableModel;
     private final FilterContainer filterContainer;
     private final JButton addFilterButton;
     private final JButton applyFilterButton;
 
-    public CelestialTypeFilterPanel(CelestialTypeTableModel tableModel) {
+    public CelestialBodyResidentFilterPanel(CelestialBodyResidentTableModel tableModel) {
         this.tableModel = tableModel;
         setLayout(new BorderLayout());
 
@@ -54,12 +54,12 @@ public class CelestialTypeFilterPanel extends JPanel {
     }
 
     private void applyFilters() {
-        CelestialTypeFilter filter = new CelestialTypeFilter();
+        CelestialBodyResidentFilter filter = new CelestialBodyResidentFilter();
         for (FilterComponent component : filterContainer.getFilterComponents()) {
             component.applyFilter(filter);
         }
         tableModel.clear();
-        CelestialTypeService.getInstance().processFilteredCelestialTypes(tableModel::addCelestialType, filter);
+        CelestialBodyResidentService.getInstance().processFilteredCelestialBodyResidents(tableModel::addCelestialBodyResident, filter);
     }
 
     private class FilterContainer extends JPanel {
@@ -97,6 +97,7 @@ public class CelestialTypeFilterPanel extends JPanel {
     }
 
     private class FilterComponent extends JPanel {
+
         private final JComboBox<String> columnComboBox;
         private final JComboBox<FilterOperation> operationComboBox;
         private final JPanel valuePanel;
@@ -110,9 +111,9 @@ public class CelestialTypeFilterPanel extends JPanel {
             setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
             columnComboBox = new JComboBox<>(new String[]{
-                    "ID", "Name", "Description"
+                    "ID", "Resident From", "Resident Until", "Resident", "Celestial Body"
             });
-            columnComboBox.setBounds(10, 10, 120, 30);
+            columnComboBox.setBounds(0, 10, 120, 30);
 
             operationComboBox = new JComboBox<>(FilterOperation.values());
             operationComboBox.setBounds(140, 10, 120, 30);
@@ -125,11 +126,26 @@ public class CelestialTypeFilterPanel extends JPanel {
 
             removeButton = new JButton("Remove");
             removeButton.setBounds(580, 10, 80, 30);
-            removeButton.addActionListener(e -> parentContainer.removeFilterComponent(FilterComponent.this));
+            removeButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    parentContainer.removeFilterComponent(FilterComponent.this);
+                }
+            });
 
-            columnComboBox.addActionListener(e -> updateValuePanel());
+            columnComboBox.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    updateValuePanel();
+                }
+            });
 
-            operationComboBox.addActionListener(e -> updateValuePanel());
+            operationComboBox.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    updateValuePanel();
+                }
+            });
 
             add(columnComboBox);
             add(operationComboBox);
@@ -165,8 +181,7 @@ public class CelestialTypeFilterPanel extends JPanel {
             valuePanel.repaint();
         }
 
-
-        public void applyFilter(CelestialTypeFilter filter) {
+        public void applyFilter(CelestialBodyResidentFilter filter) {
 
             String selectedColumn = (String) columnComboBox.getSelectedItem();
             FilterOperation selectedOperation = (FilterOperation) operationComboBox.getSelectedItem();
@@ -184,16 +199,16 @@ public class CelestialTypeFilterPanel extends JPanel {
             }
         }
 
-
         private int getColumnIndex(String columnName) {
             return switch (columnName) {
-                case "ID" -> CelestialTypeFilter.ID;
-                case "Name" -> CelestialTypeFilter.NAME;
-                case "Description" -> CelestialTypeFilter.DESCRIPTION;
+                case "ID" -> CelestialBodyResidentFilter.ID;
+                case "Resident From" -> CelestialBodyResidentFilter.RESIDENT_FROM;
+                case "Resident Until" -> CelestialBodyResidentFilter.RESIDENT_UNTIL;
+                case "Resident" -> CelestialBodyResidentFilter.RESIDENT_ID;
+                case "Celestial Body" -> CelestialBodyResidentFilter.CELESTIAL_BODY_ID;
                 default -> throw new IllegalArgumentException("Unknown column name: " + columnName);
             };
         }
-
 
         private Object getValueFromPanel(FilterOperation operation) {
 

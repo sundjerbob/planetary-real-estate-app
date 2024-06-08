@@ -1,18 +1,19 @@
 package com.db_course.gui.tables.view;
 
-import com.db_course.dto.CelestialBodyDto;
-import com.db_course.gui.tables.model.CelestialBodyTableModel;
+import com.db_course.dto.MissionDto;
+import com.db_course.gui.tables.model.MissionTableModel;
 
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class CelestialBodyTable extends JTable {
+public class MissionTable extends JTable {
 
 
-    private final CelestialBodyTableModel tableModel;
+    private final MissionTableModel tableModel;
 
-    public CelestialBodyTable(CelestialBodyTableModel model) {
+
+    public MissionTable(MissionTableModel model) {
         super(model);
         this.tableModel = model;
         this.addMouseListener(new MouseAdapter() {
@@ -21,18 +22,18 @@ public class CelestialBodyTable extends JTable {
                 if (e.getClickCount() == 1) {
                     int row = getSelectedRow();
                     if (row != -1) {
-                        CelestialBodyDto selectedBody = tableModel.getCelestialBodyAt(row);
-                        System.out.println("Selected Celestial Body: " + selectedBody);
+                        MissionDto selectedMission = tableModel.getMissionAt(row);
+                        System.out.println("Selected Mission: " + selectedMission);
                     }
                 }
             }
         });
     }
 
-    public CelestialBodyDto getSelectedCelestialBody() {
+    public MissionDto getSelectedMission() {
         int row = getSelectedRow();
         if (row != -1) {
-            return tableModel.getCelestialBodyAt(row);
+            return tableModel.getMissionAt(row);
         }
         return null;
     }

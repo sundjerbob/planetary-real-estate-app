@@ -7,17 +7,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CelestialBodyResidentTableModel extends AbstractTableModel {
-    private final List<CelestialBodyResidentDto> residents;
+    private final List<CelestialBodyResidentDto> celestialBodyResidents;
     private final String[] columnNames = {"ID", "Resident ID", "Celestial Body", "Resident From", "Resident Until"};
-    private CelestialBodyResidentDto selectedResident;
 
     public CelestialBodyResidentTableModel() {
-        residents = new ArrayList<>();
+        celestialBodyResidents = new ArrayList<>();
     }
 
     @Override
     public int getRowCount() {
-        return residents.size();
+        return celestialBodyResidents.size();
     }
 
     @Override
@@ -32,44 +31,31 @@ public class CelestialBodyResidentTableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        CelestialBodyResidentDto resident = residents.get(rowIndex);
-        switch (columnIndex) {
-            case 0:
-                return resident.getId();
-            case 1:
-                return resident.getResidentId();
-            case 2:
-                return resident.getCelestialBody();
-            case 3:
-                return resident.getResidentFrom();
-            case 4:
-                return resident.getResidentUntil();
-            default:
-                return null;
-        }
+        CelestialBodyResidentDto celestialBodyResident = celestialBodyResidents.get(rowIndex);
+        return switch (columnIndex) {
+            case 0 -> celestialBodyResident.getId();
+            case 1 -> celestialBodyResident.getResidentId();
+            case 2 -> celestialBodyResident.getCelestialBody();
+            case 3 -> celestialBodyResident.getResidentFrom();
+            case 4 -> celestialBodyResident.getResidentUntil();
+            default -> null;
+        };
     }
 
-    public void addResident(CelestialBodyResidentDto resident) {
-        residents.add(resident);
-        fireTableRowsInserted(residents.size() - 1, residents.size() - 1);
+    public void addCelestialBodyResident(CelestialBodyResidentDto celestialBodyResident) {
+        celestialBodyResidents.add(celestialBodyResident);
+        fireTableRowsInserted(celestialBodyResidents.size() - 1, celestialBodyResidents.size() - 1);
     }
 
     public void clear() {
-        residents.clear();
-        fireTableDataChanged();
-    }
-
-    public CelestialBodyResidentDto getResidentAt(int rowIndex) {
-        return residents.get(rowIndex);
-    }
-
-    public void setSelectedResident(int rowIndex) {
-        if (rowIndex >= 0 && rowIndex < residents.size()) {
-            selectedResident = residents.get(rowIndex);
+        int size = celestialBodyResidents.size();
+        celestialBodyResidents.clear();
+        if (size > 0) {
+            fireTableRowsDeleted(0, size - 1);
         }
     }
 
-    public CelestialBodyResidentDto getSelectedResident() {
-        return selectedResident;
+    public CelestialBodyResidentDto getCelestialBodyResidentAt(int rowIndex) {
+        return celestialBodyResidents.get(rowIndex);
     }
 }

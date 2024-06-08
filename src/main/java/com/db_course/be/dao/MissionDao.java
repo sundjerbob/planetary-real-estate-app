@@ -1,7 +1,7 @@
 package com.db_course.be.dao;
 
-import com.db_course.be.entity_model.Mission;
 import com.db_course.be.db_config.DB_Client;
+import com.db_course.be.entity_model.Mission;
 import com.db_course.be.filter.entity_filters.impl.MissionFilter;
 
 import java.sql.*;
@@ -45,7 +45,7 @@ public class MissionDao {
                 consumer.accept(mapToMission(resultSet));
             }
         } catch (SQLException e) {
-            throw new RuntimeException("MissionDao.processAllMissions() says: " + e.getMessage());
+            throw new RuntimeException("MissionDao.processFilteredMissions() says: " + e.getMessage());
         }
     }
 
@@ -134,7 +134,7 @@ public class MissionDao {
     /******************************************************************************************************************/
     private Mission mapToMission(ResultSet resultSet) {
         try {
-            int id = resultSet.getInt("id");
+            int id = resultSet.getInt("mission_id");
             int celestialBodyId = resultSet.getInt("explored_body_id");
             int spaceshipId = resultSet.getInt("spaceship_id");
             String name = resultSet.getString("name");

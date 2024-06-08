@@ -1,7 +1,9 @@
 package com.db_course.be.dao;
 
 
+import com.db_course.be.db_config.DB_Client;
 import com.db_course.be.entity_model.CelestialBodyResident;
+import com.db_course.be.filter.entity_filters.impl.CelestialBodyResidentFilter;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -15,8 +17,8 @@ public class CelestialBodyResidentDao {
     private static final String TABLE = "CELESTIAL_BODY_RESIDENTS";
 
 
-    public CelestialBodyResidentDao(Connection connection) {
-        this.connection = connection;
+    public CelestialBodyResidentDao() {
+        this.connection = DB_Client.getInstance().getConnection();
     }
 
 
@@ -97,17 +99,27 @@ public class CelestialBodyResidentDao {
 
 
     /******************************************************************************************************************/
-    public void processCelestialBodyResidentsByResidentId(int residentId, Consumer<CelestialBodyResident> consumer) {
+    public void processFilteredCelestialBodyResidents(Consumer<CelestialBodyResident> consumer, CelestialBodyResidentFilter filter) {
 
-    String statement = "SELECT * FROM " + TABLE + " WHERE resident_id = ?";
+        try (
+                PreparedStatement statement = filter.generatePreparedStatement();
+                ResultSet resultSet = statement.executeQuery()
+        ) {
 
+            while (resultSet.next()) {
+                consumer.accept(mapToCelestialBodyResident(resultSet));
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("CelestialBodyResidentDao.processAllCelestialBodyResidents() says: " + e.getMessage());
+
+        }
 
     }
 
 
     /******************************************************************************************************************/
     private CelestialBodyResident mapToCelestialBodyResident(ResultSet resultSet) throws SQLException {
-        int id = resultSet.getInt("celestial_body_resident_id");
+        int id = resultSet.getInt("id");
         int residentId = resultSet.getInt("resident_id");
         int celestialBodyId = resultSet.getInt("celestial_body_id");
         LocalDate residentFrom = resultSet.getObject("resident_from", LocalDate.class);

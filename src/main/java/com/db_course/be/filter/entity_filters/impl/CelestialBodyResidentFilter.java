@@ -8,7 +8,6 @@ import java.time.LocalDate;
 
 public class CelestialBodyResidentFilter extends EntityFilter {
 
-
     private static final String TABLE = "CELESTIAL_BODY_RESIDENTS";
     private static final int COL_NB = 5;
 
@@ -23,7 +22,6 @@ public class CelestialBodyResidentFilter extends EntityFilter {
     public CelestialBodyResidentFilter() {
 
         super(TABLE, COL_NB);
-
 
         constructors[ID] = () -> new ColumnFilter(TABLE, "id", int.class);
 

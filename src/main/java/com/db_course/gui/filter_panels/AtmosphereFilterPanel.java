@@ -13,13 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AtmosphereFilterPanel extends JPanel {
-
-
     private final AtmosphereTableModel tableModel;
     private final FilterContainer filterContainer;
     private final JButton addFilterButton;
     private final JButton applyFilterButton;
-
 
     public AtmosphereFilterPanel(AtmosphereTableModel tableModel) {
         this.tableModel = tableModel;
@@ -115,19 +112,19 @@ public class AtmosphereFilterPanel extends JPanel {
             columnComboBox = new JComboBox<>(new String[]{
                     "ID", "Max Temperature", "Min Temperature", "Atmosphere Height", "Ampere Pressure", "Celestial Body"
             });
-            columnComboBox.setBounds(10, 10, 150, 30);
+            columnComboBox.setBounds(0, 10, 120, 30);
 
             operationComboBox = new JComboBox<>(FilterOperation.values());
-            operationComboBox.setBounds(170, 10, 150, 30);
+            operationComboBox.setBounds(140, 10, 120, 30);
 
             valuePanel = new JPanel();
-            valuePanel.setBounds(330, 10, 250, 30);
+            valuePanel.setBounds(270, 10, 300, 30);
             valuePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
             updateValuePanel();
 
             removeButton = new JButton("Remove");
-            removeButton.setBounds(590, 10, 80, 30);
+            removeButton.setBounds(580, 10, 80, 30);
             removeButton.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
@@ -184,14 +181,23 @@ public class AtmosphereFilterPanel extends JPanel {
         }
 
         public void applyFilter(AtmosphereFilter filter) {
+
             String selectedColumn = (String) columnComboBox.getSelectedItem();
             FilterOperation selectedOperation = (FilterOperation) operationComboBox.getSelectedItem();
+
             if (selectedColumn != null && selectedOperation != null) {
                 int columnIndex = getColumnIndex(selectedColumn);
-                Object value = getValueFromPanel();
-                filter.addFilter(columnIndex, selectedOperation, value);
+                Object value = getValueFromPanel(selectedOperation);
+
+                if (selectedOperation == FilterOperation.BETWEEN && value instanceof String[] && ((String[]) value).length == 2)
+                    filter.addFilter(columnIndex, selectedOperation, ((String[]) value)[0], ((String[]) value)[1]);
+
+                else
+                    filter.addFilter(columnIndex, selectedOperation, value);
+
             }
         }
+
 
         private int getColumnIndex(String columnName) {
             return switch (columnName) {
@@ -205,15 +211,26 @@ public class AtmosphereFilterPanel extends JPanel {
             };
         }
 
-        private Object getValueFromPanel() {
-            // For simplicity, assuming single text field for all types
+
+        private Object getValueFromPanel(FilterOperation operation) {
+
             Component[] components = valuePanel.getComponents();
-            if (components.length == 1 && components[0] instanceof JTextField) {
+
+            if (operation == FilterOperation.BETWEEN && components.length == 4 &&
+
+                    components[1] instanceof JTextField && components[3] instanceof JTextField) {
+
+
+                return new String[]{
+                        ((JTextField) components[1]).getText().trim(),
+                        ((JTextField) components[3]).getText().trim()
+                };
+            } else if (components.length == 1 && components[0] instanceof JTextField) {
                 return ((JTextField) components[0]).getText();
-            } else if (components.length == 4 && components[1] instanceof JTextField && components[3] instanceof JTextField) {
-                return new Object[]{((JTextField) components[1]).getText(), ((JTextField) components[3]).getText()};
             }
             return null;
         }
+
+
     }
 }

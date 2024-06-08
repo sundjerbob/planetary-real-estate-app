@@ -18,7 +18,7 @@ public class FilterDefs {
         stringifyOperations[FilterOperation.GREATER_THAN_OR_EQUAL.ordinal()] = placeholder -> ">= " + placeholder;
         stringifyOperations[FilterOperation.BEGINS_WITH.ordinal()] = placeholder -> "LIKE " + placeholder;
         stringifyOperations[FilterOperation.CONTAINS.ordinal()] = placeholder -> "LIKE " + placeholder;
-        stringifyOperations[FilterOperation.BETWEEN.ordinal()] = placeholder -> "BETWEEN ? AND ?";
+        stringifyOperations[FilterOperation.BETWEEN.ordinal()] = placeholder -> "BETWEEN " + placeholder + " AND " + placeholder;
         stringifyOperations[FilterOperation.IS_NULL.ordinal()] = placeholder -> "IS NULL";
         stringifyOperations[FilterOperation.IS_NOT_NULL.ordinal()] = placeholder -> "IS NOT NULL";
         stringifyOperations[FilterOperation.IS_TRUE.ordinal()] = placeholder -> "IS TRUE";

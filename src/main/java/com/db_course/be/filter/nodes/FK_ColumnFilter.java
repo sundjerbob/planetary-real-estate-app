@@ -48,11 +48,13 @@ public class FK_ColumnFilter implements MetaDataNode {
         } else if (operation == FilterOperation.CONTAINS) {
             return new Object[]{"%" + filterValues[0] + "%"};
         }
+
         return filterValues;
     }
 
     @Override
     public String mapToQuery() {
+
         return tableName + "." + fkColName + " IN (SELECT " + refPkColName + " FROM " + referenceTable + " WHERE " + referenceTable + "." + filterByCol + " " + FilterDefs.stringifyOperations[operation.ordinal()].buildOprExp("?") + ")";
     }
 }

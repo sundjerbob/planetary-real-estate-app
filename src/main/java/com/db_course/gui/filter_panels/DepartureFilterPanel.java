@@ -9,15 +9,17 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DepartureFilterPanel extends JPanel {
+
+
     private final DepartureTableModel tableModel;
     private final FilterContainer filterContainer;
     private final JButton addFilterButton;
     private final JButton applyFilterButton;
+
 
     public DepartureFilterPanel(DepartureTableModel tableModel) {
         this.tableModel = tableModel;
@@ -53,6 +55,7 @@ public class DepartureFilterPanel extends JPanel {
         add(buttonPanel, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
     }
+
 
     private void applyFilters() {
         DepartureFilter filter = new DepartureFilter();
@@ -98,12 +101,15 @@ public class DepartureFilterPanel extends JPanel {
     }
 
     private class FilterComponent extends JPanel {
+
+
         private final JComboBox<String> columnComboBox;
         private final JComboBox<FilterOperation> operationComboBox;
         private final JPanel valuePanel;
         private final JButton removeButton;
 
         private final FilterContainer parentContainer;
+
 
         public FilterComponent(FilterContainer parentContainer) {
             this.parentContainer = parentContainer;
@@ -113,39 +119,24 @@ public class DepartureFilterPanel extends JPanel {
             columnComboBox = new JComboBox<>(new String[]{
                     "ID", "Departure Date", "Spaceship", "Celestial Origin", "Celestial Destination"
             });
-            columnComboBox.setBounds(10, 10, 120, 30);
+            columnComboBox.setBounds(0, 10, 120, 30);
 
             operationComboBox = new JComboBox<>(FilterOperation.values());
             operationComboBox.setBounds(140, 10, 120, 30);
 
             valuePanel = new JPanel();
-            valuePanel.setBounds(270, 10, 200, 30);
+            valuePanel.setBounds(270, 10, 300, 30);
             valuePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
             updateValuePanel();
 
             removeButton = new JButton("Remove");
-            removeButton.setBounds(480, 10, 80, 30);
-            removeButton.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    parentContainer.removeFilterComponent(FilterComponent.this);
-                }
-            });
+            removeButton.setBounds(580, 10, 80, 30);
+            removeButton.addActionListener(e -> parentContainer.removeFilterComponent(FilterComponent.this));
 
-            columnComboBox.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    updateValuePanel();
-                }
-            });
+            columnComboBox.addActionListener(e -> updateValuePanel());
 
-            operationComboBox.addActionListener(new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    updateValuePanel();
-                }
-            });
+            operationComboBox.addActionListener(e -> updateValuePanel());
 
             add(columnComboBox);
             add(operationComboBox);
@@ -153,8 +144,10 @@ public class DepartureFilterPanel extends JPanel {
             add(removeButton);
         }
 
+
         private void updateValuePanel() {
             valuePanel.removeAll();
+
 
             FilterOperation selectedOperation = (FilterOperation) operationComboBox.getSelectedItem();
             if (selectedOperation != null) {
@@ -177,48 +170,62 @@ public class DepartureFilterPanel extends JPanel {
                 }
             }
 
+
             valuePanel.revalidate();
             valuePanel.repaint();
         }
 
+
         public void applyFilter(DepartureFilter filter) {
+
             String selectedColumn = (String) columnComboBox.getSelectedItem();
             FilterOperation selectedOperation = (FilterOperation) operationComboBox.getSelectedItem();
+
             if (selectedColumn != null && selectedOperation != null) {
                 int columnIndex = getColumnIndex(selectedColumn);
-                Object value = getValueFromPanel();
-                filter.addFilter(columnIndex, selectedOperation, value);
+                Object value = getValueFromPanel(selectedOperation);
+
+                if (selectedOperation == FilterOperation.BETWEEN && value instanceof String[] && ((String[]) value).length == 2)
+                    filter.addFilter(columnIndex, selectedOperation, ((String[]) value)[0], ((String[]) value)[1]);
+
+                else
+                    filter.addFilter(columnIndex, selectedOperation, value);
+
             }
         }
+
 
         private int getColumnIndex(String columnName) {
-            switch (columnName) {
-                case "ID":
-                    return DepartureFilter.ID;
-                case "Departure Date":
-                    return DepartureFilter.DEPARTURE_DATETIME;
-                case "Spaceship":
-                    return DepartureFilter.SPACESHIP;
-                case "Celestial Origin":
-                    return DepartureFilter.CELESTIAL_ORIGIN;
-                case "Celestial Destination":
-                    return DepartureFilter.CELESTIAL_DESTINATION;
-                default:
-                    throw new IllegalArgumentException("Unknown column name: " + columnName);
-            }
+
+            return switch (columnName) {
+                case "ID" -> DepartureFilter.ID;
+                case "Departure Date" -> DepartureFilter.DEPARTURE_DATETIME;
+                case "Spaceship" -> DepartureFilter.SPACESHIP;
+                case "Celestial Origin" -> DepartureFilter.CELESTIAL_ORIGIN;
+                case "Celestial Destination" -> DepartureFilter.CELESTIAL_DESTINATION;
+                default -> throw new IllegalArgumentException("Unknown column name: " + columnName);
+            };
         }
 
-        private Object getValueFromPanel() {
+        private Object getValueFromPanel(FilterOperation operation) {
+
             Component[] components = valuePanel.getComponents();
-            if (components.length == 1 && components[0] instanceof JTextField) {
-                return ((JTextField) components[0]).getText();
-            } else if (components.length == 4 && components[1] instanceof JTextField && components[3] instanceof JTextField) {
-                return new Object[]{
-                        ((JTextField) components[1]).getText(),
-                        ((JTextField) components[3]).getText()
+
+            if (operation == FilterOperation.BETWEEN && components.length == 4 &&
+
+                    components[1] instanceof JTextField && components[3] instanceof JTextField) {
+
+
+                return new String[]{
+                        ((JTextField) components[1]).getText().trim(),
+                        ((JTextField) components[3]).getText().trim()
                 };
+            } else if (components.length == 1 && components[0] instanceof JTextField) {
+                return ((JTextField) components[0]).getText();
             }
             return null;
         }
+
+
     }
 }

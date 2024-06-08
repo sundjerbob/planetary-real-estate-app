@@ -2,6 +2,7 @@ package com.db_course.gui.filter_panels;
 
 import com.db_course.be.filter.defs.FilterOperation;
 import com.db_course.be.filter.entity_filters.impl.CelestialBodyFilter;
+import com.db_course.be.filter.entity_filters.impl.DepartureFilter;
 import com.db_course.be.service.CelestialBodyService;
 import com.db_course.gui.tables.model.CelestialBodyTableModel;
 
@@ -183,50 +184,69 @@ public class CelestialBodyFilterPanel extends JPanel {
             valuePanel.repaint();
         }
 
+
         public void applyFilter(CelestialBodyFilter filter) {
+
             String selectedColumn = (String) columnComboBox.getSelectedItem();
             FilterOperation selectedOperation = (FilterOperation) operationComboBox.getSelectedItem();
+
             if (selectedColumn != null && selectedOperation != null) {
                 int columnIndex = getColumnIndex(selectedColumn);
-                Object value = getValueFromPanel();
-                filter.addFilter(columnIndex, selectedOperation, value);
+                Object value = getValueFromPanel(selectedOperation);
+
+                if (selectedOperation == FilterOperation.BETWEEN && value instanceof String[] && ((String[]) value).length == 2)
+                    filter.addFilter(columnIndex, selectedOperation, ((String[]) value)[0], ((String[]) value)[1]);
+
+                else
+                    filter.addFilter(columnIndex, selectedOperation, value);
+
             }
         }
+
 
         private int getColumnIndex(String columnName) {
-            switch (columnName) {
-                case "ID": return CelestialBodyFilter.ID;
-                case "Name": return CelestialBodyFilter.NAME;
-                case "Description": return CelestialBodyFilter.DESCRIPTION;
-                case "Surface Pressure": return CelestialBodyFilter.SURFACE_PRESSURE;
-                case "Surface Temperature Min": return CelestialBodyFilter.SURFACE_TEMPERATURE_MIN;
-                case "Surface Temperature Max": return CelestialBodyFilter.SURFACE_TEMPERATURE_MAX;
-                case "Core Temperature": return CelestialBodyFilter.CORE_TEMPERATURE;
-                case "Explored": return CelestialBodyFilter.EXPLORED;
-                case "Radiation Level": return CelestialBodyFilter.RADIATION_LEVEL;
-                case "Has Water": return CelestialBodyFilter.HAS_WATER;
-                case "Surface Area": return CelestialBodyFilter.SURFACE_AREA;
-                case "Mass": return CelestialBodyFilter.MASS;
-                case "Gravitational Field Height": return CelestialBodyFilter.GRAVITATIONAL_FIELD_HEIGHT;
-                case "Moving Speed": return CelestialBodyFilter.MOVING_SPEED;
-                case "Rotation Speed": return CelestialBodyFilter.ROTATION_SPEED;
-                case "Celestial Body Type": return CelestialBodyFilter.CELESTIAL_BODY_TYPE;
-                case "Rotates Around Body": return CelestialBodyFilter.ROTATES_AROUND_BODY;
-                default: throw new IllegalArgumentException("Unknown column name: " + columnName);
-            }
+            return switch (columnName) {
+                case "ID" -> CelestialBodyFilter.ID;
+                case "Name" -> CelestialBodyFilter.NAME;
+                case "Description" -> CelestialBodyFilter.DESCRIPTION;
+                case "Surface Pressure" -> CelestialBodyFilter.SURFACE_PRESSURE;
+                case "Surface Temperature Min" -> CelestialBodyFilter.SURFACE_TEMPERATURE_MIN;
+                case "Surface Temperature Max" -> CelestialBodyFilter.SURFACE_TEMPERATURE_MAX;
+                case "Core Temperature" -> CelestialBodyFilter.CORE_TEMPERATURE;
+                case "Explored" -> CelestialBodyFilter.EXPLORED;
+                case "Radiation Level" -> CelestialBodyFilter.RADIATION_LEVEL;
+                case "Has Water" -> CelestialBodyFilter.HAS_WATER;
+                case "Surface Area" -> CelestialBodyFilter.SURFACE_AREA;
+                case "Mass" -> CelestialBodyFilter.MASS;
+                case "Gravitational Field Height" -> CelestialBodyFilter.GRAVITATIONAL_FIELD_HEIGHT;
+                case "Moving Speed" -> CelestialBodyFilter.MOVING_SPEED;
+                case "Rotation Speed" -> CelestialBodyFilter.ROTATION_SPEED;
+                case "Celestial Body Type" -> CelestialBodyFilter.CELESTIAL_BODY_TYPE;
+                case "Rotates Around Body" -> CelestialBodyFilter.ROTATES_AROUND_BODY;
+                default -> throw new IllegalArgumentException("Unknown column name: " + columnName);
+            };
         }
 
-        private Object getValueFromPanel() {
+
+        private Object getValueFromPanel(FilterOperation operation) {
+
             Component[] components = valuePanel.getComponents();
-            if (components.length == 1 && components[0] instanceof JTextField) {
-                return ((JTextField) components[0]).getText();
-            } else if (components.length == 4 && components[1] instanceof JTextField && components[3] instanceof JTextField) {
-                return new Object[]{
-                        ((JTextField) components[1]).getText(),
-                        ((JTextField) components[3]).getText()
+
+            if (operation == FilterOperation.BETWEEN && components.length == 4 &&
+
+                    components[1] instanceof JTextField && components[3] instanceof JTextField) {
+
+
+                return new String[]{
+                        ((JTextField) components[1]).getText().trim(),
+                        ((JTextField) components[3]).getText().trim()
                 };
+            } else if (components.length == 1 && components[0] instanceof JTextField) {
+                return ((JTextField) components[0]).getText();
             }
             return null;
         }
+
+
     }
 }

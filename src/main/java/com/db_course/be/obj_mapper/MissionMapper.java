@@ -9,8 +9,8 @@ public class MissionMapper {
 
     public static MissionDto missionToDto(
             Mission mission,
-            CelestialBodyDto celestialBody,
-            SpaceshipDto spaceship
+            String celestialBody,
+            String spaceship
     ) {
         return new MissionDto(
                 mission.getId(),

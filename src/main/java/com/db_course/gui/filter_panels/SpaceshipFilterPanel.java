@@ -181,41 +181,60 @@ public class SpaceshipFilterPanel extends JPanel {
             valuePanel.repaint();
         }
 
+
         public void applyFilter(SpaceshipFilter filter) {
+
             String selectedColumn = (String) columnComboBox.getSelectedItem();
             FilterOperation selectedOperation = (FilterOperation) operationComboBox.getSelectedItem();
+
             if (selectedColumn != null && selectedOperation != null) {
                 int columnIndex = getColumnIndex(selectedColumn);
-                Object value = getValueFromPanel();
-                filter.addFilter(columnIndex, selectedOperation, value);
+                Object value = getValueFromPanel(selectedOperation);
+
+                if (selectedOperation == FilterOperation.BETWEEN && value instanceof String[] && ((String[]) value).length == 2)
+                    filter.addFilter(columnIndex, selectedOperation, ((String[]) value)[0], ((String[]) value)[1]);
+
+                else
+                    filter.addFilter(columnIndex, selectedOperation, value);
+
             }
         }
+
 
         private int getColumnIndex(String columnName) {
-            switch (columnName) {
-                case "ID": return SpaceshipFilter.ID;
-                case "Name": return SpaceshipFilter.NAME;
-                case "Model": return SpaceshipFilter.MODEL;
-                case "Passenger Capacity": return SpaceshipFilter.PASSENGER_CAPACITY;
-                case "Fuel Capacity": return SpaceshipFilter.FUEL_CAPACITY;
-                case "Max Travel Range": return SpaceshipFilter.MAX_TRAVEL_RANGE;
-                case "Traveling Speed": return SpaceshipFilter.TRAVELING_SPEED;
-                case "Manufacturer": return SpaceshipFilter.MANUFACTURER;
-                default: throw new IllegalArgumentException("Unknown column name: " + columnName);
-            }
+            return switch (columnName) {
+                case "ID" -> SpaceshipFilter.ID;
+                case "Name" -> SpaceshipFilter.NAME;
+                case "Model" -> SpaceshipFilter.MODEL;
+                case "Passenger Capacity" -> SpaceshipFilter.PASSENGER_CAPACITY;
+                case "Fuel Capacity" -> SpaceshipFilter.FUEL_CAPACITY;
+                case "Max Travel Range" -> SpaceshipFilter.MAX_TRAVEL_RANGE;
+                case "Traveling Speed" -> SpaceshipFilter.TRAVELING_SPEED;
+                case "Manufacturer" -> SpaceshipFilter.MANUFACTURER;
+                default -> throw new IllegalArgumentException("Unknown column name: " + columnName);
+            };
         }
 
-        private Object getValueFromPanel() {
+
+        private Object getValueFromPanel(FilterOperation operation) {
+
             Component[] components = valuePanel.getComponents();
-            if (components.length == 1 && components[0] instanceof JTextField) {
-                return ((JTextField) components[0]).getText();
-            } else if (components.length == 4 && components[1] instanceof JTextField && components[3] instanceof JTextField) {
-                return new Object[]{
-                        ((JTextField) components[1]).getText(),
-                        ((JTextField) components[3]).getText()
+
+            if (operation == FilterOperation.BETWEEN && components.length == 4 &&
+
+                    components[1] instanceof JTextField && components[3] instanceof JTextField) {
+
+
+                return new String[]{
+                        ((JTextField) components[1]).getText().trim(),
+                        ((JTextField) components[3]).getText().trim()
                 };
+            } else if (components.length == 1 && components[0] instanceof JTextField) {
+                return ((JTextField) components[0]).getText();
             }
             return null;
         }
+
+
     }
 }
